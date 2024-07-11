@@ -1,44 +1,99 @@
-<!DOCKTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>🏴‍☠️PIRATINHA🏴‍☠️</title>
+    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade -->
+    <title>🏴‍☠️PIRATINHA🏴‍☠️</title> <!-- Título da página -->
     <style>
-a:link, a:visited {
-  background-color: #0d0d0d;
-  color: white;
-  padding: 20px 20px;
-  border-radius: 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-family: "Lucida Console", "Courier New", monospace;
-}
-
-a:hover,  a:active {
-  color: red;
-  background-color: transparent;
-  text-decoration: underline;
-  border: 2px solid red;
-  border-radius: 20px;
-  padding: 19px;
-  font-family: "Lucida Console", "Courier New", monospace;
-}
-
-</style>
+        body {
+            background-color: black; /* Cor de fundo */
+            text-align: center; /* Alinhamento do texto */
+            font-family: "Lucida Console", "Courier New", monospace; /* Família da fonte */
+            box-shadow: 0 0 3px 1px #808080 inset; /* Sombra na borda */
+            margin: 0; /* Remove margens da sombra */
+            padding: 0; /* Remove paddings da sombra */
+        }
+        h1 {
+            color: #d9d9d9; /* Cor do título */
+            text-shadow: 2px 2px 4px #404040; /* Sombra do título */
+        }
+        .link a:link, .link a:visited { /* Estilo dos links visitados e não visitados */
+            background-color: #0d0d0d; /* Cor de fundo dos links */
+            color: #d9d9d9; /* Cor do texto dos links */
+            padding: 20px 20px; /* Espaçamento interno dos links */
+            border-radius: 20px; /* Bordas arredondadas */
+            text-align: center; /* Alinhamento do texto dos links */
+            text-decoration: none; /* Remove sublinhado */
+            display: inline-block; /* Exibe como bloco inline */
+        }
+        .link a:hover, .link a:active { /* Estilo dos links ao passar o mouse e ao clicar */
+            color: red; /* Cor do texto ao passar o mouse */
+            background-color: transparent; /* Cor de fundo ao passar o mouse */
+            text-decoration: underline; /* Sublinhado ao passar o mouse */
+            border: 2px solid red; /* Borda vermelha ao passar o mouse */
+            border-radius: 20px; /* Bordas arredondadas */
+            padding: 19px; /* Espaçamento interno reduzido */
+        }
+        footer { /* Estilo do rodapé */
+            color: gray; /* Cor do texto do rodapé */
+            text-align: center; /* Alinhamento do texto */
+            font-size: 8px; /* Tamanho da fonte */
+            margin-top: 200px; /* Margem superior */
+            display: none; /* Inicialmente oculto */
+        }
+        footer a:link, footer a:visited { /* Estilo dos links no rodapé */
+            color: gray; /* Cor do texto dos links */
+            text-decoration: none; /* Remove sublinhado */
+        }
+        footer a:hover, footer a:active { /* Estilo dos links no rodapé ao passar o mouse e ao clicar */
+            color: gray; /* Mantém a cor do texto */
+            text-decoration: none; /* Mantém sem sublinhado */
+        }
+    </style>
 </head>
-<body style="background-color:black;text-align:center;">
-<img src="https://github.com/Marxs69/0-0/blob/main/Images/Caruso.jpg?raw=true" width="150" height="150">
-	<h1 style="color:white;">🏴‍☠️PIRATINHA🏴‍☠️</h1>
-	<p><a href="https://twitter.com/Ecologica_Verde">Ecológica Verde (Xwitter)</a></p>
-	<p><a href="https://cs.rin.ru/">CS.RIN.RU</a></p>
-	<p><a href="https://fitgirl-repacks.site/">FitGirl Repacks</a></p>
-	<p><a href="https://dodi-repacks.site/">DODI REPACKS</a></p>
-	<p><a href="https://gog-games.to/">GOG GAMES</a></p>
-	<p><a href="https://www.skidrowreloaded.com/">Skidrow & Reloaded Games</a></p>
-	<p><a href="https://kaoskrew.org/">KAOSKREW</a></p>
-	<p><a href="https://byxatab.com/">ByXatab (RU)</a></p>
-	<p><a href="https://online-fix.me/">ONLINE-Fix (RU)</a></p>
-	<p><a href="https://www.3dmgame.com/games/ck3/resource_24_1/">3DM Game (CN)</a></p>
+<body>
+    <h1>🏴‍☠️PIRATINHA🏴‍☠️</h1> <!-- Cabeçalho da página -->
+    <div class="link">
+        <!-- Lista de links -->
+        <p><a href="https://twitter.com/Ecologica_Verde" target="_blank">Ecológica Verde (Xwitter)</a></p>
+        <p><a href="https://cs.rin.ru/" target="_blank">CS.RIN.RU</a></p>
+        <p><a href="https://fitgirl-repacks.site/" target="_blank">FitGirl Repacks</a></p>
+        <p><a href="https://dodi-repacks.site/" target="_blank">DODI REPACKS</a></p>
+        <p><a href="https://gog-games.to/" target="_blank">GOG GAMES</a></p>
+        <p><a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow & Reloaded Games</a></p>
+        <p><a href="https://kaoskrew.org/" target="_blank">KAOSKREW</a></p>
+        <p><a href="https://byxatab.com/" target="_blank">ByXatab (RU)</a></p>
+        <p><a href="https://online-fix.me/" target="_blank">ONLINE-Fix (RU)</a></p>
+        <p><a href="https://www.3dmgame.com/games/ck3/resource_24_1/" target="_blank">3DM Game (CN)</a></p>
+    </div>
+    
+    <footer>
+        <p><a href="https://youtu.be/IqPn52KCbBU?si=d3BkYwPfgaoYepFX&t=10" target="_blank">OLEO DE MACACO</a></p> <!-- Link no rodapé -->
+    </footer>
+    
+    <script>
+        function checkTime() {
+            var now = new Date(); // Obtém a data e hora atuais
+            var hours = now.getUTCHours(); // Obtém a hora UTC atual
+            var minutes = now.getUTCMinutes(); // Obtém os minutos atuais em UTC
+            
+            // Converte o horário BRT para UTC (BRT é UTC-3)
+            var brtStartHour = 23 + 3;
+            var brtEndHour = 0 + 3;
+
+            // Verifica se o horário está dentro do intervalo desejado
+            if ((hours === brtStartHour && minutes >= 30) || (hours === brtEndHour && minutes <= 30)) {
+                document.querySelector('footer').style.display = 'block'; // Exibe o rodapé
+            } else {
+                document.querySelector('footer').style.display = 'none'; // Oculta o rodapé
+            }
+        }
+        
+        // Verifica o horário ao carregar a página
+        checkTime();
+        
+        // Verifica o horário a cada minuto
+        setInterval(checkTime, 60000);
+    </script>
+</body>
 </html>

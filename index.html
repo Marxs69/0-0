@@ -37,7 +37,7 @@
             text-align: center; /* Alinhamento do texto */
             font-size: 8px; /* Tamanho da fonte */
             margin-top: 200px; /* Margem superior */
-            display: none; /* Inicialmente oculto */
+            display: show; /* Inicialmente oculto */
         }
         footer a:link, footer a:visited { /* Estilo dos links no rodapé */
             color: gray; /* Cor do texto dos links */
@@ -45,7 +45,7 @@
         }
         footer a:hover, footer a:active { /* Estilo dos links no rodapé ao passar o mouse e ao clicar */
             color: gray; /* Mantém a cor do texto */
-            text-decoration: none; /* Mantém sem sublinhado */
+            text-decoration: block; /* Mantém sem sublinhado */
         }
     </style>
 </head>
@@ -83,7 +83,7 @@
             if ((hours === brtStartHour && minutes >= 30) || (hours === brtEndHour && minutes <= 30)) {
                 document.querySelector('footer').style.display = 'block'; // Exibe o rodapé
             } else {
-                document.querySelector('footer').style.display = 'none'; // Oculta o rodapé
+                document.querySelector('footer').style.display = 'block'; // Oculta o rodapé
             }
         }
         

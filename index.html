@@ -70,28 +70,29 @@
     </footer>
     
     <script>
-        function checkTime() {
-            var now = new Date(); // Obtém a data e hora atuais
-            var hours = now.getUTCHours(); // Obtém a hora UTC atual
-            var minutes = now.getUTCMinutes(); // Obtém os minutos atuais em UTC
-            
-            // Converte o horário BRT para UTC (BRT é UTC-3)
-            var brtStartHour = 23 + 3;
-            var brtEndHour = 0 + 3;
+    function checkTime() {
+        var now = new Date(); // Obtém a data e hora atuais
+        var hours = now.getUTCHours(); // Obtém a hora UTC atual
+        var minutes = now.getUTCMinutes(); // Obtém os minutos atuais em UTC
 
-            // Verifica se o horário está dentro do intervalo desejado
-            if ((hours === brtStartHour && minutes >= 30) || (hours === brtEndHour && minutes <= 30)) {
-                document.querySelector('footer').style.display = 'block'; // Exibe o rodapé
-            } else {
-                document.querySelector('footer').style.display = 'block'; // Oculta o rodapé
-            }
+        // Definir as horas de início e fim em UTC para o intervalo desejado
+        var brtStartHour = 23; // 23:00 BRT é 02:00 UTC do dia seguinte
+        var brtEndHour = 0; // 00:00 BRT é 03:00 UTC
+
+        // Verifica se o horário está dentro do intervalo desejado
+        if ((hours === (brtStartHour + 3) % 24 && minutes >= 30) || 
+            (hours === (brtEndHour + 3) % 24 && minutes <= 30)) {
+            document.querySelector('footer').style.display = 'block'; // Exibe o rodapé
+        } else {
+            document.querySelector('footer').style.display = 'none'; // Oculta o rodapé
         }
-        
-        // Verifica o horário ao carregar a página
-        checkTime();
-        
-        // Verifica o horário a cada minuto
-        setInterval(checkTime, 60000);
-    </script>
+    }
+    
+    // Verifica o horário ao carregar a página
+    checkTime();
+    
+    // Verifica o horário a cada minuto
+    setInterval(checkTime, 60000);
+</script>
 </body>
 </html>

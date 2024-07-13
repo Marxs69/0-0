@@ -33,18 +33,18 @@
             padding: 19px; /* Espaçamento interno reduzido */
         }
         footer { /* Estilo do rodapé */
-            color: gray; /* Cor do texto do rodapé */
-            text-align: center; /* Alinhamento do texto */
+            color: red; /* Cor do texto do rodapé */
+            text-align: left; /* Alinhamento do texto */
             font-size: 8px; /* Tamanho da fonte */
             margin-top: 200px; /* Margem superior */
             display: show; /* Inicialmente oculto */
         }
         footer a:link, footer a:visited { /* Estilo dos links no rodapé */
-            color: gray; /* Cor do texto dos links */
+            color: red; /* Cor do texto dos links */
             text-decoration: none; /* Remove sublinhado */
         }
         footer a:hover, footer a:active { /* Estilo dos links no rodapé ao passar o mouse e ao clicar */
-            color: gray; /* Mantém a cor do texto */
+            color: red; /* Mantém a cor do texto */
             text-decoration: block; /* Mantém sem sublinhado */
         }
     </style>
@@ -71,7 +71,7 @@
     </div>
     
     <footer>
-        <p><a href="https://youtu.be/IqPn52KCbBU?si=d3BkYwPfgaoYepFX&t=10" target="_blank">OLEO DE MACACO</a></p> <!-- Link no rodapé -->
+        <p><a href="https://youtu.be/MJdz3i44dIc?si=hSNMEb9NrdP6FPFt&t=5" target="_blank">Soyuz nerushimy respublik svobodnykh</a></p> <!-- Link no rodapé -->
     </footer>
     
     <script>
@@ -82,11 +82,11 @@
 
         // Definir as horas de início e fim em UTC para o intervalo desejado
         var brtStartHour = 23; // 23:00 BRT é 02:00 UTC do dia seguinte
-        var brtEndHour = 0; // 00:00 BRT é 03:00 UTC
+        var brtEndHour = 1; // 01:00 BRT é 04:00 UTC
 
         // Verifica se o horário está dentro do intervalo desejado
-        if ((hours === (brtStartHour + 3) % 24 && minutes >= 30) || 
-            (hours === (brtEndHour + 3) % 24 && minutes <= 30)) {
+        if ((hours === (brtStartHour + 3) % 24 && minutes >= 0) || 
+            (hours === (brtEndHour + 3) % 24 && minutes <= 0)) {
             document.querySelector('footer').style.display = 'block'; // Exibe o rodapé
         } else {
             document.querySelector('footer').style.display = 'none'; // Oculta o rodapé

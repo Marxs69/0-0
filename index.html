@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade -->
@@ -37,7 +37,7 @@
             text-align: center; /* Alinhamento do texto */
             font-size: 8px; /* Tamanho da fonte */
             margin-top: 200px; /* Margem superior */
-            display: show; /* Inicialmente oculto */
+            display: none; /* Inicialmente oculto */
         }
         footer a:link, footer a:visited { /* Estilo dos links no rodapé */
             color: green; /* Cor do texto dos links */
@@ -76,20 +76,14 @@
     
     <script>
     function checkTime() {
-        var now = new Date(); // Obtém a data e hora atuais
-        var hours = now.getUTCHours(); // Obtém a hora UTC atual
-        var minutes = now.getUTCMinutes(); // Obtém os minutos atuais em UTC
+        var now = new Date();
+        var hours = now.getUTCHours();
 
-        // Definir as horas de início e fim em UTC para o intervalo desejado
-        var brtStartHour = 23; // 23:00 BRT é 02:00 UTC do dia seguinte
-        var brtEndHour = 1; // 01:00 BRT é 04:00 UTC
-
-        // Verifica se o horário está dentro do intervalo desejado
-        if ((hours === (brtStartHour + 3) % 24 && minutes >= 0) || 
-            (hours === (brtEndHour + 3) % 24 && minutes <= 0)) {
-            document.querySelector('footer').style.display = 'block'; // Exibe o rodapé
+        // Verifica se a hora UTC está entre 02:00 e 04:00
+        if (hours >= 2 && hours < 4) {
+            document.querySelector('footer').style.display = 'block';
         } else {
-            document.querySelector('footer').style.display = 'none'; // Oculta o rodapé
+            document.querySelector('footer').style.display = 'none';
         }
     }
     
@@ -97,7 +91,7 @@
     checkTime();
     
     // Verifica o horário a cada minuto
-    setInterval(checkTime, 120);
-</script>
+    setInterval(checkTime, 60000); // 60000ms = 1 minuto
+    </script>
 </body>
 </html>

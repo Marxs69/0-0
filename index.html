@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
-    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade -->
-    <title>🏴‍☠️PIRATINHA🏴‍☠️</title> <!-- Título da página -->
-    <link rel="icon" type="image/x-icon" href="/Images/favicon.ico"> <!-- Adiciona o favicon -->
-    <style>
+ <style>
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200..900&display=swap');
         body {
             background-color: black; /* Cor de fundo */
             text-align: center; /* Alinhamento do texto */
-            font-family: "Lucida Console", "Courier New", monospace; /* Família da fonte */
+            font-family: "Karla", "Lucida Console", "Courier New", "monospace"; /* Família da fonte */
         }
         h1 {
             color: #d9d9d9; /* Cor do título */
+            text-align: center; /* Alinhamento do texto */
             text-shadow: 2px 2px 4px #404040; /* Sombra do título */
+            font-family: "Source Code Pro", "Lucida Console", "Courier New", "monospace"; /* Família da fonte */
         }
-        .link a:link, .link a:visited { /* Estilo dos links visitados e não visitados */
+        div.link1{
+            position: absolute;
+            padding: 5px;
+        }
+        .link1 a:link, .link1 a:visited { /* Estilo dos links visitados e não visitados */
             background-color: #0d0d0d; /* Cor de fundo dos links */
             color: #d9d9d9; /* Cor do texto dos links */
             padding: 20px 20px; /* Espaçamento interno dos links */
@@ -24,11 +27,32 @@
             text-decoration: none; /* Remove sublinhado */
             display: inline-block; /* Exibe como bloco inline */
         }
-        .link a:hover, .link a:active { /* Estilo dos links ao passar o mouse e ao clicar */
-            color: red; /* Cor do texto ao passar o mouse */
+        .link1 a:hover, .link1 a:active { /* Estilo dos links ao passar o mouse e ao clicar */
+            color: #0066CC; /* Cor do texto ao passar o mouse */
             background-color: transparent; /* Cor de fundo ao passar o mouse */
             text-decoration: underline; /* Sublinhado ao passar o mouse */
-            border: 2px solid red; /* Borda vermelha ao passar o mouse */
+            border: 2px solid #003568; /* Borda ao passar o mouse */
+            border-radius: 20px; /* Bordas arredondadas */
+            padding: 19px; /* Espaçamento interno reduzido */
+        }
+        div.link2{
+            position: absolute;
+            left: 650px;
+        }
+        .link2 a:link, .link2 a:visited { /* Estilo dos links visitados e não visitados */
+            background-color: #0d0d0d; /* Cor de fundo dos links */
+            color: #d9d9d9; /* Cor do texto dos links */
+            padding: 20px 20px; /* Espaçamento interno dos links */
+            border-radius: 20px; /* Bordas arredondadas */
+            text-align: center; /* Alinhamento do texto dos links */
+            text-decoration: none; /* Remove sublinhado */
+            display: inline-block; /* Exibe como bloco inline */
+        }
+        .link2 a:hover, .link2 a:active { /* Estilo dos links ao passar o mouse e ao clicar */
+            color: #0066CC; /* Cor do texto ao passar o mouse */
+            background-color: transparent; /* Cor de fundo ao passar o mouse */
+            text-decoration: underline; /* Sublinhado ao passar o mouse */
+            border: 2px solid #003568; /* Borda ao passar o mouse */
             border-radius: 20px; /* Bordas arredondadas */
             padding: 19px; /* Espaçamento interno reduzido */
         }
@@ -36,62 +60,44 @@
             color: pink; /* Cor do texto do rodapé */
             text-align: right; /* Alinhamento do texto */
             font-size: 8px; /* Tamanho da fonte */
-            margin-top: 200px; /* Margem superior */
-            display: none; /* Inicialmente oculto */
+            margin-top: 831px; /* Margem superior */
         }
         footer a:link, footer a:visited { /* Estilo dos links no rodapé */
-            color: pink; /* Cor do texto dos links */
+            color: #151515; /* Cor do texto dos links */
             text-decoration: none; /* Remove sublinhado */
         }
         footer a:hover, footer a:active { /* Estilo dos links no rodapé ao passar o mouse e ao clicar */
-            color: pink; /* Mantém a cor do texto */
+            color: purple; /* Mantém a cor do texto */
             text-decoration: block; /* Mantém sem sublinhado */
         }
     </style>
+<head>
+    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade -->
+    <title>🏴‍☠️PIRATINHA🏴‍☠️</title> <!-- Título da página -->
+    <link rel="icon" type="image/x-icon" href="/Images/favicon.ico"> <!-- Adiciona o favicon -->
 </head>
 <body>
     <h1>🏴‍☠️PIRATINHA🏴‍☠️</h1> <!-- Cabeçalho da página -->
-    <div class="link">
-        <!-- Lista de links -->
-        <p><a href="https://twitter.com/Ecologica_Verde" target="_blank">Ecológica Verde (Xwitter)</a></p>
+    <div class="link1"> <!-- Lista de links -->
         <p><a href="https://cs.rin.ru/forum/index.php" target="_blank">CS.RIN.RU</a></p>
         <p><a href="https://fitgirl-repacks.site/" target="_blank">FitGirl Repacks</a></p>
         <p><a href="https://dodi-repacks.site/" target="_blank">DODI REPACKS</a></p>
         <p><a href="https://gog-games.to/" target="_blank">GOG GAMES</a></p>
+        <p><a href="https://online-fix.me/" target="_blank">ONLINE-Fix (🇷🇺)</a></p>
+        <p><a href="https://byxatab.com/" target="_blank">ByXatab (🇷🇺)</a></p>
+    </div>
+    <div class="link2">
+        <p><a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow Reloaded</a></p>
         <p><a href="https://kaoskrew.org/" target="_blank">KAOSKREW</a></p>
         <p><a href="https://gload.to/" target="_blank">GLOAD</a></p>
-        <p><a href="https://god0654.github.io/DigitalZone/" target="_blank">DigitalZone</a></p>
         <p><a href="https://www.myabandonware.com/" target="_blank">My Abandonware</a></p>
         <p><a href="https://oldgamesdownload.com/browse/platform/" target="_blank">OldGames Download</a></p>
-        <p><a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow & Reloaded Games</a></p>
-        <p><a href="https://byxatab.com/" target="_blank">ByXatab (RU)</a></p>
-        <p><a href="https://online-fix.me/" target="_blank">ONLINE-Fix (RU)</a></p>
-        <p><a href="https://www.old-games.ru/catalog/" target="_blank">Old-Games (RU)</a></p>
-        <p><a href="https://www.3dmgame.com/games" target="_blank">3DM Game (CN)</a></p>
+        <p><a href="https://www.old-games.ru/catalog/" target="_blank">Old-Games (🇷🇺)</a></p>
+        <p><a href="https://www.3dmgame.com/games" target="_blank">3DM Game (🇨🇳)</a></p>
     </div>
-    
     <footer>
-        <p><a href="https://www.vinhobolsonaro.com.br/" target="_blank">BOLSOVINHO</a></p>
+        <p><a href="https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria" target="_blank">AAAAAAAAAA</a></p>
     </footer>
-    
-    <script>
-    function checkTime() {
-        var now = new Date();
-        var hours = now.getUTCHours();
-
-        // Verifica se a hora UTC está entre 02:00 e 04:00
-        if (hours >= 2 && hours < 4) {
-            document.querySelector('footer').style.display = 'block';
-        } else {
-            document.querySelector('footer').style.display = 'none';
-        }
-    }
-    
-    // Verifica o horário ao carregar a página
-    checkTime();
-    
-    // Verifica o horário a cada minuto
-    setInterval(checkTime, 60000); // 60000ms = 1 minuto
-    </script>
 </body>
 </html>

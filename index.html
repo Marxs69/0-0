@@ -2,27 +2,30 @@
 <html lang="en-US">
  <style>
 @font-face {
-  font-family: Futura;
-  src: url('futura medium condensed bt.ttf');}
-@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200..900&display=swap');
+  font-family: Futura; src: url('futura medium condensed bt.ttf');} /* Nome da fonte e Localização */
         body {
             background-color: black; /* Cor de fundo */
             text-align: center; /* Alinhamento do texto */
-            font-family: "Futura", "Karla","monospace"; /* Família da fonte */
+            font-family: "Futura", "monospace"; /* Família da fonte */
+			overflow: hidden; /* Hide scrollbars */
         }
         h1 {
+			font-size: 125px;
+			margin-top: 50px;
             color: #d9d9d9; /* Cor do título */
             text-align: center; /* Alinhamento do texto */
             text-shadow: 2px 2px 4px #404040; /* Sombra do título */
-            font-family: "Source Code Pro", "Lucida Console", "Courier New", "monospace"; /* Família da fonte */
+            font-family: "Futura", "monospace"; /* Família da fonte */
         }
-        div.link1{
+		table{
+		display: inline-block;
+		margin-top: 20px;
+		}
+        div.link{
             position: relative;
-            left: -10%;
-            top: 10%;
+			font-size: 25px;
         }
-        .link1 a:link, .link1 a:visited { /* Estilo dos links visitados e não visitados */
+        .link a:link, .link a:visited { /* Estilo dos links visitados e não visitados */
             background-color: #0d0d0d; /* Cor de fundo dos links */
             color: #d9d9d9; /* Cor do texto dos links */
             padding: 20px 20px; /* Espaçamento interno dos links */
@@ -31,32 +34,10 @@
             text-decoration: none; /* Remove sublinhado */
             display: inline-block; /* Exibe como bloco inline */
         }
-        .link1 a:hover, .link1 a:active { /* Estilo dos links ao passar o mouse e ao clicar */
+        .link a:hover, .link a:active { /* Estilo dos links ao passar o mouse e ao clicar */
             color: #0066CC; /* Cor do texto ao passar o mouse */
             background-color: transparent; /* Cor de fundo ao passar o mouse */
-            text-decoration: underline; /* Sublinhado ao passar o mouse */
-            border: 2px solid #003568; /* Borda ao passar o mouse */
-            border-radius: 20px; /* Bordas arredondadas */
-            padding: 19px; /* Espaçamento interno reduzido */
-        }
-        div.link2{
-            position: absolute;
-            left: 55%;
-            top: 7%;
-        }
-        .link2 a:link, .link2 a:visited { /* Estilo dos links visitados e não visitados */
-            background-color: #0d0d0d; /* Cor de fundo dos links */
-            color: #d9d9d9; /* Cor do texto dos links */
-            padding: 20px 20px; /* Espaçamento interno dos links */
-            border-radius: 20px; /* Bordas arredondadas */
-            text-align: center; /* Alinhamento do texto dos links */
-            text-decoration: none; /* Remove sublinhado */
-            display: inline-block; /* Exibe como bloco inline */
-        }
-        .link2 a:hover, .link2 a:active { /* Estilo dos links ao passar o mouse e ao clicar */
-            color: #0066CC; /* Cor do texto ao passar o mouse */
-            background-color: transparent; /* Cor de fundo ao passar o mouse */
-            text-decoration: underline; /* Sublinhado ao passar o mouse */
+            text-decoration: none; /* Sublinhado ao passar o mouse */
             border: 2px solid #003568; /* Borda ao passar o mouse */
             border-radius: 20px; /* Bordas arredondadas */
             padding: 19px; /* Espaçamento interno reduzido */
@@ -66,8 +47,8 @@
             text-align: left; /* Alinhamento do texto */
             font-size: 8px; /* Tamanho da fonte */
              position: absolute;
-             bottom: 0;
-             right: 0;
+             bottom: 0%;
+             right: 0%;
         }
         footer a:link, footer a:visited { /* Estilo dos links no rodapé */
             color: #151515; /* Cor do texto dos links */
@@ -85,24 +66,39 @@
     <link rel="icon" type="image/x-icon" href="/Images/favicon.ico"> <!-- Adiciona o favicon -->
 </head>
 <body>
-    <h1>🏴‍☠️PIRATINHA🏴‍☠️</h1> <!-- Cabeçalho da página -->
-    <div class="link1"> <!-- Lista de links -->
-        <p><a href="https://cs.rin.ru/forum/index.php" target="_blank">CS.RIN.RU</a></p>
-        <p><a href="https://fitgirl-repacks.site/" target="_blank">FitGirl Repacks</a></p>
-        <p><a href="https://dodi-repacks.site/" target="_blank">DODI REPACKS</a></p>
-        <p><a href="https://gog-games.to/" target="_blank">GOG GAMES</a></p>
-        <p><a href="https://online-fix.me/" target="_blank">ONLINE-Fix (🇷🇺)</a></p>
-        <p><a href="https://byxatab.com/" target="_blank">ByXatab (🇷🇺)</a></p>
-    </div>
-    <div class="link2">
-        <p><a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow Reloaded</a></p>
-        <p><a href="https://kaoskrew.org/" target="_blank">KAOSKREW</a></p>
-        <p><a href="https://gload.to/" target="_blank">GLOAD</a></p>
-        <p><a href="https://www.myabandonware.com/" target="_blank">My Abandonware</a></p>
-        <p><a href="https://oldgamesdownload.com/browse/platform/" target="_blank">OldGames Download</a></p>
-        <p><a href="https://www.old-games.ru/catalog/" target="_blank">Old-Games (🇷🇺)</a></p>
-        <p><a href="https://www.3dmgame.com/games" target="_blank">3DM Game (🇨🇳)</a></p>
-    </div>
+	<h1>🏴‍☠️PIRATINHA🏴‍☠️</h1> <!-- Cabeçalho da página -->
+    <div class="link"> <!-- Lista de links -->
+	<table>
+		<tr>
+        <td><a href="https://cs.rin.ru/forum/index.php" target="_blank">CS.RIN.RU</a></td>
+		<td></td>
+        <td><a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow Reloaded</a></td>
+		</tr>
+        <td><a href="https://fitgirl-repacks.site/" target="_blank">FitGirl Repacks</a></td>
+		<td></td>
+        <td><a href="https://kaoskrew.org/" target="_blank">KAOSKREW</a></td>
+		</tr>
+        <td><a href="https://dodi-repacks.site/" target="_blank">DODI REPACKS</a></td>
+		<td></td>
+		<td><a href="https://gload.to/" target="_blank">GLOAD</a></td>
+		</tr>
+        <td><a href="https://gog-games.to/" target="_blank">GOG GAMES</a></td>
+		<td></td>
+		<td><a href="https://www.myabandonware.com/" target="_blank">My Abandonware</a></td>
+		</tr>
+        <td><a href="https://online-fix.me/" target="_blank">ONLINE-Fix (🇷🇺)</a></td>
+		<td></td>
+		<td><a href="https://oldgamesdownload.com/browse/platform/" target="_blank">OldGames Download</a></td>
+		</tr>
+        <td><a href="https://byxatab.com/" target="_blank">ByXatab (🇷🇺)</a></td>
+		<td></td>
+		<td><a href="https://www.old-games.ru/catalog/" target="_blank">Old-Games (🇷🇺)</a></td>
+		</tr>
+        <td></td>
+		<td></td>
+		<td><a href="https://www.3dmgame.com/games" target="_blank">3DM Game (🇨🇳)</a></td>
+		</table>
+	</div>
     <footer>
         <p><a href="https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria" target="_blank">AAAAAAAAAA</a></p>
     </footer>

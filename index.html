@@ -1,55 +1,111 @@
 <!DOCTYPE html>
 <html lang="en-US">
- <style>
-@font-face {
-  font-family: Futura; src: url('futura medium condensed bt.ttf');} /* Nome da fonte e Localização */
+<head>
+    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade -->
+    <title>🏴‍☠️PIRATINHA🏴‍☠️</title> <!-- Título da página -->
+    <link rel="icon" type="image/x-icon" href="./Images/favicon.ico"> <!-- Adiciona o favicon -->
+    <style>
+        @font-face {
+            font-family: "Futura";
+            src: url('futura medium condensed bt.ttf') format('truetype');
+        } /* Nome da fonte e Localização */
+
         body {
             background-color: black; /* Cor de fundo */
             text-align: center; /* Alinhamento do texto */
             font-family: "Futura", "monospace"; /* Família da fonte */
-			overflow: hidden; /* Hide scrollbars */
+            overflow: hidden; /* Hide scrollbars */
         }
+
         h1 {
-			font-size: 125px;
-			margin-top: 50px;
+            font-size: 125px;
+            margin-top: 50px;
             color: #d9d9d9; /* Cor do título */
             text-align: center; /* Alinhamento do texto */
             text-shadow: 2px 2px 4px #404040; /* Sombra do título */
             font-family: "Futura", "monospace"; /* Família da fonte */
         }
-        h2{color: white}
-		table{
-		display: inline-block;
-		margin-top: 20px;
-		}
-        div.link{
-            position: relative;
-			font-size: 25px;
+
+        h2 {
+            color: white;
+            font-family: "Futura", "monospace";
+            font-size: 20px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin: 0;
         }
-        .link a:link, .link a:visited { /* Estilo dos links visitados e não visitados */
+
+        /* Barra divisória entre "Recomendados" e "Outros" */
+        .divider {
+            display: flex;
+            align-items: center;
+            width: 60%;
+            max-width: 600px;
+            margin: 25px auto;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #404040;
+        }
+        .divider span {
+            padding: 0 15px;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #808080;
+            font-family: "Futura", "monospace";
+        }
+
+        section {
+            margin-top: 20px;
+        }
+
+        /* Container dos links: agrupa as "bolhas" lado a lado, encostadas */
+        .link {
+            position: relative;
+            font-size: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        /* Cada link tem sempre a mesma borda (transparente em repouso) e o mesmo
+           padding, então o hover não muda o tamanho da bolha nem desloca o texto.
+           A margem negativa faz as bordas se sobreporem, ficando "encostadas". */
+        .link a:link,
+        .link a:visited {
+            box-sizing: border-box;
             background-color: #0d0d0d; /* Cor de fundo dos links */
             color: #d9d9d9; /* Cor do texto dos links */
-            padding: 20px 20px; /* Espaçamento interno dos links */
+            padding: 20px; /* Espaçamento interno, igual nos 4 lados */
+            border: 2px solid transparent; /* Borda fixa, invisível em repouso */
             border-radius: 20px; /* Bordas arredondadas */
             text-align: center; /* Alinhamento do texto dos links */
             text-decoration: none; /* Remove sublinhado */
-            display: inline-block; /* Exibe como bloco inline */
+            display: inline-block;
+            margin: -1px; /* Sobrepõe as bordas para as bolhas ficarem encostadas */
         }
-        .link a:hover, .link a:active { /* Estilo dos links ao passar o mouse e ao clicar */
+
+        .link a:hover,
+        .link a:active {
             color: #0066CC; /* Cor do texto ao passar o mouse */
             background-color: transparent; /* Cor de fundo ao passar o mouse */
-            text-decoration: none; /* Sublinhado ao passar o mouse */
-            border: 2px solid #003568; /* Borda ao passar o mouse */
-            border-radius: 20px; /* Bordas arredondadas */
-            padding: 19px; /* Espaçamento interno reduzido */
+            border-color: #003568; /* Só a cor da borda muda, não o tamanho */
+            z-index: 1; /* Garante que a borda do hover fique visível por cima das vizinhas */
+            position: relative;
         }
+
         footer { /* Estilo do rodapé */
             color: #151515; /* Cor do texto do rodapé */
             text-align: left; /* Alinhamento do texto */
             font-size: 8px; /* Tamanho da fonte */
-             position: absolute;
-             bottom: 0%;
-             right: 0%;
+            position: absolute;
+            bottom: 0%;
+            right: 0%;
         }
         footer a:link, footer a:visited { /* Estilo dos links no rodapé */
             color: #151515; /* Cor do texto dos links */
@@ -60,52 +116,35 @@
             text-decoration: block; /* Mantém sem sublinhado */
         }
     </style>
-<head>
-    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade -->
-    <title>🏴‍☠️PIRATINHA🏴‍☠️</title> <!-- Título da página -->
-    <link rel="icon" type="image/x-icon" href="./Images/favicon.ico"> <!-- Adiciona o favicon -->
 </head>
 <body>
-	<h1>🏴‍☠️PIRATINHA🏴‍☠️</h1> <!-- Cabeçalho da página -->
-    <div class="link"> <!-- Lista de links -->
-	<table>
-		<tr>
-        <td><a href="https://cs.rin.ru/forum/index.php" target="_blank">CS.RIN.RU</a></td>
-		<td></td>
-        <td><a href="https://fitgirl-repacks.site/" target="_blank">FitGirl Repacks</a></td>
-        <td></td>
-        <td><a href="https://dodi-repacks.site/" target="_blank">DODI REPACKS</a></td>
-		</tr>
-        <td><a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow Reloaded</a></td>
-		<td></td>
-        <td><a href="https://byxatab.com/" target="_blank">ByXatab (🇷🇺)</a></td>
-        <td></td>
-        <td><a href="https://marxs69.github.io/0-0/" target="_blank">///</a></td>
-        </tr>
-        <td></td>
-        <td></td>
-        <td></td>
-		</tr>
-		<td><a href="https://gload.to/" target="_blank">GLOAD (🇩🇪)</a></td>
-        <td></td>
-        <td><a href="https://zeigames.com/" target="_blank">ZeiGames - Rexa</a></td>
-        <td></td>
-        <td><a href="https://oldgamesdownload.com/browse/platform/" target="_blank">OldGames Download</a></td>
-		</tr>
-        
-		<td><a href="https://www.myabandonware.com/" target="_blank">My Abandonware</a></td>
-        <td></td>
-        <td><a href="https://online-fix.me/" target="_blank">ONLINE-Fix (🇷🇺)</a></td>
-        <td></td>
-        <td><a href="https://www.old-games.ru/catalog/" target="_blank">Old-Games (🇷🇺)</a></td>
-		</tr>
+    <h1>🏴‍☠️PIRATINHA🏴‍☠️</h1> <!-- Cabeçalho da página -->
 
-        <td></td>
-		<td></td>
-		<td><a href="https://www.3dmgame.com/games" target="_blank">3DM Game (🇨🇳)</a></td>
-		</table>
-	</div>
+    <section>
+        <h2>Recomendados</h2>
+        <div class="link">
+            <a href="https://cs.rin.ru/forum/index.php" target="_blank">CS.RIN.RU</a>
+            <a href="https://fitgirl-repacks.site/" target="_blank">FitGirl Repacks</a>
+            <a href="https://dodi-repacks.site/" target="_blank">DODI REPACKS</a>
+            <a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow Reloaded</a>
+            <a href="https://byxatab.com/" target="_blank">ByXatab (🇷🇺)</a>
+        </div>
+    </section>
+
+    <div class="divider"><span>Outros</span></div>
+
+    <section>
+        <div class="link">
+            <a href="https://gload.to/" target="_blank">GLOAD (🇩🇪)</a>
+            <a href="https://zeigames.com/" target="_blank">ZeiGames - Rexa</a>
+            <a href="https://oldgamesdownload.com/browse/platform/" target="_blank">OldGames Download</a>
+            <a href="https://www.myabandonware.com/" target="_blank">My Abandonware</a>
+            <a href="https://online-fix.me/" target="_blank">ONLINE-Fix (🇷🇺)</a>
+            <a href="https://www.old-games.ru/catalog/" target="_blank">Old-Games (🇷🇺)</a>
+            <a href="https://www.3dmgame.com/games" target="_blank">3DM Game (🇨🇳)</a>
+        </div>
+    </section>
+
     <footer>
         <p><a href="https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria" target="_blank">AAAAAAAAAA</a></p>
     </footer>

@@ -107,6 +107,8 @@ button.srow:hover { background: rgba(255,255,255,.14); }
 .srow .tile img { width: 18px; height: 18px; }
 .srow .tile b { font-size: 14px; }
 .thumb { width: 56px; height: 36px; flex: none; border-radius: 8px; background: #3b4048 center / cover no-repeat; border: 1px solid var(--glass-line); }
+.srow .pick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.srow a.pill { display: inline-grid; place-items: center; width: 32px; padding: 0; text-decoration: none; }
 .empty { margin: 18px 4px; font-size: 14px; color: var(--text-dim); line-height: 1.4; }
 
 /* taskbar */
@@ -171,11 +173,8 @@ button.srow:hover { background: rgba(255,255,255,.14); }
 #old footer { color: #151515; font-size: 8px; position: absolute; bottom: 0; right: 0; }
 #old footer a:link, #old footer a:visited { color: #151515; text-decoration: none; }
 #old footer a:hover, #old footer a:active { color: purple; }
-.switch { flex: none; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px 0 8px; border: 1px solid #2a2a2a; border-radius: 999px; background: #0d0d0d; color: #d9d9d9; font: inherit; font-size: 13px; cursor: pointer; }
-.switch:hover { background: #1a1a1a; }
-.switch .track { position: relative; width: 36px; height: 20px; border-radius: 999px; background: #5b6068; }
-.switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
-#oldswitch { position: fixed; left: 14px; bottom: 14px; z-index: 5; }
+#oldswitch { position: fixed; left: 14px; bottom: 14px; z-index: 5; height: 34px; padding: 0 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 11px; background: rgba(255,255,255,.08); color: #f0f2f4; font: inherit; font-size: 13px; cursor: pointer; }
+#oldswitch:hover { background: rgba(255,255,255,.18); }
 
 @media (max-width: 640px) { #clock { display: none; } .win { min-width: 0; } }
 @media (prefers-reduced-motion: reduce) { #start.open { animation: none; } .icon { transition: none; } }
@@ -213,9 +212,7 @@ button.srow:hover { background: rgba(255,255,255,.14); }
     <div class="link" id="old-out"></div>
   </section>
   <footer><p><a href="https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria" target="_blank">AAAAAAAAAA</a></p></footer>
-  <button class="switch" id="oldswitch" data-switch title="Voltar ao modo OS" role="switch" aria-checked="false">
-    <span class="track"></span><span>Modo OS</span>
-  </button>
+  <button id="oldswitch" data-switch title="Voltar ao modo OS">Modo OS</button>
 </div>
 
 <script>
@@ -234,11 +231,7 @@ const LINKS = [
   { n: '3DM Game (🇨🇳)',      u: 'https://www.3dmgame.com/games',                  g: 'out' },
 ];
 const FOOTER_URL = 'https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria';
-const WALLS = [                                  // adicione novos planos de fundo aqui
-  { n: 'Azul celeste (padrão)', c: '#87ceeb' },
-  { n: 'dummy1.jpg', img: './Images/dummy1.jpg' },
-  { n: 'dummy2.jpg', img: './Images/dummy2.jpg' },
-];
+
 
 const $ = (s, r = document) => r.querySelector(s);
 const os = $('#os'), desk = $('#desktop'), startEl = $('#start'), startBtn = $('#startbtn');
@@ -265,8 +258,9 @@ function createWindow(o) {
   const vw = innerWidth, vh = innerHeight - 90;
   const W = Math.min(o.w, vw - 20), H = Math.min(o.h, vh - 20);
   const el = document.createElement('div'); el.className = 'win';
-  el.style.cssText = `width:${W}px;height:${H}px;left:${Math.max(10, Math.min(120 + offset, vw - W - 10))}px;top:${Math.max(10, Math.min(30 + offset, vh - H))}px`;
-  offset = (offset + 32) % 160;
+  const o2 = offset - 48;                          // pequeno deslocamento para janelas não ficarem exatamente empilhadas
+  el.style.cssText = `width:${W}px;height:${H}px;left:${Math.max(10, Math.min(Math.round((vw - W) / 2 + o2), vw - W - 10))}px;top:${Math.max(10, Math.round((vh - H) / 2 + o2))}px`;
+  offset = (offset + 24) % 120;
   el.innerHTML = `<div class="bar"><span class="title"></span>${o.ext ? '<a class="wbtn ext" target="_blank" rel="noopener" title="Abrir em nova aba">↗</a>' : ''}
     <button class="wbtn mn" title="Minimizar">–</button><button class="wbtn mx" title="Maximizar">▢</button><button class="wbtn close" title="Fechar">✕</button></div>
     <div class="view${o.sys ? ' sys' : ''}"></div>${o.hint || ''}`;
@@ -445,28 +439,106 @@ function openTrash() {
 }
 
 /* ---------- plano de fundo ---------- */
-let wallIdx = Math.min(store.get('piratinha-wall', 0), WALLS.length - 1);
+const WALL_DIR = './Images/Wallpaper/';
+const WALLPAPER_FILES = [];     // opcional: nomes de arquivos, caso o servidor não liste a pasta (ex.: 'praia.webp')
+// GitHub Pages: a pasta é lida pela API do GitHub. Deixe vazio para detectar sozinho (usuario.github.io/repo);
+// preencha só se usar domínio próprio ou se o site estiver numa subpasta (ex.: docs).
+const GH = { owner: '', repo: '', path: 'Images/Wallpaper' };
+const IMG_RE = /\.(png|jpe?g|webp|gif|avif|bmp|svg)$/i;
+const COLORS = [
+  { n: 'Azul celeste',   c: '#87ceeb' },
+  { n: 'Vinho',          c: '#6B0F11' },
+  { n: 'Meia-noite',     c: '#0B0E19' },
+  { n: 'Roxo noturno',   c: '#1E0B36' },
+  { n: 'Verde petróleo', c: '#0E2B2E' },
+  { n: 'Marrom café',    c: '#33200F' },
+];
+let IMAGES = [], current = COLORS[0];
+let picked = store.get('piratinha-wall', null);          // nome escolhido manualmente (senão, sorteio a cada visita)
+if (typeof picked !== 'string') picked = null;
+const imgUrl = n => WALL_DIR + encodeURIComponent(n);
 function applyWall() {
-  const w = WALLS[wallIdx];
-  os.style.backgroundColor = w.c || 'var(--wallpaper)';
-  os.style.backgroundImage = w.img ? `url("${w.img}")` : 'none';
+  os.style.backgroundColor = current.c || 'var(--wallpaper)';
+  os.style.backgroundImage = current.img ? `url("${current.img}")` : 'none';
+  const w = wins.get('sys:wall'); if (w && w.render) w.render();
+}
+async function loadWallpapers() {
+  const names = new Set(WALLPAPER_FILES);
+  const get = async u => { try { const r = await fetch(u, { cache: 'no-cache' }); return r.ok ? await r.text() : ''; } catch (e) { return ''; } };
+  const [json, html] = await Promise.all([get(WALL_DIR + 'wallpapers.json'), get(WALL_DIR)]);
+  try { JSON.parse(json).forEach(n => names.add(String(n))); } catch (e) {}
+  try {
+    new DOMParser().parseFromString(html, 'text/html').querySelectorAll('a[href]').forEach(a => {
+      let f = a.getAttribute('href').split(/[?#]/)[0].split('/').pop();
+      try { f = decodeURIComponent(f); } catch (e) {}
+      if (IMG_RE.test(f)) names.add(f);
+    });
+  } catch (e) {}
+  if (!names.size) {                                     // GitHub Pages: lista a pasta via API do GitHub (com cache de 10 min)
+    let { owner, repo } = GH;
+    if (!owner && /\.github\.io$/.test(location.hostname)) {
+      owner = location.hostname.split('.')[0];
+      repo = repo || location.pathname.split('/')[1] || location.hostname;
+    }
+    if (owner && repo) {
+      const cache = store.get('piratinha-wall-cache', null);
+      let list = cache && Date.now() - cache.t < 600000 ? cache.names : null;
+      if (!list) {
+        try {
+          const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${GH.path}`);
+          if (r.ok) { list = (await r.json()).filter(f => f.type === 'file').map(f => f.name); store.set('piratinha-wall-cache', { t: Date.now(), names: list }); }
+        } catch (e) {}
+        if (!list && cache) list = cache.names;
+      }
+      (list || []).forEach(n => names.add(n));
+    }
+  }
+  if (!names.size) {                                     // último recurso (funciona até em file://): imagens numeradas 1.jpg ... 30.webp
+    const tests = [];
+    for (let i = 1; i <= 30; i++) ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].forEach(x => {
+      const n = i + '.' + x;
+      tests.push(new Promise(res => { const im = new Image(); im.onload = () => { names.add(n); res(); }; im.onerror = res; im.src = imgUrl(n); }));
+    });
+    await Promise.all(tests);
+  }
+  IMAGES = [...names].filter(n => IMG_RE.test(n)).sort().map(n => ({ n, img: imgUrl(n) }));
+  const keep = picked && [...IMAGES, ...COLORS].find(w => w.n === picked);
+  current = keep || (IMAGES.length ? IMAGES[Math.floor(Math.random() * IMAGES.length)] : COLORS[0]);
+  applyWall();
+}
+function initWall() {
+  const c = picked && COLORS.find(w => w.n === picked);
+  if (c) current = c; else if (picked) current = { n: picked, img: imgUrl(picked) };   // evita "piscar" enquanto a lista carrega
+  applyWall(); loadWallpapers();
 }
 function openWall() {
   createWindow({
-    id: 'sys:wall', title: 'Plano de fundo', mk: etile('🖼️'), w: 420, h: 360, sys: true,
+    id: 'sys:wall', title: 'Plano de fundo', mk: etile('🖼️'), w: 460, h: 460, sys: true,
     body: (v, w) => {
+      const rowFor = wl => {
+        const r = document.createElement('div'); r.className = 'srow' + (wl.n === current.n ? ' on' : '');
+        const pick = document.createElement('button'); pick.className = 'pick';
+        const th = document.createElement('div'); th.className = 'thumb';
+        if (wl.c) th.style.background = wl.c; else th.style.backgroundImage = `url("${wl.img}")`;
+        const nm = document.createElement('span'); nm.className = 'grow'; nm.textContent = wl.n;
+        const ck = document.createElement('span'); ck.textContent = wl.n === current.n ? '✓' : '';
+        pick.append(th, nm, ck);
+        pick.onclick = () => { current = wl; picked = wl.n; store.set('piratinha-wall', picked); applyWall(); };
+        r.append(pick);
+        if (wl.img) {
+          const d = document.createElement('a'); d.className = 'pill'; d.href = wl.img; d.download = wl.n; d.textContent = '⬇'; d.title = 'Baixar imagem';
+          r.append(d);
+        }
+        return r;
+      };
+      const head = t => { const h = document.createElement('div'); h.className = 'sysbar'; h.textContent = t; return h; };
       w.render = () => {
         v.innerHTML = '';
-        WALLS.forEach((wl, i) => {
-          const b = document.createElement('button'); b.className = 'srow' + (i === wallIdx ? ' on' : '');
-          const th = document.createElement('div'); th.className = 'thumb';
-          if (wl.c) th.style.background = wl.c; else th.style.backgroundImage = `url("${wl.img}")`;
-          const nm = document.createElement('span'); nm.className = 'grow'; nm.textContent = wl.n;
-          const ck = document.createElement('span'); ck.textContent = i === wallIdx ? '✓' : '';
-          b.append(th, nm, ck);
-          b.onclick = () => { wallIdx = i; store.set('piratinha-wall', i); applyWall(); w.render(); };
-          v.append(b);
-        });
+        v.append(head('Imagens'));
+        if (!IMAGES.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = location.protocol === 'file:' ? 'Página aberta direto do arquivo (file://): o navegador não permite listar a pasta. Abra por um servidor local (ex.: python3 -m http.server), ou crie Images/Wallpaper/wallpapers.json, ou use WALLPAPER_FILES. Imagens numeradas (1.jpg, 2.png…) são detectadas sozinhas.' : 'Nenhuma imagem encontrada em Images/Wallpaper. O servidor não lista a pasta: crie Images/Wallpaper/wallpapers.json com os nomes, ou use WALLPAPER_FILES.'; v.append(p); }
+        IMAGES.forEach(wl => v.append(rowFor(wl)));
+        const h2 = head('Cores sólidas'); h2.style.marginTop = '14px'; v.append(h2);
+        COLORS.forEach(wl => v.append(rowFor(wl)));
       };
       w.render();
     },
@@ -524,7 +596,7 @@ function tick() {
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 
 /* ---------- init ---------- */
-applyWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();
+initWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();
 </script>
 </body>
 </html>

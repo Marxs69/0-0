@@ -1,152 +1,530 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade -->
-    <title>🏴‍☠️PIRATINHA🏴‍☠️</title> <!-- Título da página -->
-    <link rel="icon" type="image/x-icon" href="./Images/favicon.ico"> <!-- Adiciona o favicon -->
-    <style>
-        @font-face {
-            font-family: "Futura";
-            src: url('futura medium condensed bt.ttf') format('truetype');
-        } /* Nome da fonte e Localização */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏴‍☠️PIRATINHA🏴‍☠️</title>
+<link rel="icon" type="image/x-icon" href="./Images/favicon.ico">
+<style>
+@font-face { font-family: "Futura"; src: url('futura medium condensed bt.ttf') format('truetype'); }
 
-        body {
-            background-color: black; /* Cor de fundo */
-            text-align: center; /* Alinhamento do texto */
-            font-family: "Futura", "monospace"; /* Família da fonte */
-            overflow: hidden; /* Hide scrollbars */
-        }
+:root {
+  --wallpaper: #87ceeb;                 /* azul celeste — cor de fundo padrão */
+  --glass: rgba(34, 36, 40, .58);
+  --glass-strong: rgba(28, 30, 34, .8);
+  --glass-line: rgba(255, 255, 255, .14);
+  --text: #f0f2f4;
+  --text-dim: #aeb4bb;
+  --accent: #4aa8ff;
+  --radius: 18px;
+  --taskbar-h: 58px;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; background: var(--wallpaper); }
 
-        h1 {
-            font-size: 125px;
-            margin-top: 50px;
-            color: #d9d9d9; /* Cor do título */
-            text-align: center; /* Alinhamento do texto */
-            text-shadow: 2px 2px 4px #404040; /* Sombra do título */
-            font-family: "Futura", "monospace"; /* Família da fonte */
-        }
+[data-mode="old"] #os { display: none; }
+[data-mode="os"] #old { display: none; }
 
-        h2 {
-            color: white;
-            font-family: "Futura", "monospace";
-            font-size: 20px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin: 0;
-        }
+/* ============ MODO OS ============ */
+#os {
+  position: fixed; inset: 0; color: var(--text); user-select: none; -webkit-user-select: none;
+  background: var(--wallpaper) center / cover no-repeat;
+}
+#os.dragging iframe { pointer-events: none; }
 
-        /* Barra divisória entre "Recomendados" e "Outros" */
-        .divider {
-            display: flex;
-            align-items: center;
-            width: 60%;
-            max-width: 600px;
-            margin: 25px auto;
-        }
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background-color: #404040;
-        }
-        .divider span {
-            padding: 0 15px;
-            font-size: 12px;
-            letter-spacing: 3px;
-            color: #808080;
-            font-family: "Futura", "monospace";
-        }
+/* nome do site sobre o wallpaper: via ::before, então não é selecionável nem copiável */
+#mark {
+  position: absolute; inset: 0 0 calc(var(--taskbar-h) + 20px) 0; z-index: 0;
+  display: grid; place-items: center; pointer-events: none; user-select: none; -webkit-user-select: none;
+}
+#mark::before {
+  content: attr(data-text); font-size: clamp(56px, 13vw, 170px); letter-spacing: .04em;
+  color: rgba(255, 255, 255, .5); text-shadow: 0 2px 28px rgba(0, 60, 110, .25);
+}
 
-        section {
-            margin-top: 20px;
-        }
+#desktop { position: absolute; inset: 0 0 calc(var(--taskbar-h) + 20px) 0; z-index: 1; }
+.icon {
+  position: absolute; width: 96px; height: 100px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 8px 4px; border-radius: 14px; border: 1px solid transparent; background: none;
+  color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); font: inherit; font-size: 13px; line-height: 1.15;
+  cursor: default; text-align: center; touch-action: none; transition: left .12s, top .12s;
+}
+.icon:hover { background: rgba(255,255,255,.22); }
+.icon:focus-visible, .icon.sel { outline: none; background: rgba(255,255,255,.32); border-color: rgba(255,255,255,.7); }
+.icon.drag { transition: none; z-index: 99990; opacity: .92; cursor: grabbing; }
+.icon.hot { background: rgba(255,255,255,.5); border-color: #fff; }
+.icon span { overflow-wrap: anywhere; pointer-events: none; }
+.icon .tile { pointer-events: none; }
+.tile {
+  width: 46px; height: 46px; flex: none; border-radius: 13px; display: grid; place-items: center;
+  background: var(--glass); border: 1px solid var(--glass-line);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.18); overflow: hidden;
+}
+.tile img { width: 26px; height: 26px; }
+.tile b { color: var(--text); font-size: 20px; text-shadow: none; }
+.tile i { font-style: normal; font-size: 24px; text-shadow: none; }
+.badge { position: absolute; top: 2px; right: 18px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: #fff; font-size: 11px; display: grid; place-items: center; text-shadow: none; }
+.badge:empty { display: none; }
 
-        /* Container dos links: agrupa as "bolhas" lado a lado, encostadas */
-        .link {
-            position: relative;
-            font-size: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 15px;
-        }
+/* janelas */
+.win {
+  position: absolute; display: flex; flex-direction: column; min-width: 320px; min-height: 220px;
+  background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: var(--radius);
+  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: 0 18px 50px rgba(0,0,0,.35); resize: both; overflow: hidden;
+}
+.win.min { display: none; }
+.win.max { inset: 10px 10px calc(var(--taskbar-h) + 20px) 10px !important; width: auto !important; height: auto !important; resize: none; }
+.win:not(.active) { box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.win:not(.active) .bar { opacity: .7; }
+.bar { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 10px 0 12px; flex: none; touch-action: none; cursor: default; border-bottom: 1px solid var(--glass-line); }
+.bar .tile { width: 24px; height: 24px; border-radius: 7px; box-shadow: none; }
+.bar .tile img { width: 15px; height: 15px; }
+.bar .tile b { font-size: 12px; }
+.bar .tile i { font-size: 14px; }
+.bar .title { flex: 1; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wbtn { width: 30px; height: 30px; border: 0; border-radius: 9px; background: transparent; color: var(--text); font: inherit; font-size: 15px; display: grid; place-items: center; cursor: pointer; text-decoration: none; }
+.wbtn:hover { background: rgba(255,255,255,.14); }
+.wbtn.close:hover { background: #e5484d; }
+.view { flex: 1; min-height: 0; background: #fff; margin: 0 6px; border-radius: 10px; overflow: hidden; }
+.view iframe { width: 100%; height: 100%; border: 0; display: block; }
+.view.sys { background: transparent; overflow: auto; margin: 0; padding: 10px 12px 12px; }
+.hint { flex: none; padding: 7px 12px 8px; font-size: 12px; color: var(--text-dim); }
+.hint a { color: var(--accent); }
 
-        /* Cada link tem sempre a mesma borda (transparente em repouso) e o mesmo
-           padding, então o hover não muda o tamanho da bolha nem desloca o texto.
-           A margem negativa faz as bordas se sobreporem, ficando "encostadas". */
-        .link a:link,
-        .link a:visited {
-            box-sizing: border-box;
-            background-color: #0d0d0d; /* Cor de fundo dos links */
-            color: #d9d9d9; /* Cor do texto dos links */
-            padding: 20px; /* Espaçamento interno, igual nos 4 lados */
-            border: 2px solid transparent; /* Borda fixa, invisível em repouso */
-            border-radius: 20px; /* Bordas arredondadas */
-            text-align: center; /* Alinhamento do texto dos links */
-            text-decoration: none; /* Remove sublinhado */
-            display: inline-block;
-            margin: -1px; /* Sobrepõe as bordas para as bolhas ficarem encostadas */
-        }
+/* listas dentro de janelas de sistema (lixeira, plano de fundo) */
+.sysbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; color: var(--text-dim); }
+.pill { height: 32px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.pill:hover { background: rgba(255,255,255,.18); }
+.srow { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; margin-bottom: 4px; border: 1px solid transparent; border-radius: 12px; background: rgba(255,255,255,.05); color: var(--text); font: inherit; font-size: 14px; text-align: left; }
+.srow .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+button.srow { cursor: pointer; }
+button.srow:hover { background: rgba(255,255,255,.14); }
+.srow.on { border-color: var(--accent); }
+.srow .tile { width: 30px; height: 30px; border-radius: 9px; box-shadow: none; }
+.srow .tile img { width: 18px; height: 18px; }
+.srow .tile b { font-size: 14px; }
+.thumb { width: 56px; height: 36px; flex: none; border-radius: 8px; background: #3b4048 center / cover no-repeat; border: 1px solid var(--glass-line); }
+.empty { margin: 18px 4px; font-size: 14px; color: var(--text-dim); line-height: 1.4; }
 
-        .link a:hover,
-        .link a:active {
-            color: #0066CC; /* Cor do texto ao passar o mouse */
-            background-color: transparent; /* Cor de fundo ao passar o mouse */
-            border-color: #003568; /* Só a cor da borda muda, não o tamanho */
-            z-index: 1; /* Garante que a borda do hover fique visível por cima das vizinhas */
-            position: relative;
-        }
+/* taskbar */
+#taskbar {
+  position: absolute; left: 10px; right: 10px; bottom: 10px; height: var(--taskbar-h); z-index: 99999;
+  display: flex; align-items: center; gap: 8px; padding: 0 10px;
+  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
+  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: 0 10px 30px rgba(0,0,0,.28);
+}
+#tasks { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.task { position: relative; flex: none; max-width: 170px; height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border: 1px solid transparent; border-radius: 12px; background: rgba(255,255,255,.06); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.task:hover { background: rgba(255,255,255,.14); }
+.task.active { background: rgba(255,255,255,.18); border-color: var(--glass-line); }
+.task.active::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 14px; height: 3px; margin-left: -7px; border-radius: 3px; background: var(--accent); }
+.task .tile { width: 24px; height: 24px; border-radius: 7px; box-shadow: none; }
+.task .tile img { width: 15px; height: 15px; }
+.task .tile b { font-size: 12px; }
+.task .tile i { font-size: 14px; }
+.task span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#startbtn { width: 42px; height: 42px; flex: none; border: 0; border-radius: 13px; background: rgba(255,255,255,.1); font-size: 22px; cursor: pointer; }
+#startbtn:hover, #startbtn[aria-expanded="true"] { background: rgba(255,255,255,.22); }
+#clock { flex: none; padding: 0 6px; font-size: 14px; text-align: right; line-height: 1.1; color: var(--text); }
+#clock small { display: block; font-size: 11px; color: var(--text-dim); }
 
-        footer { /* Estilo do rodapé */
-            color: #151515; /* Cor do texto do rodapé */
-            text-align: left; /* Alinhamento do texto */
-            font-size: 8px; /* Tamanho da fonte */
-            position: absolute;
-            bottom: 0%;
-            right: 0%;
-        }
-        footer a:link, footer a:visited { /* Estilo dos links no rodapé */
-            color: #151515; /* Cor do texto dos links */
-            text-decoration: none; /* Remove sublinhado */
-        }
-        footer a:hover, footer a:active { /* Estilo dos links no rodapé ao passar o mouse e ao clicar */
-            color: purple; /* Mantém a cor do texto */
-            text-decoration: block; /* Mantém sem sublinhado */
-        }
-    </style>
+/* start menu */
+#start {
+  position: absolute; left: 10px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99998;
+  width: min(340px, calc(100vw - 20px)); max-height: min(520px, calc(100vh - 100px));
+  display: none; flex-direction: column; gap: 12px; padding: 14px;
+  background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 22px;
+  backdrop-filter: blur(26px) saturate(1.4); -webkit-backdrop-filter: blur(26px) saturate(1.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+#start.open { display: flex; animation: pop .14s ease-out; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+.starthead { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.starthead b { font-size: 18px; font-weight: normal; letter-spacing: .06em; }
+.starthead button { height: 34px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 11px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.starthead button:hover { background: rgba(255,255,255,.18); }
+#search { width: 100%; height: 40px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: none; user-select: text; -webkit-user-select: text; }
+#search:focus { border-color: var(--accent); }
+#search::placeholder { color: var(--text-dim); }
+#apps { overflow-y: auto; display: flex; flex-direction: column; gap: 2px; padding-right: 2px; }
+#apps h3 { margin: 10px 0 4px 6px; font-size: 12px; font-weight: normal; color: var(--text-dim); }
+#apps h3:first-child { margin-top: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; width: 100%; padding: 9px 12px; border: 0; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.row:hover, .row:focus-visible { background: rgba(255,255,255,.14); outline: none; }
+.row .h { flex: none; font-size: 11px; color: var(--text-dim); }
+
+/* ============ MODO ANTIGO (estilos originais) ============ */
+#old { position: fixed; inset: 0; background: black; text-align: center; overflow: auto; font-family: "Futura", "monospace"; }
+#old h1 { font-size: 125px; margin-top: 50px; color: #d9d9d9; text-align: center; text-shadow: 2px 2px 4px #404040; font-family: "Futura", "monospace"; }
+#old h2 { color: white; font-family: "Futura", "monospace"; font-size: 20px; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
+#old .divider { display: flex; align-items: center; width: 60%; max-width: 600px; margin: 25px auto; }
+#old .divider::before, #old .divider::after { content: ""; flex: 1; height: 1px; background-color: #404040; }
+#old .divider span { padding: 0 15px; font-size: 12px; letter-spacing: 3px; color: #808080; font-family: "Futura", "monospace"; }
+#old section { margin-top: 20px; }
+#old .link { position: relative; font-size: 25px; display: flex; flex-wrap: wrap; justify-content: center; margin-top: 15px; }
+#old .link a:link, #old .link a:visited { box-sizing: border-box; background-color: #0d0d0d; color: #d9d9d9; padding: 20px; border: 2px solid transparent; border-radius: 20px; text-align: center; text-decoration: none; display: inline-block; margin: -1px; }
+#old .link a:hover, #old .link a:active { color: #0066CC; background-color: transparent; border-color: #003568; z-index: 1; position: relative; }
+#old footer { color: #151515; font-size: 8px; position: absolute; bottom: 0; right: 0; }
+#old footer a:link, #old footer a:visited { color: #151515; text-decoration: none; }
+#old footer a:hover, #old footer a:active { color: purple; }
+.switch { flex: none; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px 0 8px; border: 1px solid #2a2a2a; border-radius: 999px; background: #0d0d0d; color: #d9d9d9; font: inherit; font-size: 13px; cursor: pointer; }
+.switch:hover { background: #1a1a1a; }
+.switch .track { position: relative; width: 36px; height: 20px; border-radius: 999px; background: #5b6068; }
+.switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+#oldswitch { position: fixed; left: 14px; bottom: 14px; z-index: 5; }
+
+@media (max-width: 640px) { #clock { display: none; } .win { min-width: 0; } }
+@media (prefers-reduced-motion: reduce) { #start.open { animation: none; } .icon { transition: none; } }
+</style>
 </head>
-<body>
-    <h1>🏴‍☠️PIRATINHA🏴‍☠️</h1> <!-- Cabeçalho da página -->
+<body data-mode="os">
 
-    <section>
-        <h2>Recomendados</h2>
-        <div class="link">
-            <a href="https://cs.rin.ru/forum/index.php" target="_blank">CS.RIN.RU</a>
-            <a href="https://fitgirl-repacks.site/" target="_blank">FitGirl Repacks</a>
-            <a href="https://dodi-repacks.site/" target="_blank">DODI REPACKS</a>
-            <a href="https://www.skidrowreloaded.com/" target="_blank">Skidrow Reloaded</a>
-            <a href="https://byxatab.com/" target="_blank">ByXatab (🇷🇺)</a>
-        </div>
-    </section>
+<!-- ================= MODO OS ================= -->
+<div id="os">
+  <div id="mark" data-text="PIRATINHA" aria-hidden="true"></div>
+  <div id="desktop"></div>
 
-    <div class="divider"><span>Outros</span></div>
+  <div id="start" role="dialog" aria-label="Menu Iniciar">
+    <div class="starthead"><b>🏴‍☠️ PIRATINHA</b><button data-switch>Modo antigo</button></div>
+    <input id="search" type="search" placeholder="Buscar site…" autocomplete="off">
+    <div id="apps"></div>
+  </div>
 
-    <section>
-        <div class="link">
-            <a href="https://gload.to/" target="_blank">GLOAD (🇩🇪)</a>
-            <a href="https://zeigames.com/" target="_blank">ZeiGames - Rexa</a>
-            <a href="https://oldgamesdownload.com/browse/platform/" target="_blank">OldGames Download</a>
-            <a href="https://www.myabandonware.com/" target="_blank">My Abandonware</a>
-            <a href="https://online-fix.me/" target="_blank">ONLINE-Fix (🇷🇺)</a>
-            <a href="https://www.old-games.ru/catalog/" target="_blank">Old-Games (🇷🇺)</a>
-            <a href="https://www.3dmgame.com/games" target="_blank">3DM Game (🇨🇳)</a>
-        </div>
-    </section>
+  <div id="taskbar">
+    <button id="startbtn" aria-label="Menu Iniciar" aria-expanded="false" title="Iniciar">🏴‍☠️</button>
+    <div id="tasks"></div>
+    <div id="clock"></div>
+  </div>
+</div>
 
-    <footer>
-        <p><a href="https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria" target="_blank">AAAAAAAAAA</a></p>
-    </footer>
+<!-- ================= MODO ANTIGO ================= -->
+<div id="old">
+  <h1>🏴‍☠️PIRATINHA🏴‍☠️</h1>
+  <section>
+    <h2>Recomendados</h2>
+    <div class="link" id="old-rec"></div>
+  </section>
+  <div class="divider"><span>Outros</span></div>
+  <section>
+    <div class="link" id="old-out"></div>
+  </section>
+  <footer><p><a href="https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria" target="_blank">AAAAAAAAAA</a></p></footer>
+  <button class="switch" id="oldswitch" data-switch title="Voltar ao modo OS" role="switch" aria-checked="false">
+    <span class="track"></span><span>Modo OS</span>
+  </button>
+</div>
+
+<script>
+const LINKS = [
+  { n: 'CS.RIN.RU',          u: 'https://cs.rin.ru/forum/index.php',              g: 'rec' },
+  { n: 'FitGirl Repacks',    u: 'https://fitgirl-repacks.site/',                  g: 'rec' },
+  { n: 'DODI REPACKS',       u: 'https://dodi-repacks.site/',                     g: 'rec' },
+  { n: 'Skidrow Reloaded',   u: 'https://www.skidrowreloaded.com/',               g: 'rec' },
+  { n: 'ByXatab (🇷🇺)',       u: 'https://byxatab.com/',                           g: 'rec' },
+  { n: 'GLOAD (🇩🇪)',         u: 'https://gload.to/',                              g: 'out' },
+  { n: 'ZeiGames - Rexa',    u: 'https://zeigames.com/',                          g: 'out' },
+  { n: 'OldGames Download',  u: 'https://oldgamesdownload.com/browse/platform/',  g: 'out' },
+  { n: 'My Abandonware',     u: 'https://www.myabandonware.com/',                 g: 'out' },
+  { n: 'ONLINE-Fix (🇷🇺)',    u: 'https://online-fix.me/',                         g: 'out' },
+  { n: 'Old-Games (🇷🇺)',     u: 'https://www.old-games.ru/catalog/',              g: 'out' },
+  { n: '3DM Game (🇨🇳)',      u: 'https://www.3dmgame.com/games',                  g: 'out' },
+];
+const FOOTER_URL = 'https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria';
+const WALLS = [                                  // adicione novos planos de fundo aqui
+  { n: 'Azul celeste (padrão)', c: '#87ceeb' },
+  { n: 'dummy1.jpg', img: './Images/dummy1.jpg' },
+  { n: 'dummy2.jpg', img: './Images/dummy2.jpg' },
+];
+
+const $ = (s, r = document) => r.querySelector(s);
+const os = $('#os'), desk = $('#desktop'), startEl = $('#start'), startBtn = $('#startbtn');
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+
+/* ---------- tiles ---------- */
+function tile(l) {
+  const t = document.createElement('div'); t.className = 'tile';
+  const img = new Image(); img.alt = ''; img.draggable = false;
+  img.src = 'https://www.google.com/s2/favicons?domain=' + new URL(l.u).hostname + '&sz=64';
+  img.onerror = () => { t.innerHTML = ''; const b = document.createElement('b'); b.textContent = l.n.replace(/[^\p{L}\p{N}]/gu, '').charAt(0).toUpperCase(); t.append(b); };
+  t.append(img); return t;
+}
+const etile = e => () => { const t = document.createElement('div'); t.className = 'tile'; t.innerHTML = '<i>' + e + '</i>'; return t; };
+
+/* ---------- janelas ---------- */
+const wins = new Map(); let z = 10, offset = 0, active = null;
+function createWindow(o) {
+  closeStart();
+  if (wins.has(o.id)) { const w = wins.get(o.id); w.el.classList.remove('min'); focusWin(w); return w; }
+  const vw = innerWidth, vh = innerHeight - 90;
+  const W = Math.min(o.w, vw - 20), H = Math.min(o.h, vh - 20);
+  const el = document.createElement('div'); el.className = 'win';
+  el.style.cssText = `width:${W}px;height:${H}px;left:${Math.max(10, Math.min(120 + offset, vw - W - 10))}px;top:${Math.max(10, Math.min(30 + offset, vh - H))}px`;
+  offset = (offset + 32) % 160;
+  el.innerHTML = `<div class="bar"><span class="title"></span>${o.ext ? '<a class="wbtn ext" target="_blank" rel="noopener" title="Abrir em nova aba">↗</a>' : ''}
+    <button class="wbtn mn" title="Minimizar">–</button><button class="wbtn mx" title="Maximizar">▢</button><button class="wbtn close" title="Fechar">✕</button></div>
+    <div class="view${o.sys ? ' sys' : ''}"></div>${o.hint || ''}`;
+  $('.bar', el).prepend(o.mk()); $('.title', el).textContent = o.title;
+  if (o.ext) $('.ext', el).href = o.ext;
+
+  const btn = document.createElement('button'); btn.className = 'task';
+  btn.append(o.mk()); const sp = document.createElement('span'); sp.textContent = o.title; btn.append(sp);
+  $('#tasks').append(btn); os.append(el);
+
+  const w = { id: o.id, el, btn };
+  wins.set(o.id, w);
+  o.body($('.view', el), w);
+  btn.onclick = () => (active === w && !el.classList.contains('min')) ? minimize(w) : (el.classList.remove('min'), focusWin(w));
+  el.addEventListener('pointerdown', () => focusWin(w));
+  $('.mn', el).onclick = () => minimize(w);
+  $('.mx', el).onclick = () => el.classList.toggle('max');
+  $('.close', el).onclick = () => { el.remove(); btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); };
+
+  const bar = $('.bar', el);
+  bar.addEventListener('dblclick', e => { if (!e.target.closest('.wbtn')) el.classList.toggle('max'); });
+  bar.addEventListener('pointerdown', e => {
+    if (e.target.closest('.wbtn') || el.classList.contains('max')) return;
+    const r = el.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
+    bar.setPointerCapture(e.pointerId); os.classList.add('dragging');
+    const move = ev => {
+      el.style.left = Math.max(-r.width + 80, Math.min(ev.clientX - dx, innerWidth - 80)) + 'px';
+      el.style.top = Math.max(0, Math.min(ev.clientY - dy, innerHeight - 100)) + 'px';
+    };
+    const up = () => { os.classList.remove('dragging'); bar.removeEventListener('pointermove', move); bar.removeEventListener('pointerup', up); bar.removeEventListener('pointercancel', up); };
+    bar.addEventListener('pointermove', move); bar.addEventListener('pointerup', up); bar.addEventListener('pointercancel', up);
+  });
+  el.addEventListener('pointerdown', e => {          // canto de redimensionar: iframe não pode roubar o mouse
+    const r = el.getBoundingClientRect();
+    if (e.clientX > r.right - 22 && e.clientY > r.bottom - 22) {
+      os.classList.add('dragging'); addEventListener('pointerup', () => os.classList.remove('dragging'), { once: true });
+    }
+  });
+  focusWin(w); return w;
+}
+function minimize(w) { w.el.classList.add('min'); if (active === w) active = null; refresh(); }
+function focusWin(w) { active = w; w.el.style.zIndex = ++z; refresh(); }
+function refresh() { wins.forEach(w => { const on = w === active && !w.el.classList.contains('min'); w.el.classList.toggle('active', on); w.btn.classList.toggle('active', on); }); }
+
+function openApp(l) {
+  createWindow({
+    id: l.u, title: l.n, mk: () => tile(l), w: 960, h: 620, ext: l.u,
+    hint: `<div class="hint">Página em branco ou recusada? O site bloqueia exibição incorporada. <a target="_blank" rel="noopener" href="${l.u}">Abrir em nova aba</a></div>`,
+    body: v => { v.innerHTML = `<iframe src="${l.u}" referrerpolicy="no-referrer" allow="fullscreen"></iframe>`; $('iframe', v).title = l.n; },
+  });
+}
+
+/* ---------- grid de ícones ---------- */
+const CW = 96, CH = 100, PAD = 16;
+let cols = 1, rows = 1;
+const saved = store.get('piratinha-pos', {});          // posições salvas: url -> [coluna, linha]
+const trashed = new Set(store.get('piratinha-trash', []));
+const cell = new Map();                                // posições efetivas
+const icons = new Map();
+const reserved = (c, r) => r === 0 && (c === 0 || c === cols - 1);   // lixeira e plano de fundo
+const taken = (c, r, except) => { for (const [k, p] of cell) if (k !== except && p[0] === c && p[1] === r) return true; return false; };
+const free = (c, r, except) => !reserved(c, r) && !taken(c, r, except);
+function firstFree(except) { for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) if (free(c, r, except)) return [c, r]; return null; }
+function nearestFree(c, r, except) {
+  let best = null, bd = 1e9;
+  for (let cc = 0; cc < cols; cc++) for (let rr = 0; rr < rows; rr++) {
+    if (!free(cc, rr, except)) continue;
+    const d = (cc - c) ** 2 + (rr - r) ** 2; if (d < bd) { bd = d; best = [cc, rr]; }
+  }
+  return best;
+}
+const setXY = (el, c, r) => { el.style.left = PAD + c * CW + 'px'; el.style.top = PAD + r * CH + 'px'; };
+const valid = p => p && p[0] < cols && p[1] < rows && !reserved(p[0], p[1]);
+
+function layoutAll() {
+  cols = Math.max(2, Math.floor((desk.clientWidth - PAD * 2) / CW));
+  rows = Math.max(1, Math.floor((desk.clientHeight - PAD * 2) / CH));
+  cell.clear(); setXY(trashEl, 0, 0); setXY(wallEl, cols - 1, 0);
+  const visible = LINKS.filter(l => !trashed.has(l.u));
+  LINKS.forEach(l => { icons.get(l.u).el.style.display = trashed.has(l.u) ? 'none' : ''; });
+  const later = [];
+  visible.forEach(l => {                               // 1º passe: quem tem posição salva livre
+    const p = saved[l.u];
+    if (valid(p) && !taken(p[0], p[1], l.u)) cell.set(l.u, p); else later.push(l);
+  });
+  later.forEach(l => {                                 // 2º passe: o resto vai para a primeira vaga
+    const p = saved[l.u];
+    cell.set(l.u, (p ? nearestFree(p[0], p[1], l.u) : firstFree(l.u)) || [0, Math.min(1, rows - 1)]);
+  });
+  visible.forEach(l => { const p = cell.get(l.u); setXY(icons.get(l.u).el, p[0], p[1]); });
+}
+
+const inside = (el, x, y) => { const r = el.getBoundingClientRect(); return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; };
+const touch = matchMedia('(pointer: coarse)').matches;
+function deselect() { document.querySelectorAll('.icon.sel').forEach(x => x.classList.remove('sel')); }
+
+function mkIcon(name, mk, onOpen) {
+  const b = document.createElement('button'); b.className = 'icon';
+  b.append(mk()); const s = document.createElement('span'); s.textContent = name; b.append(s);
+  b.addEventListener('click', () => {
+    if (b._dragged) { b._dragged = false; return; }
+    deselect(); b.classList.add('sel'); if (touch) onOpen();
+  });
+  b.addEventListener('dblclick', () => { if (Date.now() - (b._dragEnd || 0) > 500) onOpen(); });
+  b.addEventListener('keydown', e => { if (e.key === 'Enter') onOpen(); });
+  desk.append(b); return b;
+}
+
+/* ícones fixos: lixeira (esquerda) e plano de fundo (direita) */
+const trashEl = mkIcon('Lixeira', etile('🗑️'), () => openTrash());
+const wallEl = mkIcon('Plano de fundo', etile('🖼️'), () => openWall());
+const badge = document.createElement('div'); badge.className = 'badge'; trashEl.append(badge);
+
+/* ícones dos sites: arrastáveis em grid */
+LINKS.forEach(l => {
+  const b = mkIcon(l.n, () => tile(l), () => openApp(l));
+  icons.set(l.u, { l, el: b });
+  b.addEventListener('pointerdown', e => {
+    if (e.button !== 0) return;
+    b._dragged = false;
+    const sx = e.clientX, sy = e.clientY, r = b.getBoundingClientRect(), dr = desk.getBoundingClientRect();
+    const ox = sx - r.left, oy = sy - r.top; let drag = false;
+    b.setPointerCapture(e.pointerId);
+    const move = ev => {
+      if (!drag) { if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 6) return; drag = true; b.classList.add('drag'); os.classList.add('dragging'); deselect(); }
+      b.style.left = ev.clientX - dr.left - ox + 'px'; b.style.top = ev.clientY - dr.top - oy + 'px';
+      trashEl.classList.toggle('hot', inside(trashEl, ev.clientX, ev.clientY));
+    };
+    const up = ev => {
+      b.removeEventListener('pointermove', move); b.removeEventListener('pointerup', up); b.removeEventListener('pointercancel', up);
+      os.classList.remove('dragging'); b.classList.remove('drag'); trashEl.classList.remove('hot');
+      if (!drag) return;
+      b._dragged = true; b._dragEnd = Date.now();
+      if (ev.type === 'pointerup' && inside(trashEl, ev.clientX, ev.clientY)) { sendToTrash(l); return; }
+      let c = Math.max(0, Math.min(cols - 1, Math.floor((ev.clientX - dr.left - PAD) / CW)));
+      let rr = Math.max(0, Math.min(rows - 1, Math.floor((ev.clientY - dr.top - PAD) / CH)));
+      const p = free(c, rr, l.u) ? [c, rr] : (nearestFree(c, rr, l.u) || cell.get(l.u));
+      saved[l.u] = p; store.set('piratinha-pos', saved); layoutAll();
+    };
+    b.addEventListener('pointermove', move); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
+  });
+});
+desk.addEventListener('click', e => { if (e.target === desk) deselect(); });
+addEventListener('resize', layoutAll);
+
+/* ---------- lixeira ---------- */
+function sendToTrash(l) { trashed.add(l.u); delete saved[l.u]; persistTrash(); layoutAll(); }
+function restore(l) { trashed.delete(l.u); delete saved[l.u]; persistTrash(); layoutAll(); }
+function persistTrash() {
+  store.set('piratinha-trash', [...trashed]); store.set('piratinha-pos', saved);
+  badge.textContent = trashed.size || '';
+  const w = wins.get('sys:trash'); if (w && w.render) w.render();
+}
+function openTrash() {
+  createWindow({
+    id: 'sys:trash', title: 'Lixeira', mk: etile('🗑️'), w: 440, h: 420, sys: true,
+    body: (v, w) => {
+      w.render = () => {
+        v.innerHTML = '';
+        const items = LINKS.filter(l => trashed.has(l.u));
+        const bar = document.createElement('div'); bar.className = 'sysbar';
+        bar.innerHTML = '<span></span>'; $('span', bar).textContent = items.length ? items.length + (items.length > 1 ? ' itens' : ' item') : '';
+        if (items.length) { const all = document.createElement('button'); all.className = 'pill'; all.textContent = 'Restaurar tudo'; all.onclick = () => items.forEach(restore); bar.append(all); }
+        v.append(bar);
+        if (!items.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'A lixeira está vazia. Arraste um ícone da área de trabalho até ela para guardá-lo aqui.'; v.append(p); return; }
+        items.forEach(l => {
+          const row = document.createElement('div'); row.className = 'srow';
+          const nm = document.createElement('span'); nm.className = 'grow'; nm.textContent = l.n;
+          const bt = document.createElement('button'); bt.className = 'pill'; bt.textContent = 'Restaurar'; bt.onclick = () => restore(l);
+          row.append(tile(l), nm, bt); v.append(row);
+        });
+      };
+      w.render();
+    },
+  });
+}
+
+/* ---------- plano de fundo ---------- */
+let wallIdx = Math.min(store.get('piratinha-wall', 0), WALLS.length - 1);
+function applyWall() {
+  const w = WALLS[wallIdx];
+  os.style.backgroundColor = w.c || 'var(--wallpaper)';
+  os.style.backgroundImage = w.img ? `url("${w.img}")` : 'none';
+}
+function openWall() {
+  createWindow({
+    id: 'sys:wall', title: 'Plano de fundo', mk: etile('🖼️'), w: 420, h: 360, sys: true,
+    body: (v, w) => {
+      w.render = () => {
+        v.innerHTML = '';
+        WALLS.forEach((wl, i) => {
+          const b = document.createElement('button'); b.className = 'srow' + (i === wallIdx ? ' on' : '');
+          const th = document.createElement('div'); th.className = 'thumb';
+          if (wl.c) th.style.background = wl.c; else th.style.backgroundImage = `url("${wl.img}")`;
+          const nm = document.createElement('span'); nm.className = 'grow'; nm.textContent = wl.n;
+          const ck = document.createElement('span'); ck.textContent = i === wallIdx ? '✓' : '';
+          b.append(th, nm, ck);
+          b.onclick = () => { wallIdx = i; store.set('piratinha-wall', i); applyWall(); w.render(); };
+          v.append(b);
+        });
+      };
+      w.render();
+    },
+  });
+}
+
+/* ---------- menu iniciar (lista, sem ícones) ---------- */
+const slug = q => q.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '') || 'site';
+function row(name, host, fn) {
+  const b = document.createElement('button'); b.className = 'row';
+  const n = document.createElement('span'); n.textContent = name;
+  const h = document.createElement('span'); h.className = 'h'; h.textContent = host;
+  b.append(n, h); b.onclick = fn; return b;
+}
+function buildStart(q = '') {
+  const box = $('#apps'); box.innerHTML = '';
+  const qq = q.trim().toLowerCase();
+  const found = LINKS.filter(l => !qq || l.n.toLowerCase().includes(qq) || new URL(l.u).hostname.includes(qq));
+  if (!found.length) {                                  // pegadinha: parece o resultado pedido, mas leva ao link do rodapé
+    box.append(row(q.trim(), slug(q) + '.com', () => { closeStart(); window.open(FOOTER_URL, '_blank', 'noopener'); }));
+    return;
+  }
+  [['rec', 'Recomendados'], ['out', 'Outros']].forEach(([g, name]) => {
+    const items = found.filter(l => l.g === g); if (!items.length) return;
+    const h = document.createElement('h3'); h.textContent = name; box.append(h);
+    items.forEach(l => box.append(row(l.n, new URL(l.u).hostname.replace(/^www\./, ''), () => openApp(l))));
+  });
+}
+$('#search').addEventListener('input', e => buildStart(e.target.value));
+$('#search').addEventListener('keydown', e => { if (e.key === 'Enter') { const f = $('.row', startEl); if (f) f.click(); } });
+function closeStart() { startEl.classList.remove('open'); startBtn.setAttribute('aria-expanded', 'false'); }
+startBtn.onclick = e => {
+  e.stopPropagation();
+  const open = startEl.classList.toggle('open'); startBtn.setAttribute('aria-expanded', open);
+  if (open) { $('#search').value = ''; buildStart(); $('#search').focus(); }
+};
+document.addEventListener('pointerdown', e => { if (!e.target.closest('#start') && !e.target.closest('#startbtn')) closeStart(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStart(); });
+
+/* ---------- modo antigo ---------- */
+LINKS.forEach(l => {
+  const a = document.createElement('a'); a.href = l.u; a.target = '_blank'; a.textContent = l.n;
+  $(l.g === 'rec' ? '#old-rec' : '#old-out').append(a);
+});
+function setMode(m) { document.body.dataset.mode = m; closeStart(); if (m === 'os') layoutAll(); try { localStorage.setItem('piratinha-mode', m); } catch (e) {} }
+document.querySelectorAll('[data-switch]').forEach(b => b.addEventListener('click', () => setMode(document.body.dataset.mode === 'os' ? 'old' : 'os')));
+try { const m = localStorage.getItem('piratinha-mode'); if (m === 'old' || m === 'os') document.body.dataset.mode = m; } catch (e) {}
+
+/* ---------- relógio em tempo real (sincronizado com a virada do minuto) ---------- */
+function tick() {
+  const d = new Date();
+  $('#clock').innerHTML = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '<small>' + d.toLocaleDateString('pt-BR') + '</small>';
+  clearTimeout(tick.t); tick.t = setTimeout(tick, 60000 - (d.getSeconds() * 1000 + d.getMilliseconds()) + 50);
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+
+/* ---------- init ---------- */
+applyWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();
+</script>
 </body>
 </html>

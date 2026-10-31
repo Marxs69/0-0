@@ -210,6 +210,25 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 .term input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: inherit; font: inherit; }
 .sp { flex: 1; min-width: 0; height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }
 
+/* notificações, modal, reboot */
+#bell { font-size: 18px; color: var(--text); } .dot { position: absolute; top: 7px; right: 9px; width: 9px; height: 9px; border-radius: 50%; background: #e5484d; border: 1px solid var(--glass-strong); display: none; } #bell.alert .dot { display: block; }
+#toasts { position: absolute; right: 14px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99996; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+#os.tbtop #toasts { bottom: 20px; } #os.tbtop #npanel { bottom: auto; top: calc(var(--taskbar-h) + 20px); }
+.toast { pointer-events: auto; display: flex; gap: 12px; align-items: center; width: 310px; padding: 12px 14px; border-radius: 14px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); box-shadow: 0 12px 32px rgba(0,0,0,.35); cursor: pointer; animation: wopen .2s; }
+.toast.game { background: linear-gradient(135deg, rgba(23,26,33,.96), rgba(34,48,66,.96)); border-color: rgba(102,192,244,.45); }
+.toast.out { opacity: 0; transition: opacity .25s; } .noanim .toast { animation: none; }
+.toast .ti { font-size: 26px; } .toast b { display: block; font-size: 14px; font-weight: normal; } .toast em { font-style: normal; font-size: 13px; color: var(--text-dim); }
+#npanel { position: absolute; right: 10px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99998; display: none; width: min(360px, calc(100vw - 20px)); max-height: 420px; overflow: auto; padding: 12px; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 18px; backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+.nh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; } .nh b { font-weight: normal; }
+.pill.danger { background: rgba(229,72,77,.16); border-color: rgba(229,72,77,.5); color: #ffb4b6; } .pill.danger:hover { background: rgba(229,72,77,.3); }
+.modal { position: fixed; inset: 0; z-index: 100001; display: grid; place-items: center; background: rgba(0,0,0,.45); }
+.modal .box { width: min(380px, calc(100vw - 32px)); padding: 20px; border-radius: 18px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.modal p { margin: 0 0 16px; line-height: 1.5; } .modal .mb { display: flex; justify-content: flex-end; gap: 8px; }
+.blackout { position: fixed; inset: 0; z-index: 100003; background: #000; color: #777; display: grid; place-items: center; font-size: 18px; text-align: center; padding: 24px; cursor: pointer; }
+.bsod { position: fixed; inset: 0; z-index: 100004; background: #0a56b8; color: #fff; padding: 8vw; font-size: 20px; line-height: 1.5; }
+.pbar { height: 10px; border-radius: 6px; background: rgba(255,255,255,.12); overflow: hidden; } .pbar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.startfoot { display: flex; justify-content: flex-end; gap: 6px; padding-top: 10px; border-top: 1px solid var(--glass-line); }
+
 /* start menu */
 #start {
   position: absolute; left: 10px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99998;
@@ -263,19 +282,21 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
   <div id="desktop"></div>
   <div id="dock"></div>
   <div id="ctx"></div>
+  <div id="toasts"></div>
+  <div id="npanel"></div>
 
   <div id="start" role="dialog" aria-label="Menu Iniciar">
     <div class="starthead"><b>🏴‍☠️ PIRATINHA</b><button id="startset">Configurações</button></div>
     <input id="search" type="search" placeholder="Buscar site…" autocomplete="off">
     <div id="apps"></div>
+    <div class="startfoot"><button class="pill" id="st-off">⏻ Desligar</button><button class="pill" id="st-re">⟳ Reiniciar</button></div>
   </div>
 
   <div id="taskbar">
     <button id="startbtn" aria-label="Menu Iniciar" aria-expanded="false" title="Iniciar">🏴‍☠️</button>
-    <div id="pins"></div>
-    <div class="sep"></div>
     <div id="tools"></div>
     <div id="tasks"></div>
+    <button id="bell" class="pin" title="Notificações" aria-label="Notificações">🔔<i class="dot"></i></button>
     <div id="clock"></div>
   </div>
 </div>
@@ -655,12 +676,12 @@ function row(name, host, fn) {
 function buildStart(q = '') {
   const box = $('#apps'); box.innerHTML = '';
   const qq = q.trim().toLowerCase();
-  const found = [...LINKS, ...GAMES].filter(l => !qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq));
+  const found = LINKS.filter(l => !qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq));
   if (!found.length) {                                  // pegadinha: parece o resultado pedido, mas leva ao link do rodapé
     box.append(row(q.trim(), slug(q) + '.com', () => { closeStart(); window.open(FOOTER_URL, '_blank', 'noopener'); }));
     return;
   }
-  [['rec', 'Recomendados'], ['out', 'Outros'], ['game', 'Jogos']].forEach(([g, name]) => {
+  [['rec', 'Recomendados'], ['out', 'Outros']].forEach(([g, name]) => {
     const items = found.filter(l => l.g === g); if (!items.length) return;
     const h = document.createElement('h3'); h.textContent = name; box.append(h);
     items.forEach(l => box.append(row(l.n, l.local ? (l.file || 'jogo') : hostOf(l), () => openApp(l))));
@@ -696,10 +717,6 @@ function tick() {
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 
 /* ---------- favoritos fixados na taskbar e dock de jogos ---------- */
-LINKS.filter(l => l.g === 'rec').forEach(l => {
-  const b = document.createElement('button'); b.className = 'pin'; b.title = l.n; b.append(tile(l));
-  b.onclick = () => toggleApp(l); pinBtns.set(l.u, b); $('#pins').append(b);
-});
 GAMES.forEach(l => {
   const b = document.createElement('button'); b.className = 'dk'; b.dataset.label = l.file || l.n; b.setAttribute('aria-label', l.file || l.n); b.append(tile(l));
   b.onclick = () => toggleApp(l); pinBtns.set(l.u, b); $('#dock').append(b);
@@ -707,7 +724,7 @@ GAMES.forEach(l => {
 
 /* ---------- configurações: cor/opacidade do vidro e tamanho dos ícones ---------- */
 const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 38 }, m: { n: 'Médio', w: 96, h: 100, t: 46 }, g: { n: 'Grande', w: 116, h: 120, t: 56 } };
-const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b' }, store.get('piratinha-pref', {}));
+const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true }, store.get('piratinha-pref', {}));
 function applyPrefs(relayout) {
   const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
   const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
@@ -720,18 +737,18 @@ function applyPrefs(relayout) {
 }
 function openSettings() {
   createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 440, h: 600, sys: true, body: v => {
-    v.innerHTML = '<div class="srow"><span class="grow">Cor do vidro</span><input type="color"></div><div class="srow"><span class="grow">Opacidade do vidro</span><input type="range" min="15" max="90"></div><div class="sysbar" style="margin-top:14px">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Posição da taskbar</div><div class="tbp" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Geral</div><div class="opts"></div><div class="sysbar" style="margin-top:14px">Sistema</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="pill goold">Ir para o modo antigo</button><button class="pill reset">Restaurar padrões</button></div>';
+    v.innerHTML = '<div class="srow"><span class="grow">Cor do vidro</span><input type="color"></div><div class="srow"><span class="grow">Opacidade do vidro</span><input type="range" min="15" max="90"></div><div class="sysbar" style="margin-top:14px">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Posição da taskbar</div><div class="tbp" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Geral</div><div class="opts"></div><div class="sysbar" style="margin-top:14px">Sistema</div><div style="display:flex;justify-content:space-between;gap:6px"><button class="pill goold">Ir para o modo antigo</button><button class="pill danger reset">Restaurar padrões</button></div>';
     const [c, a] = v.querySelectorAll('input'), sz = $('.sz', v), tbp = $('.tbp', v), opts = $('.opts', v);
     c.value = pref.c; a.value = Math.round(pref.a * 100);
     c.oninput = () => { pref.c = c.value; applyPrefs(); }; a.oninput = () => { pref.a = a.value / 100; applyPrefs(); };
     const group = (box, items, key, relayout) => { const draw = () => { box.innerHTML = ''; items.forEach(([k, n]) => { const b = document.createElement('button'); b.className = 'pill' + (k === pref[key] ? ' on' : ''); b.textContent = n; b.onclick = () => { pref[key] = k; applyPrefs(relayout); draw(); }; box.append(b); }); }; draw(); };
     group(sz, Object.entries(SIZES).map(([k, z]) => [k, z.n]), 's', true); group(tbp, [['b', 'Embaixo'], ['t', 'Em cima']], 'tb', true);
-    [['h24', 'Relógio em 24 horas'], ['sec', 'Mostrar segundos no relógio'], ['an', 'Animações das janelas'], ['shuf', 'Embaralhar ícones a cada acesso']].forEach(([k, n]) => {
+    [['h24', 'Relógio em 24 horas'], ['sec', 'Mostrar segundos no relógio'], ['an', 'Animações das janelas'], ['shuf', 'Embaralhar ícones a cada acesso'], ['notif', 'Notificações (piadas a cada 30–60 min)']].forEach(([k, n]) => {
       const l = document.createElement('label'), sp = document.createElement('span'), cb = document.createElement('input'); l.className = 'srow'; sp.className = 'grow'; sp.textContent = n; cb.type = 'checkbox'; cb.checked = !!pref[k];
       cb.onchange = () => { pref[k] = cb.checked; applyPrefs(); tick(); }; l.append(sp, cb); opts.append(l);
     });
     $('.goold', v).onclick = () => setMode('old');
-    $('.reset', v).onclick = () => { if (confirm('Restaurar os padrões e apagar todos os dados salvos neste navegador (notas, recordes, lixeira, preferências)?')) { try { localStorage.clear(); } catch (e) {} location.reload(); } };
+    $('.reset', v).onclick = () => ask('Restaurar os padrões e apagar todos os dados salvos neste navegador (notas, recordes, lixeira e preferências)? Isso não pode ser desfeito.', () => { try { localStorage.clear(); } catch (e) {} location.reload(); });
   } });
 }
 
@@ -812,7 +829,7 @@ function openBrowser() {
 const ctx = $('#ctx');
 desk.addEventListener('contextmenu', e => {
   if (e.target !== desk) return; e.preventDefault(); ctx.innerHTML = '';
-  [['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['⚙️ Configurações', openSettings], ['📝 Novo bloco de notas', openNotes]].forEach(([t, f]) => {
+  [['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['📝 Novo bloco de notas', openNotes], ['⚙️ Configurações', openSettings]].forEach(([t, f]) => {
     const b = document.createElement('button'); b.textContent = t; b.onclick = () => { ctx.style.display = 'none'; f(); }; ctx.append(b);
   });
   ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.min(e.clientY, innerHeight - 200) + 'px';
@@ -979,12 +996,16 @@ function openTerm() {
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     const LOGO = ['     _.-"""-._    ', '    /  _   _  \\   ', '   |  (o) (o)  |  ', '    \\    ^    /   ', '     | \\___/ |    ', '      \\_____/     ', '    PIRATINHA OS  '];
     const CMDS = {
-      help: () => print('Comandos: help, neofetch, cowsay <texto>, matrix, hack, date, echo <texto>, whoami, ls, clear'),
+      help: () => print('Comandos: help, neofetch, cowsay <texto>, matrix, hack, fortune, sl, sudo, bsod, reboot, shutdown, date, echo <texto>, whoami, ls, clear'),
+      sudo: () => print('pirata não está no arquivo sudoers. Este incidente será reportado ao papagaio.'),
+      fortune: () => print(['Quem cala, consente. Quem baixa, repacka.', 'Todo tesouro tem um mapa. O seu está no outro casaco.', 'Hoje é um bom dia para fazer backup.', 'O papagaio sabe a sua senha.', 'Uma atualização é só um reinício com esperança.'][Math.random() * 5 | 0]),
+      bsod: () => bsod(), reboot: () => reboot(), shutdown: a => (/-r/.test(a) ? reboot() : shutdown()),
+      sl: async () => { const T = ['      ____            ', ' ____|    |======    ', '|____|____|__O__O____', '   (o)(o)(o)(o)      ']; const d = print(''); for (let i = 0; i < 60; i += 2) { d.textContent = T.map(l => ' '.repeat(i) + l).join('\n'); await sleep(35); } d.remove(); print('Choo choo!'); },
       clear: () => { out.innerHTML = ''; },
       date: () => print(new Date().toLocaleString('pt-BR')),
       echo: a => print(a), whoami: () => print('pirata'), ls: () => print('Images/  games/  index.html  tesouro.txt'),
       neofetch: () => {
-        const info = ['pirata@piratinha', '-----------------', 'SO: PIRATINHA OS', 'Tela: ' + innerWidth + 'x' + innerHeight, 'Wallpaper: ' + current.n, 'Janelas abertas: ' + wins.size, 'Uptime: ' + Math.round(performance.now() / 1000) + 's', 'Vidro: ' + pref.c];
+        const info = ['pirata@piratinha', '-----------------', 'SO: PIRATINHA OS', 'Tela: ' + innerWidth + 'x' + innerHeight, 'Wallpaper: ' + current.n, 'Janelas abertas: ' + wins.size, 'Uptime: ' + Math.round((Date.now() - BOOT) / 1000) + 's', 'Vidro: ' + pref.c];
         print(Array.from({ length: Math.max(LOGO.length, info.length) }, (_, i) => (LOGO[i] || ' '.repeat(LOGO[0].length)) + (info[i] || '')).join('\n'));
       },
       cowsay: a => { a = a || 'Arrr!'; print(' ' + '_'.repeat(a.length + 2) + '\n< ' + a + ' >\n ' + '-'.repeat(a.length + 2) + '\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||'); },
@@ -996,7 +1017,7 @@ function openTerm() {
       if (e.key === 'Enter') { const s = inp.value; inp.value = ''; if (s.trim()) { hist.push(s); hi = hist.length; } run(s); }
       else if (e.key === 'ArrowUp' && hi > 0) inp.value = hist[--hi]; else if (e.key === 'ArrowDown') inp.value = hist[++hi] || '';
     };
-    term.onclick = () => inp.focus(); print('Terminal PIRATINHA. Digite help.'); setTimeout(() => inp.focus(), 50);
+    term.onclick = () => inp.focus(); CMDS.neofetch(); print('Digite help.'); setTimeout(() => inp.focus(), 50);
   } });
 }
 
@@ -1005,6 +1026,87 @@ function openTerm() {
   const b = document.createElement('button'); b.className = 'dk'; b.dataset.label = n; b.setAttribute('aria-label', n); b.append(etile(em)());
   b.onclick = () => { const w = wins.get(id); if (w) toggleWin(w); else fn(); }; pinBtns.set(id, b); $('#dock').append(b);
 });
+
+/* ---------- reiniciar, desligar, aviso de confirmação ---------- */
+let BOOT = Date.now();
+function ask(msg, ok) {
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = '<div class="box"><p></p><div class="mb"><button class="pill">Cancelar</button><button class="pill danger">Confirmar</button></div></div>'; $('p', m).textContent = msg;
+  const [c, y] = m.querySelectorAll('button'); c.onclick = () => m.remove(); y.onclick = () => { m.remove(); ok(); }; os.append(m); c.focus();
+}
+const blk = txt => { const d = document.createElement('div'); d.className = 'blackout'; d.textContent = txt; document.body.append(d); return d; };
+function coldStart() {
+  [...wins.values()].forEach(w => { w.el.remove(); if (w.btn.classList.contains('task')) w.btn.remove(); else w.btn.classList.remove('open', 'active'); });
+  wins.clear(); active = null; BOOT = Date.now(); closeStart(); ctx.style.display = 'none'; npanel.style.display = 'none';
+  for (let i = ORDER.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; }
+  Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll();
+}
+function reboot() { closeStart(); const d = blk('Reiniciando…'); setTimeout(() => { coldStart(); d.remove(); }, 1600); }
+function shutdown() {
+  closeStart(); const d = blk('Sistema desligado. Clique ou pressione uma tecla para ligar.');
+  const on = () => { document.removeEventListener('keydown', on); d.remove(); coldStart(); };
+  setTimeout(() => { document.addEventListener('keydown', on); d.onclick = on; }, 400);
+}
+function bsod() {
+  const d = document.createElement('div'); d.className = 'bsod';
+  d.innerHTML = '<div style="font-size:90px">:(</div><p>Seu PIRATINHA OS encontrou um problema e precisa reiniciar. Estamos coletando algumas informações de erro e já reiniciamos para você.</p><p class="bp">0% concluído</p><p style="font-size:13px;opacity:.8">Código de parada: PAPAGAIO_COMEU_O_CABO</p>'; document.body.append(d);
+  let p = 0; const iv = setInterval(() => { p += 5 + Math.random() * 10; if (p >= 100) { clearInterval(iv); d.remove(); reboot(); } else $('.bp', d).textContent = (p | 0) + '% concluído'; }, 400);
+}
+$('#st-off').onclick = shutdown; $('#st-re').onclick = reboot;
+
+/* ---------- notificações (piadas) e sino ---------- */
+const JOKES = [
+  { i: '⬇️', t: 'Atualização do sistema', m: 'PIRATINHA OS 9.0.1 está pronto. Clique para instalar.', u: 1 },
+  { i: '🎮', t: 'Barba-Negra', m: 'começou a jogar DOOM.', g: 1 },
+  { i: '🎮', t: 'Jack Sparrow', m: 'começou a jogar Campo Minado.', g: 1 },
+  { i: '🎮', t: 'Capitão Gancho', m: 'começou a jogar Tetris.', g: 1 },
+  { i: '🎮', t: 'Papagaio', m: 'começou a jogar Snake e já perdeu.', g: 1 },
+  { i: '🦜', t: 'Papagaio', m: 'instalou 14 extensões sem perguntar.' },
+  { i: '🛡️', t: 'Antivírus', m: 'tirou o dia de folga.' },
+  { i: '📦', t: 'tesouro.zip', m: 'terminou de baixar. Ninguém sabe onde.' },
+  { i: '🔋', t: 'Bateria', m: 'em 100%. Desconfie.' },
+];
+const NOTES = [], bell = $('#bell'), npanel = $('#npanel'), toasts = $('#toasts'); let lastJ = -1;
+const actNote = n => { if (n.u === 1) openUpdate(); else if (n.u === 2) openUpdate(true); };
+function drawPanel() {
+  npanel.innerHTML = ''; const h = document.createElement('div'); h.className = 'nh'; const t = document.createElement('b'); t.textContent = 'Notificações';
+  const sw = document.createElement('button'); sw.className = 'pill'; sw.textContent = pref.notif ? 'Desativar' : 'Ativar';
+  sw.onclick = () => { pref.notif = !pref.notif; applyPrefs(); drawPanel(); }; h.append(t, sw); npanel.append(h);
+  if (!NOTES.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = pref.notif ? 'Nenhuma notificação ainda.' : 'Notificações desativadas.'; npanel.append(p); }
+  NOTES.forEach(n => {
+    const r = document.createElement('button'), a = document.createElement('span'), b = document.createElement('span'), s = document.createElement('small');
+    r.className = 'srow'; a.textContent = n.i; b.className = 'grow'; b.style.whiteSpace = 'normal'; b.textContent = n.t + ' — ' + n.m;
+    s.textContent = n.time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); r.append(a, b, s);
+    r.onclick = () => { npanel.style.display = 'none'; actNote(n); }; npanel.append(r);
+  });
+}
+function pushNote(j) {
+  const n = Object.assign({ time: new Date() }, j); NOTES.unshift(n); if (NOTES.length > 40) NOTES.pop();
+  const t = document.createElement('div'); t.className = 'toast' + (j.g ? ' game' : ''); t.innerHTML = '<span class="ti"></span><div><b></b><em></em></div>';
+  $('.ti', t).textContent = j.i; $('b', t).textContent = j.t; $('em', t).textContent = j.m;
+  const kill = () => { t.classList.add('out'); setTimeout(() => t.remove(), 250); };
+  t.onclick = () => { actNote(n); kill(); }; toasts.append(t); setTimeout(kill, 8000);
+  if (npanel.style.display === 'block') drawPanel(); else bell.classList.add('alert');
+}
+bell.onclick = e => { e.stopPropagation(); const open = npanel.style.display === 'block'; npanel.style.display = open ? 'none' : 'block'; if (!open) { bell.classList.remove('alert'); drawPanel(); } };
+document.addEventListener('pointerdown', e => { if (!e.target.closest('#npanel') && !e.target.closest('#bell')) npanel.style.display = 'none'; });
+function fire() {
+  if (pref.notif) { let k; do { k = Math.random() * JOKES.length | 0; } while (k === lastJ); lastJ = k; pushNote(JOKES[k]); }
+  setTimeout(fire, (30 + Math.random() * 30) * 60000);
+}
+setTimeout(fire, (30 + Math.random() * 30) * 60000);
+function openUpdate(done) {
+  createWindow({ id: 'sys:update', title: 'Atualização do sistema', mk: etile('⬇️'), w: 460, h: 300, sys: true, body: (v, w) => {
+    v.innerHTML = '<p class="us" style="margin:6px 0 14px">Preparando…</p><div class="pbar"><i></i></div><p class="up" style="color:var(--text-dim);font-size:13px"></p><div class="uact" style="display:none;gap:8px;margin-top:14px"><button class="pill ok">Reiniciar agora</button><button class="pill later">Mais tarde</button></div>';
+    const us = $('.us', v), bar = $('.pbar i', v), up = $('.up', v), ua = $('.uact', v), close = () => w.el.querySelector('.close').click();
+    const STEPS = ['Baixando PIRATINHA OS 9.0.1…', 'Instalando o papagaio…', 'Reconfigurando o tesouro…', 'Procurando o mapa… (não achei)', 'Finalizando…'];
+    const finish = () => { us.textContent = 'Atualização concluída. É preciso reiniciar para aplicá-la.'; bar.style.width = '100%'; up.textContent = ''; ua.style.display = 'flex'; };
+    $('.ok', v).onclick = () => { close(); reboot(); };
+    $('.later', v).onclick = () => { close(); setTimeout(() => { if (pref.notif) pushNote({ i: '🔄', t: 'Reinício pendente', m: 'Reinicie para concluir a atualização.', u: 2 }); }, 120000); };
+    if (done) return finish(); let p = 0;
+    const iv = setInterval(() => { if (!v.isConnected) return clearInterval(iv); p = Math.min(100, p + 2 + Math.random() * 7); bar.style.width = p + '%'; us.textContent = STEPS[Math.min(4, p / 20 | 0)]; up.textContent = (p | 0) + '%'; if (p >= 100) { clearInterval(iv); finish(); } }, 450);
+  } });
+}
 
 /* ---------- init ---------- */
 applyPrefs(); initWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();

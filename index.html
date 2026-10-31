@@ -10,17 +10,24 @@
 
 :root {
   --wallpaper: #87ceeb;                 /* azul celeste — cor de fundo padrão */
-  --glass: rgba(34, 36, 40, .58);
-  --glass-strong: rgba(28, 30, 34, .8);
+  --glass: rgba(34, 36, 40, .48);
+  --glass-strong: rgba(28, 30, 34, .68);
   --glass-line: rgba(255, 255, 255, .14);
   --text: #f0f2f4;
   --text-dim: #aeb4bb;
   --accent: #4aa8ff;
   --radius: 18px;
   --taskbar-h: 58px;
+  --dock-h: 70px;
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
+html { color-scheme: dark; }
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.28) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.26); border: 2px solid transparent; border-radius: 10px; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); background-clip: padding-box; }
 body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; background: var(--wallpaper); }
 
 [data-mode="old"] #os { display: none; }
@@ -33,19 +40,9 @@ body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; backgroun
 }
 #os.dragging iframe { pointer-events: none; }
 
-/* nome do site sobre o wallpaper: via ::before, então não é selecionável nem copiável */
-#mark {
-  position: absolute; inset: 0 0 calc(var(--taskbar-h) + 20px) 0; z-index: 0;
-  display: grid; place-items: center; pointer-events: none; user-select: none; -webkit-user-select: none;
-}
-#mark::before {
-  content: attr(data-text); font-size: clamp(56px, 13vw, 170px); letter-spacing: .04em;
-  color: rgba(255, 255, 255, .5); text-shadow: 0 2px 28px rgba(0, 60, 110, .25);
-}
-
-#desktop { position: absolute; inset: 0 0 calc(var(--taskbar-h) + 20px) 0; z-index: 1; }
+#desktop { position: absolute; inset: 0 0 calc(var(--taskbar-h) + 20px + var(--dock-h)) 0; z-index: 1; }
 .icon {
-  position: absolute; width: 96px; height: 100px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  position: absolute; width: var(--cw, 96px); height: var(--ch, 100px); display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: 8px 4px; border-radius: 14px; border: 1px solid transparent; background: none;
   color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.65); font: inherit; font-size: 13px; line-height: 1.15;
   cursor: default; text-align: center; touch-action: none; transition: left .12s, top .12s;
@@ -76,7 +73,7 @@ body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; backgroun
   box-shadow: 0 18px 50px rgba(0,0,0,.35); resize: both; overflow: hidden;
 }
 .win.min { display: none; }
-.win.max { inset: 10px 10px calc(var(--taskbar-h) + 20px) 10px !important; width: auto !important; height: auto !important; resize: none; }
+.win.max { inset: 10px 10px calc(var(--taskbar-h) + 20px + var(--dock-h)) 10px !important; width: auto !important; height: auto !important; resize: none; }
 .win:not(.active) { box-shadow: 0 8px 24px rgba(0,0,0,.25); }
 .win:not(.active) .bar { opacity: .7; }
 .bar { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 10px 0 12px; flex: none; touch-action: none; cursor: default; border-bottom: 1px solid var(--glass-line); }
@@ -131,8 +128,62 @@ button.srow:hover { background: rgba(255,255,255,.14); }
 .task span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #startbtn { width: 42px; height: 42px; flex: none; border: 0; border-radius: 13px; background: rgba(255,255,255,.1); font-size: 22px; cursor: pointer; }
 #startbtn:hover, #startbtn[aria-expanded="true"] { background: rgba(255,255,255,.22); }
-#clock { flex: none; padding: 0 6px; font-size: 14px; text-align: right; line-height: 1.1; color: var(--text); }
-#clock small { display: block; font-size: 11px; color: var(--text-dim); }
+#clock { flex: none; padding: 0 6px; margin-right: 14px; font-size: 19px; text-align: right; line-height: 1.15; color: var(--text); }
+#clock small { display: block; font-size: 13px; color: var(--text-dim); }
+
+/* fixados na taskbar */
+#pins { flex: none; display: flex; gap: 6px; }
+.sep { flex: none; width: 1px; height: 26px; background: var(--glass-line); margin: 0 2px; }
+.pin { position: relative; flex: none; width: 42px; height: 40px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 12px; background: rgba(255,255,255,.06); cursor: pointer; }
+.pin:hover { background: rgba(255,255,255,.14); }
+.pin.active { background: rgba(255,255,255,.18); border-color: var(--glass-line); }
+.pin .tile { width: 26px; height: 26px; border-radius: 8px; box-shadow: none; }
+.pin .tile img { width: 16px; height: 16px; }
+.pin .tile b { font-size: 13px; }
+.pin.open::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 5px; height: 3px; margin-left: -2px; border-radius: 3px; background: var(--text-dim); }
+.pin.active::after { width: 14px; margin-left: -7px; background: var(--accent); }
+
+/* dock de jogos */
+#dock {
+  position: absolute; left: 50%; bottom: calc(var(--taskbar-h) + 20px); transform: translateX(-50%); z-index: 99997;
+  display: flex; gap: 8px; padding: 6px; max-width: calc(100vw - 20px);
+  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
+  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+.dk { position: relative; width: 52px; height: 52px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 14px; background: none; cursor: pointer; }
+.dk:hover { background: rgba(255,255,255,.14); }
+.dk .tile { width: 42px; height: 42px; border-radius: 12px; }
+.dk .tile i { font-size: 24px; }
+.dk.open::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 5px; height: 3px; margin-left: -2px; border-radius: 3px; background: var(--text-dim); }
+.dk.active::after { width: 14px; margin-left: -7px; background: var(--accent); }
+.dk::before { content: attr(data-label); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); padding: 4px 9px; border-radius: 8px; background: var(--glass-strong); border: 1px solid var(--glass-line); color: var(--text); font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .12s; }
+.dk:hover::before { opacity: 1; }
+
+/* tamanho dos ícones, mini-apps, menu de contexto */
+.icon .tile { width: var(--ts, 46px); height: var(--ts, 46px); }
+.icon .tile img { width: calc(var(--ts, 46px) * .56); height: calc(var(--ts, 46px) * .56); }
+.icon .tile i { font-size: calc(var(--ts, 46px) * .52); }
+textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
+.note { width: 100%; height: 100%; resize: none; border: 0; outline: 0; background: transparent; color: var(--text); font: inherit; font-size: 15px; line-height: 1.5; }
+.calc { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 70px repeat(6, 1fr); gap: 6px; height: 100%; }
+.calc .scr { grid-column: 1 / -1; display: flex; align-items: flex-end; justify-content: flex-end; padding: 8px 12px; font-size: 28px; overflow: hidden; background: rgba(0,0,0,.25); border-radius: 12px; }
+.calc button { border: 1px solid var(--glass-line); border-radius: 12px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 20px; cursor: pointer; }
+.calc button:hover { background: rgba(255,255,255,.18); }
+.calc .op { background: rgba(74,168,255,.28); }
+#ctx { position: fixed; z-index: 100000; min-width: 220px; padding: 6px; display: none; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 14px; backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4); box-shadow: 0 14px 40px rgba(0,0,0,.35); }
+#ctx button { display: block; width: 100%; padding: 9px 12px; border: 0; border-radius: 9px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+#ctx button:hover { background: rgba(255,255,255,.14); }
+.view.br { padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+.tabs { display: flex; align-items: center; gap: 4px; padding: 6px 8px 0; overflow-x: auto; flex: none; }
+.tab { display: flex; align-items: center; gap: 6px; max-width: 180px; height: 32px; padding: 0 6px 0 12px; border-radius: 10px 10px 0 0; background: rgba(255,255,255,.06); font-size: 13px; white-space: nowrap; cursor: pointer; }
+.tab.on { background: rgba(255,255,255,.18); }
+.tab span { overflow: hidden; text-overflow: ellipsis; }
+.addr { display: flex; gap: 6px; padding: 6px 8px; flex: none; }
+.addr input { flex: 1; min-width: 0; height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }
+.frames { flex: 1; min-height: 0; margin: 0 6px 6px; border-radius: 10px; overflow: hidden; background: #fff; }
+.frames iframe { width: 100%; height: 100%; border: 0; display: none; }
+.pill.on { border-color: var(--accent); }
 
 /* start menu */
 #start {
@@ -184,8 +235,9 @@ button.srow:hover { background: rgba(255,255,255,.14); }
 
 <!-- ================= MODO OS ================= -->
 <div id="os">
-  <div id="mark" data-text="PIRATINHA" aria-hidden="true"></div>
   <div id="desktop"></div>
+  <div id="dock"></div>
+  <div id="ctx"></div>
 
   <div id="start" role="dialog" aria-label="Menu Iniciar">
     <div class="starthead"><b>🏴‍☠️ PIRATINHA</b><button data-switch>Modo antigo</button></div>
@@ -195,6 +247,8 @@ button.srow:hover { background: rgba(255,255,255,.14); }
 
   <div id="taskbar">
     <button id="startbtn" aria-label="Menu Iniciar" aria-expanded="false" title="Iniciar">🏴‍☠️</button>
+    <div id="pins"></div>
+    <div class="sep"></div>
     <div id="tasks"></div>
     <div id="clock"></div>
   </div>
@@ -229,7 +283,9 @@ const LINKS = [
   { n: 'ONLINE-Fix (🇷🇺)',    u: 'https://online-fix.me/',                         g: 'out' },
   { n: 'Old-Games (🇷🇺)',     u: 'https://www.old-games.ru/catalog/',              g: 'out' },
   { n: '3DM Game (🇨🇳)',      u: 'https://www.3dmgame.com/games',                  g: 'out' },
-  { n: 'DOOM',               u: './games/index.html', g: 'game', e: '👹', local: true },   // jogo local (Dwasm + Freedoom)
+];
+const GAMES = [                                  // aparecem na dock; adicione novos jogos aqui
+  { n: 'DOOM', file: 'DOOM.exe', u: './games/index.html', g: 'game', e: '👹', local: true, max: true },
 ];
 const FOOTER_URL = 'https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria';
 
@@ -255,9 +311,9 @@ const etile = e => () => { const t = document.createElement('div'); t.className 
 /* ---------- janelas ---------- */
 const wins = new Map(); let z = 10, offset = 0, active = null;
 function createWindow(o) {
-  closeStart();
+  closeStart(); o.pin = o.pin || pinBtns.get(o.id);
   if (wins.has(o.id)) { const w = wins.get(o.id); w.el.classList.remove('min'); focusWin(w); return w; }
-  const vw = innerWidth, vh = innerHeight - 90;
+  const vw = innerWidth, vh = innerHeight - 160;
   const W = Math.min(o.w, vw - 20), H = Math.min(o.h, vh - 20);
   const el = document.createElement('div'); el.className = 'win';
   const o2 = offset - 48;                          // pequeno deslocamento para janelas não ficarem exatamente empilhadas
@@ -269,18 +325,23 @@ function createWindow(o) {
   $('.bar', el).prepend(o.mk()); $('.title', el).textContent = o.title;
   if (o.ext) $('.ext', el).href = o.ext;
 
-  const btn = document.createElement('button'); btn.className = 'task';
-  btn.append(o.mk()); const sp = document.createElement('span'); sp.textContent = o.title; btn.append(sp);
-  $('#tasks').append(btn); os.append(el);
+  let btn = o.pin;                                   // app fixado (taskbar ou dock): reaproveita o botão
+  if (btn) btn.classList.add('open');
+  else {
+    btn = document.createElement('button'); btn.className = 'task';
+    btn.append(o.mk()); const sp = document.createElement('span'); sp.textContent = o.title; btn.append(sp);
+    $('#tasks').append(btn);
+  }
+  os.append(el);
 
   const w = { id: o.id, el, btn };
   wins.set(o.id, w);
   o.body($('.view', el), w);
-  btn.onclick = () => (active === w && !el.classList.contains('min')) ? minimize(w) : (el.classList.remove('min'), focusWin(w));
+  if (!o.pin) btn.onclick = () => toggleWin(w);
   el.addEventListener('pointerdown', () => focusWin(w));
   $('.mn', el).onclick = () => minimize(w);
   $('.mx', el).onclick = () => el.classList.toggle('max');
-  $('.close', el).onclick = () => { el.remove(); btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); };
+  $('.close', el).onclick = () => { el.remove(); if (o.pin) btn.classList.remove('open', 'active'); else btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); };
 
   const bar = $('.bar', el);
   bar.addEventListener('dblclick', e => { if (!e.target.closest('.wbtn')) el.classList.toggle('max'); });
@@ -303,22 +364,31 @@ function createWindow(o) {
   });
   focusWin(w); return w;
 }
+function toggleWin(w) { if (active === w && !w.el.classList.contains('min')) minimize(w); else { w.el.classList.remove('min'); focusWin(w); } }
 function minimize(w) { w.el.classList.add('min'); if (active === w) active = null; refresh(); }
 function focusWin(w) { active = w; w.el.style.zIndex = ++z; refresh(); }
 function refresh() { wins.forEach(w => { const on = w === active && !w.el.classList.contains('min'); w.el.classList.toggle('active', on); w.btn.classList.toggle('active', on); }); }
 
+const pinBtns = new Map();                           // url -> botão fixado (taskbar ou dock)
+function toggleApp(l) { const w = wins.get(l.u); if (w) toggleWin(w); else openApp(l); }
 function openApp(l) {
-  createWindow({
+  const isNew = !wins.has(l.u);
+  const w = createWindow({
+    pin: pinBtns.get(l.u),
     id: l.u, title: l.n, mk: () => tile(l), w: l.local ? 1000 : 960, h: l.local ? 660 : 620, ext: l.u,
     hint: l.local ? `<div class="hint">Clique dentro do jogo para ativar teclado e mouse. <a target="_blank" rel="noopener" href="${l.u}">Abrir em nova aba</a></div>` : `<div class="hint">Página em branco ou recusada? O site bloqueia exibição incorporada. <a target="_blank" rel="noopener" href="${l.u}">Abrir em nova aba</a></div>`,
     body: v => { v.innerHTML = `<iframe src="${l.u}" referrerpolicy="no-referrer" allow="fullscreen"></iframe>`; $('iframe', v).title = l.n; },
   });
+  if (isNew && l.max) w.el.classList.add('max');      // jogos abrem maximizados
 }
 
 /* ---------- grid de ícones ---------- */
-const CW = 96, CH = 100, PAD = 16;
+let CW = 96, CH = 100; const PAD = 16;
 let cols = 1, rows = 1;
-const saved = store.get('piratinha-pos', {});          // posições salvas: url -> [coluna, linha]
+const saved = {};                                      // posições da sessão: url -> [coluna, linha] (sorteadas a cada acesso)
+const ORDER = [...LINKS];
+for (let i = ORDER.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; }
+let frozen = false;
 const trashed = new Set(store.get('piratinha-trash', []));
 const cell = new Map();                                // posições efetivas
 const icons = new Map();
@@ -341,7 +411,8 @@ function layoutAll() {
   cols = Math.max(2, Math.floor((desk.clientWidth - PAD * 2) / CW));
   rows = Math.max(1, Math.floor((desk.clientHeight - PAD * 2) / CH));
   cell.clear(); setXY(trashEl, 0, 0); setXY(wallEl, cols - 1, 0);
-  const visible = LINKS.filter(l => !trashed.has(l.u));
+  wallEl.style.left = Math.max(PAD, desk.clientWidth - PAD - CW) + 'px';      // encostado à direita, com a mesma margem da esquerda
+  const visible = ORDER.filter(l => !trashed.has(l.u));
   LINKS.forEach(l => { icons.get(l.u).el.style.display = trashed.has(l.u) ? 'none' : ''; });
   const later = [];
   visible.forEach(l => {                               // 1º passe: quem tem posição salva livre
@@ -353,6 +424,7 @@ function layoutAll() {
     cell.set(l.u, (p ? nearestFree(p[0], p[1], l.u) : firstFree(l.u)) || [0, Math.min(1, rows - 1)]);
   });
   visible.forEach(l => { const p = cell.get(l.u); setXY(icons.get(l.u).el, p[0], p[1]); });
+  if (!frozen && desk.clientWidth) { frozen = true; visible.forEach(l => { saved[l.u] = cell.get(l.u); }); }   // fixa a disposição sorteada
 }
 
 const inside = (el, x, y) => { const r = el.getBoundingClientRect(); return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; };
@@ -400,7 +472,7 @@ LINKS.forEach(l => {
       let c = Math.max(0, Math.min(cols - 1, Math.floor((ev.clientX - dr.left - PAD) / CW)));
       let rr = Math.max(0, Math.min(rows - 1, Math.floor((ev.clientY - dr.top - PAD) / CH)));
       const p = free(c, rr, l.u) ? [c, rr] : (nearestFree(c, rr, l.u) || cell.get(l.u));
-      saved[l.u] = p; store.set('piratinha-pos', saved); layoutAll();
+      saved[l.u] = p; layoutAll();
     };
     b.addEventListener('pointermove', move); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
   });
@@ -412,7 +484,7 @@ addEventListener('resize', layoutAll);
 function sendToTrash(l) { trashed.add(l.u); delete saved[l.u]; persistTrash(); layoutAll(); }
 function restore(l) { trashed.delete(l.u); delete saved[l.u]; persistTrash(); layoutAll(); }
 function persistTrash() {
-  store.set('piratinha-trash', [...trashed]); store.set('piratinha-pos', saved);
+  store.set('piratinha-trash', [...trashed]);
   badge.textContent = trashed.size || '';
   const w = wins.get('sys:trash'); if (w && w.render) w.render();
 }
@@ -515,7 +587,7 @@ function initWall() {
 }
 function openWall() {
   createWindow({
-    id: 'sys:wall', title: 'Plano de fundo', mk: etile('🖼️'), w: 460, h: 460, sys: true,
+    id: 'sys:wall', title: 'Plano de fundo', mk: etile('🖼️'), w: 460, h: 640, sys: true,
     body: (v, w) => {
       const rowFor = wl => {
         const r = document.createElement('div'); r.className = 'srow' + (wl.n === current.n ? ' on' : '');
@@ -559,7 +631,7 @@ function row(name, host, fn) {
 function buildStart(q = '') {
   const box = $('#apps'); box.innerHTML = '';
   const qq = q.trim().toLowerCase();
-  const found = LINKS.filter(l => !qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq));
+  const found = [...LINKS, ...GAMES].filter(l => !qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq));
   if (!found.length) {                                  // pegadinha: parece o resultado pedido, mas leva ao link do rodapé
     box.append(row(q.trim(), slug(q) + '.com', () => { closeStart(); window.open(FOOTER_URL, '_blank', 'noopener'); }));
     return;
@@ -567,7 +639,7 @@ function buildStart(q = '') {
   [['rec', 'Recomendados'], ['out', 'Outros'], ['game', 'Jogos']].forEach(([g, name]) => {
     const items = found.filter(l => l.g === g); if (!items.length) return;
     const h = document.createElement('h3'); h.textContent = name; box.append(h);
-    items.forEach(l => box.append(row(l.n, hostOf(l), () => openApp(l))));
+    items.forEach(l => box.append(row(l.n, l.local ? (l.file || 'jogo') : hostOf(l), () => openApp(l))));
   });
 }
 $('#search').addEventListener('input', e => buildStart(e.target.value));
@@ -599,8 +671,117 @@ function tick() {
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 
+/* ---------- favoritos fixados na taskbar e dock de jogos ---------- */
+LINKS.filter(l => l.g === 'rec').forEach(l => {
+  const b = document.createElement('button'); b.className = 'pin'; b.title = l.n; b.append(tile(l));
+  b.onclick = () => toggleApp(l); pinBtns.set(l.u, b); $('#pins').append(b);
+});
+GAMES.forEach(l => {
+  const b = document.createElement('button'); b.className = 'dk'; b.dataset.label = l.file || l.n; b.setAttribute('aria-label', l.file || l.n); b.append(tile(l));
+  b.onclick = () => toggleApp(l); pinBtns.set(l.u, b); $('#dock').append(b);
+});
+
+/* ---------- configurações: cor/opacidade do vidro e tamanho dos ícones ---------- */
+const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 38 }, m: { n: 'Médio', w: 96, h: 100, t: 46 }, g: { n: 'Grande', w: 116, h: 120, t: 56 } };
+const pref = Object.assign({ c: '#222428', a: .48, s: 'm' }, store.get('piratinha-pref', {}));
+function applyPrefs(relayout) {
+  const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  st.setProperty('--glass', `rgba(${r},${g},${b},${pref.a})`);
+  st.setProperty('--glass-strong', `rgba(${r},${g},${b},${Math.min(.95, pref.a + .2)})`);
+  CW = z.w; CH = z.h; os.style.setProperty('--cw', z.w + 'px'); os.style.setProperty('--ch', z.h + 'px'); os.style.setProperty('--ts', z.t + 'px');
+  if (relayout) { Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll(); }
+  store.set('piratinha-pref', pref);
+}
+function openSettings() {
+  createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 440, h: 360, sys: true, body: v => {
+    v.innerHTML = '<div class="srow"><span class="grow">Cor do vidro</span><input type="color"></div><div class="srow"><span class="grow">Opacidade do vidro</span><input type="range" min="15" max="90"></div><div class="sysbar" style="margin-top:14px">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div>';
+    const [c, a] = v.querySelectorAll('input'), box = $('.sz', v);
+    c.value = pref.c; a.value = Math.round(pref.a * 100);
+    c.oninput = () => { pref.c = c.value; applyPrefs(); };
+    a.oninput = () => { pref.a = a.value / 100; applyPrefs(); };
+    const draw = () => { box.innerHTML = ''; Object.entries(SIZES).forEach(([k, z]) => { const b = document.createElement('button'); b.className = 'pill' + (k === pref.s ? ' on' : ''); b.textContent = z.n; b.onclick = () => { pref.s = k; applyPrefs(true); draw(); }; box.append(b); }); };
+    draw();
+  } });
+}
+
+/* ---------- mini-apps ---------- */
+function openNotes() {
+  createWindow({ id: 'sys:notes', title: 'Bloco de notas', mk: etile('📝'), w: 460, h: 400, sys: true, body: v => {
+    const t = document.createElement('textarea'); t.className = 'note'; t.placeholder = 'Escreva aqui… (salvo automaticamente)';
+    t.value = store.get('piratinha-notes', ''); t.oninput = () => store.set('piratinha-notes', t.value); v.append(t);
+  } });
+}
+function openCalc() {
+  createWindow({ id: 'sys:calc', title: 'Calculadora', mk: etile('🧮'), w: 320, h: 460, sys: true, body: v => {
+    let ex = ''; v.innerHTML = '<div class="calc"><div class="scr">0</div></div>';
+    const c = $('.calc', v), scr = $('.scr', v), show = () => { scr.textContent = ex || '0'; };
+    const calc = () => { try { if (!/^[\d+\-*/.() %]+$/.test(ex)) throw 0; const r = Function('"use strict";return (' + ex + ')')(); ex = Number.isFinite(r) ? String(+r.toFixed(10)) : 'Erro'; } catch (e) { ex = 'Erro'; } show(); };
+    'C ⌫ % ÷ 7 8 9 × 4 5 6 − 1 2 3 + ( ) 0 . ='.split(' ').forEach(k => {
+      const b = document.createElement('button'); b.textContent = k;
+      if ('÷×−+=%'.includes(k)) b.className = 'op'; if (k === '=') b.style.gridColumn = '1 / -1';
+      b.onclick = () => { if (ex === 'Erro') ex = ''; if (k === 'C') ex = ''; else if (k === '⌫') ex = ex.slice(0, -1); else if (k === '=') return calc(); else ex += ({ '÷': '/', '×': '*', '−': '-' })[k] || k; show(); };
+      c.append(b);
+    });
+  } });
+}
+function openMusic() {
+  createWindow({ id: 'sys:music', title: 'Música', mk: etile('🎵'), w: 460, h: 500, sys: true, body: v => {
+    const list = []; let i = -1;
+    v.innerHTML = '<div class="sysbar"><span class="np">Nenhuma faixa</span><span style="display:flex;gap:6px"><button class="pill pv">⏮</button><button class="pill nx">⏭</button><label class="pill" style="display:grid;place-items:center">+ Arquivos<input type="file" accept="audio/*" multiple hidden></label></span></div><audio controls style="width:100%"></audio><div class="pl" style="margin-top:10px"></div>';
+    const au = $('audio', v), pl = $('.pl', v), np = $('.np', v);
+    const draw = () => { pl.innerHTML = ''; list.forEach((t, k) => { const b = document.createElement('button'); b.className = 'srow' + (k === i ? ' on' : ''); b.textContent = t.name; b.onclick = () => play(k); pl.append(b); }); };
+    function play(k) { if (k < 0 || k >= list.length) return; i = k; au.src = list[k].url; au.play(); np.textContent = list[k].name; draw(); }
+    $('input', v).onchange = e => { [...e.target.files].forEach(f => list.push({ name: f.name.replace(/\.[^.]+$/, ''), url: URL.createObjectURL(f) })); if (i < 0) play(0); else draw(); e.target.value = ''; };
+    $('.pv', v).onclick = () => play(i - 1); $('.nx', v).onclick = () => play(i + 1); au.onended = () => play(i + 1);
+  } });
+}
+function openBrowser() {
+  createWindow({ id: 'sys:browser', title: 'Navegador', mk: etile('🌐'), w: 1000, h: 640, sys: true,
+    hint: '<div class="hint">Muitos sites bloqueiam exibição dentro de janelas. Se ficar em branco, use ↗ para abrir em nova aba.</div>',
+    body: v => {
+      v.classList.add('br');
+      v.innerHTML = '<div class="tabs"></div><div class="addr"><button class="pill" title="Recarregar">⟳</button><input type="text" placeholder="Digite um endereço ou pesquisa" spellcheck="false"><button class="pill" title="Abrir em nova aba">↗</button></div><div class="frames"></div>';
+      const bar = $('.tabs', v), inp = $('input', v), box = $('.frames', v), [rl, ex] = v.querySelectorAll('.addr .pill'), tabs = []; let cur = null;
+      const norm = q => { q = q.trim(); if (!q) return ''; if (/^[a-z]+:\/\//i.test(q)) return q; if (/^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(q)) return 'https://' + q; return 'https://duckduckgo.com/?q=' + encodeURIComponent(q); };
+      const name = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return 'Nova aba'; } };
+      const show = t => { cur = t; tabs.forEach(x => { x.f.style.display = x === t ? 'block' : 'none'; x.b.classList.toggle('on', x === t); }); inp.value = t.u; };
+      const plus = document.createElement('button'); plus.className = 'wbtn'; plus.textContent = '+'; plus.title = 'Nova aba'; bar.append(plus);
+      const add = () => {
+        const t = { u: '' }; t.f = document.createElement('iframe'); t.f.referrerPolicy = 'no-referrer'; t.f.allow = 'fullscreen';
+        t.b = document.createElement('div'); t.b.className = 'tab'; t.l = document.createElement('span'); t.l.textContent = 'Nova aba';
+        const x = document.createElement('button'); x.className = 'wbtn'; x.textContent = '✕'; x.style.cssText = 'width:22px;height:22px;font-size:12px';
+        x.onclick = ev => { ev.stopPropagation(); const k = tabs.indexOf(t); tabs.splice(k, 1); t.f.remove(); t.b.remove(); if (!tabs.length) add(); else if (cur === t) show(tabs[Math.max(0, k - 1)]); };
+        t.b.onclick = () => show(t); t.b.append(t.l, x); bar.insertBefore(t.b, plus); box.append(t.f); tabs.push(t); show(t);
+      };
+      plus.onclick = add;
+      inp.onkeydown = e => { if (e.key === 'Enter' && cur) { const u = norm(inp.value); if (!u) return; cur.u = u; cur.f.src = u; cur.l.textContent = name(u); inp.value = u; } };
+      rl.onclick = () => { if (cur && cur.u) cur.f.src = cur.u; };
+      ex.onclick = () => { if (cur && cur.u) window.open(cur.u, '_blank', 'noopener'); };
+      add();
+    } });
+}
+
+/* menu de clique direito na área de trabalho */
+const ctx = $('#ctx');
+desk.addEventListener('contextmenu', e => {
+  if (e.target !== desk) return; e.preventDefault(); ctx.innerHTML = '';
+  [['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['⚙️ Configurações', openSettings], ['📝 Novo bloco de notas', openNotes]].forEach(([t, f]) => {
+    const b = document.createElement('button'); b.textContent = t; b.onclick = () => { ctx.style.display = 'none'; f(); }; ctx.append(b);
+  });
+  ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.min(e.clientY, innerHeight - 200) + 'px';
+});
+document.addEventListener('pointerdown', e => { if (!e.target.closest('#ctx')) ctx.style.display = 'none'; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') ctx.style.display = 'none'; });
+
+/* mini-apps na dock */
+[['Bloco de notas', '📝', openNotes, 'sys:notes'], ['Calculadora', '🧮', openCalc, 'sys:calc'], ['Navegador', '🌐', openBrowser, 'sys:browser'], ['Música', '🎵', openMusic, 'sys:music'], ['Configurações', '⚙️', openSettings, 'sys:set']].forEach(([n, em, fn, id]) => {
+  const b = document.createElement('button'); b.className = 'dk'; b.dataset.label = n; b.setAttribute('aria-label', n); b.append(etile(em)());
+  b.onclick = () => { const w = wins.get(id); if (w) toggleWin(w); else fn(); }; pinBtns.set(id, b); $('#dock').append(b);
+});
+
 /* ---------- init ---------- */
-initWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();
+applyPrefs(); initWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();
 </script>
 </body>
 </html>

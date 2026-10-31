@@ -18,6 +18,7 @@
   --accent: #4aa8ff;
   --radius: 18px;
   --taskbar-h: 58px;
+  --blur: 22px;
   --dock-h: 70px;
 }
 * { box-sizing: border-box; }
@@ -56,7 +57,7 @@ body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; backgroun
 .tile {
   width: 46px; height: 46px; flex: none; border-radius: 13px; display: grid; place-items: center;
   background: var(--glass); border: 1px solid var(--glass-line);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
   box-shadow: 0 4px 12px rgba(0,0,0,.18); overflow: hidden;
 }
 .tile img { width: 26px; height: 26px; }
@@ -69,7 +70,7 @@ body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; backgroun
 .win {
   position: absolute; display: flex; flex-direction: column; min-width: 320px; min-height: 220px;
   background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: var(--radius);
-  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
   box-shadow: 0 18px 50px rgba(0,0,0,.35); resize: both; overflow: hidden;
 }
 .win.min { display: none; }
@@ -113,7 +114,7 @@ button.srow:hover { background: rgba(255,255,255,.14); }
   position: absolute; left: 10px; right: 10px; bottom: 10px; height: var(--taskbar-h); z-index: 99999;
   display: flex; align-items: center; gap: 8px; padding: 0 10px;
   background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
-  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
   box-shadow: 0 10px 30px rgba(0,0,0,.28);
 }
 #tasks { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
@@ -149,7 +150,7 @@ button.srow:hover { background: rgba(255,255,255,.14); }
   position: absolute; left: 50%; bottom: calc(var(--taskbar-h) + 20px); transform: translateX(-50%); z-index: 99997;
   display: flex; gap: 8px; padding: 6px; max-width: calc(100vw - 20px);
   background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
-  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 .dk { position: relative; width: 52px; height: 52px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 14px; background: none; cursor: pointer; }
@@ -172,7 +173,7 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 .calc button { border: 1px solid var(--glass-line); border-radius: 12px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 20px; cursor: pointer; }
 .calc button:hover { background: rgba(255,255,255,.18); }
 .calc .op { background: rgba(74,168,255,.28); }
-#ctx { position: fixed; z-index: 100000; min-width: 220px; padding: 6px; display: none; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 14px; backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4); box-shadow: 0 14px 40px rgba(0,0,0,.35); }
+#ctx { position: fixed; z-index: 100000; min-width: 220px; padding: 6px; display: none; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 14px; backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4); box-shadow: 0 14px 40px rgba(0,0,0,.35); }
 #ctx button { display: block; width: 100%; padding: 9px 12px; border: 0; border-radius: 9px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
 #ctx button:hover { background: rgba(255,255,255,.14); }
 .view.br { padding: 0; display: flex; flex-direction: column; overflow: hidden; }
@@ -214,20 +215,23 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 #bell { font-size: 18px; color: var(--text); } .dot { position: absolute; top: 7px; right: 9px; width: 9px; height: 9px; border-radius: 50%; background: #e5484d; border: 1px solid var(--glass-strong); display: none; } #bell.alert .dot { display: block; }
 #toasts { position: absolute; right: 14px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99996; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
 #os.tbtop #toasts { bottom: 20px; } #os.tbtop #npanel { bottom: auto; top: calc(var(--taskbar-h) + 20px); }
-.toast { pointer-events: auto; display: flex; gap: 12px; align-items: center; width: 310px; padding: 12px 14px; border-radius: 14px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); box-shadow: 0 12px 32px rgba(0,0,0,.35); cursor: pointer; animation: wopen .2s; }
+.toast { pointer-events: auto; display: flex; gap: 12px; align-items: center; width: 310px; padding: 12px 14px; border-radius: 14px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 12px 32px rgba(0,0,0,.35); cursor: pointer; animation: wopen .2s; }
 .toast.game { background: linear-gradient(135deg, rgba(23,26,33,.96), rgba(34,48,66,.96)); border-color: rgba(102,192,244,.45); }
 .toast.out { opacity: 0; transition: opacity .25s; } .noanim .toast { animation: none; }
 .toast .ti { font-size: 26px; } .toast b { display: block; font-size: 14px; font-weight: normal; } .toast em { font-style: normal; font-size: 13px; color: var(--text-dim); }
-#npanel { position: absolute; right: 10px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99998; display: none; width: min(360px, calc(100vw - 20px)); max-height: 420px; overflow: auto; padding: 12px; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 18px; backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+#npanel { position: absolute; right: 10px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99998; display: none; width: min(360px, calc(100vw - 20px)); max-height: 420px; overflow: auto; padding: 12px; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 18px; backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
 .nh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; } .nh b { font-weight: normal; }
 .pill.danger { background: rgba(229,72,77,.16); border-color: rgba(229,72,77,.5); color: #ffb4b6; } .pill.danger:hover { background: rgba(229,72,77,.3); }
 .modal { position: fixed; inset: 0; z-index: 100001; display: grid; place-items: center; background: rgba(0,0,0,.45); }
-.modal .box { width: min(380px, calc(100vw - 32px)); padding: 20px; border-radius: 18px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.modal .box { width: min(380px, calc(100vw - 32px)); padding: 20px; border-radius: 18px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 .modal p { margin: 0 0 16px; line-height: 1.5; } .modal .mb { display: flex; justify-content: flex-end; gap: 8px; }
 .blackout { position: fixed; inset: 0; z-index: 100003; background: #000; color: #777; display: grid; place-items: center; font-size: 18px; text-align: center; padding: 24px; cursor: pointer; }
 .bsod { position: fixed; inset: 0; z-index: 100004; background: #0a56b8; color: #fff; padding: 8vw; font-size: 20px; line-height: 1.5; }
 .pbar { height: 10px; border-radius: 6px; background: rgba(255,255,255,.12); overflow: hidden; } .pbar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
 .startfoot { display: flex; justify-content: flex-end; gap: 6px; padding-top: 10px; border-top: 1px solid var(--glass-line); }
+
+.blackout.upd { cursor: default; color: #ddd; background: #0b0d10; } .upd p { margin: 6px 0; } .upd .up2 { font-size: 28px; } .upd .uw { font-size: 14px; color: #888; }
+.spin { width: 44px; height: 44px; margin: 0 auto 18px; border-radius: 50%; border: 4px solid rgba(255,255,255,.2); border-top-color: #fff; animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
 
 /* start menu */
 #start {
@@ -235,7 +239,7 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
   width: min(340px, calc(100vw - 20px)); max-height: min(520px, calc(100vh - 100px));
   display: none; flex-direction: column; gap: 12px; padding: 14px;
   background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 22px;
-  backdrop-filter: blur(26px) saturate(1.4); -webkit-backdrop-filter: blur(26px) saturate(1.4);
+  backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
   box-shadow: 0 20px 60px rgba(0,0,0,.4);
 }
 #start.open { display: flex; animation: pop .14s ease-out; }
@@ -391,6 +395,7 @@ function createWindow(o) {
   $('.close', el).onclick = () => { const kill = () => { el.remove(); if (o.pin) btn.classList.remove('open', 'active'); else btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); }; if (pref.an) { el.classList.add('closing'); setTimeout(kill, 130); } else kill(); };
 
   const bar = $('.bar', el);
+  bar.addEventListener('contextmenu', e => showCtx(e, [['➖ Minimizar', () => minimize(w)], [el.classList.contains('max') ? '🗗 Restaurar' : '🗖 Maximizar', () => el.classList.toggle('max')], ...(o.ext ? [['↗ Abrir em nova aba', () => window.open(o.ext, '_blank', 'noopener')]] : []), ['✕ Fechar', () => $('.close', el).click()]]));
   bar.addEventListener('dblclick', e => { if (!e.target.closest('.wbtn')) el.classList.toggle('max'); });
   bar.addEventListener('pointerdown', e => {
     if (e.target.closest('.wbtn') || el.classList.contains('max')) return;
@@ -494,9 +499,11 @@ const trashEl = mkIcon('Lixeira', etile('🗑️'), () => openTrash());
 const badge = document.createElement('div'); badge.className = 'badge'; trashEl.append(badge);
 
 /* ícones dos sites: arrastáveis em grid */
-LINKS.forEach(l => {
+store.get('piratinha-links', []).forEach(l => { if (!LINKS.some(x => x.u === l.u)) { LINKS.push(l); ORDER.push(l); } });
+function addIcon(l) {
   const b = mkIcon(l.n, () => tile(l), () => openApp(l));
   icons.set(l.u, { l, el: b });
+  b.addEventListener('contextmenu', e => showCtx(e, [['📂 Abrir', () => openApp(l)], ['↗ Abrir em nova aba', () => window.open(l.u, '_blank', 'noopener')], ['🗑️ Mover para a lixeira', () => sendToTrash(l)], ...(l.c ? [['❌ Excluir link', () => delLink(l)]] : [])]));
   b.addEventListener('pointerdown', e => {
     if (e.button !== 0) return;
     b._dragged = false;
@@ -521,7 +528,8 @@ LINKS.forEach(l => {
     };
     b.addEventListener('pointermove', move); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
   });
-});
+}
+LINKS.forEach(addIcon);
 desk.addEventListener('click', e => { if (e.target === desk) deselect(); });
 addEventListener('resize', layoutAll);
 
@@ -701,7 +709,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStart()
 /* ---------- modo antigo ---------- */
 LINKS.forEach(l => {
   if (l.local) return;
-  const a = document.createElement('a'); a.href = l.u; a.target = '_blank'; a.textContent = l.n;
+  const a = document.createElement('a'); a.href = l.u; a.target = '_blank'; a.textContent = l.n; a.dataset.u = l.u;
   $(l.g === 'rec' ? '#old-rec' : '#old-out').append(a);
 });
 function setMode(m) { document.body.dataset.mode = m; closeStart(); if (m === 'os') layoutAll(); try { localStorage.setItem('piratinha-mode', m); } catch (e) {} }
@@ -723,27 +731,36 @@ GAMES.forEach(l => {
 });
 
 /* ---------- configurações: cor/opacidade do vidro e tamanho dos ícones ---------- */
+const THEMES = [
+  { n: 'Padrão', c: '#222428', a: .48, ac: '#4aa8ff', w: 'Azul celeste' }, { n: 'Pirata', c: '#2b1a0c', a: .55, ac: '#e0a63a', w: 'Marrom café' },
+  { n: 'Meia-noite', c: '#0b0e19', a: .55, ac: '#7c9cff', w: 'Meia-noite' }, { n: 'Sangue', c: '#3a0b0d', a: .5, ac: '#ff5a5f', w: 'Vinho' },
+  { n: 'Floresta', c: '#0e2b2e', a: .5, ac: '#34d399', w: 'Verde petróleo' }, { n: 'Neon', c: '#1e0b36', a: .5, ac: '#e879f9', w: 'Roxo noturno' },
+];
 const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 38 }, m: { n: 'Médio', w: 96, h: 100, t: 46 }, g: { n: 'Grande', w: 116, h: 120, t: 56 } };
-const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true }, store.get('piratinha-pref', {}));
+const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#4aa8ff', bl: 22 }, store.get('piratinha-pref', {}));
 function applyPrefs(relayout) {
   const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
   const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
   st.setProperty('--glass', `rgba(${r},${g},${b},${pref.a})`);
   st.setProperty('--glass-strong', `rgba(${r},${g},${b},${Math.min(.95, pref.a + .2)})`);
   CW = z.w; CH = z.h; os.style.setProperty('--cw', z.w + 'px'); os.style.setProperty('--ch', z.h + 'px'); os.style.setProperty('--ts', z.t + 'px');
+  st.setProperty('--accent', pref.ac); st.setProperty('--blur', pref.bl + 'px');
   os.classList.toggle('tbtop', pref.tb === 't'); document.body.classList.toggle('noanim', !pref.an);
   if (relayout) { Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll(); }
   store.set('piratinha-pref', pref);
 }
 function openSettings() {
-  createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 440, h: 600, sys: true, body: v => {
-    v.innerHTML = '<div class="srow"><span class="grow">Cor do vidro</span><input type="color"></div><div class="srow"><span class="grow">Opacidade do vidro</span><input type="range" min="15" max="90"></div><div class="sysbar" style="margin-top:14px">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Posição da taskbar</div><div class="tbp" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Geral</div><div class="opts"></div><div class="sysbar" style="margin-top:14px">Sistema</div><div style="display:flex;justify-content:space-between;gap:6px"><button class="pill goold">Ir para o modo antigo</button><button class="pill danger reset">Restaurar padrões</button></div>';
+  createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 440, h: 720, sys: true, body: v => {
+    v.innerHTML = '<div class="sysbar">Temas</div><div class="th" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div><div class="srow"><span class="grow">Cor do vidro</span><input type="color"></div><div class="srow"><span class="grow">Opacidade do vidro</span><input type="range" min="15" max="90"></div><div class="srow"><span class="grow">Desfoque do vidro</span><input type="range" min="0" max="40" class="bl"></div><div class="srow"><span class="grow">Cor de destaque</span><input type="color" class="ac"></div><div class="sysbar" style="margin-top:14px">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Posição da taskbar</div><div class="tbp" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Geral</div><div class="opts"></div><div class="sysbar" style="margin-top:14px">Sistema</div><div style="display:flex;justify-content:space-between;gap:6px"><button class="pill goold">Ir para o modo antigo</button><button class="pill danger reset">Restaurar padrões</button></div>';
     const [c, a] = v.querySelectorAll('input'), sz = $('.sz', v), tbp = $('.tbp', v), opts = $('.opts', v);
-    c.value = pref.c; a.value = Math.round(pref.a * 100);
+    const ac = $('.ac', v), bl = $('.bl', v), sync = () => { c.value = pref.c; a.value = Math.round(pref.a * 100); ac.value = pref.ac; bl.value = pref.bl; }; sync();
+    ac.oninput = () => { pref.ac = ac.value; applyPrefs(); }; bl.oninput = () => { pref.bl = +bl.value; applyPrefs(); };
+    THEMES.forEach(t => { const b = document.createElement('button'); b.className = 'pill'; b.textContent = t.n; b.onclick = () => {
+      Object.assign(pref, { c: t.c, a: t.a, ac: t.ac }); const wl = COLORS.find(x => x.n === t.w); if (wl) { current = wl; picked = wl.n; store.set('piratinha-wall', picked); applyWall(); } applyPrefs(); sync(); }; $('.th', v).append(b); });
     c.oninput = () => { pref.c = c.value; applyPrefs(); }; a.oninput = () => { pref.a = a.value / 100; applyPrefs(); };
     const group = (box, items, key, relayout) => { const draw = () => { box.innerHTML = ''; items.forEach(([k, n]) => { const b = document.createElement('button'); b.className = 'pill' + (k === pref[key] ? ' on' : ''); b.textContent = n; b.onclick = () => { pref[key] = k; applyPrefs(relayout); draw(); }; box.append(b); }); }; draw(); };
     group(sz, Object.entries(SIZES).map(([k, z]) => [k, z.n]), 's', true); group(tbp, [['b', 'Embaixo'], ['t', 'Em cima']], 'tb', true);
-    [['h24', 'Relógio em 24 horas'], ['sec', 'Mostrar segundos no relógio'], ['an', 'Animações das janelas'], ['shuf', 'Embaralhar ícones a cada acesso'], ['notif', 'Notificações (piadas a cada 30–60 min)']].forEach(([k, n]) => {
+    [['h24', 'Relógio em 24 horas'], ['sec', 'Mostrar segundos no relógio'], ['an', 'Animações das janelas'], ['shuf', 'Embaralhar ícones a cada acesso'], ['notif', 'Notificações']].forEach(([k, n]) => {
       const l = document.createElement('label'), sp = document.createElement('span'), cb = document.createElement('input'); l.className = 'srow'; sp.className = 'grow'; sp.textContent = n; cb.type = 'checkbox'; cb.checked = !!pref[k];
       cb.onchange = () => { pref[k] = cb.checked; applyPrefs(); tick(); }; l.append(sp, cb); opts.append(l);
     });
@@ -827,22 +844,53 @@ function openBrowser() {
 
 /* menu de clique direito na área de trabalho */
 const ctx = $('#ctx');
+function showCtx(e, items) {
+  e.preventDefault(); e.stopPropagation(); ctx.innerHTML = '';
+  items.forEach(([t, f]) => { const b = document.createElement('button'); b.textContent = t; b.onclick = () => { ctx.style.display = 'none'; f(); }; ctx.append(b); });
+  ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.max(0, Math.min(e.clientY, innerHeight - 20 - items.length * 38)) + 'px';
+}
 desk.addEventListener('contextmenu', e => {
-  if (e.target !== desk) return; e.preventDefault(); ctx.innerHTML = '';
-  [['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['📝 Novo bloco de notas', openNotes], ['⚙️ Configurações', openSettings]].forEach(([t, f]) => {
-    const b = document.createElement('button'); b.textContent = t; b.onclick = () => { ctx.style.display = 'none'; f(); }; ctx.append(b);
-  });
-  ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.min(e.clientY, innerHeight - 200) + 'px';
+  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['↕️ Organizar ícones', organize], ['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['📝 Novo bloco de notas', openNotes], ['⚙️ Configurações', openSettings]]);
 });
+function organize() {
+  const vis = LINKS.filter(l => !trashed.has(l.u)).sort((a, b) => a.n.localeCompare(b.n, 'pt'));
+  ORDER.length = 0; ORDER.push(...vis, ...LINKS.filter(l => trashed.has(l.u))); Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll();
+}
+function newLink() {
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = '<div class="box"><p>Novo link</p><input type="text" class="sp nm" placeholder="Nome" style="width:100%"><input type="text" class="sp ur" placeholder="https://…" style="width:100%;margin-top:8px"><div class="mb" style="margin-top:14px"><button class="pill">Cancelar</button><button class="pill">Adicionar</button></div></div>';
+  const [x, y] = m.querySelectorAll('button'), nm = $('.nm', m), ur = $('.ur', m);
+  x.onclick = () => m.remove();
+  y.onclick = () => {
+    let u = ur.value.trim(); if (!/^[a-z]+:\/\//i.test(u)) u = 'https://' + u;
+    try { new URL(u); } catch (e) { ur.value = ''; ur.placeholder = 'Endereço inválido'; return; }
+    if (LINKS.some(l => l.u === u)) { ur.value = ''; ur.placeholder = 'Esse link já existe'; return; }
+    const l = { n: nm.value.trim() || new URL(u).hostname.replace(/^www\./, ''), u, g: 'out', c: 1 };
+    LINKS.push(l); ORDER.push(l); store.set('piratinha-links', [...store.get('piratinha-links', []), l]); addIcon(l);
+    const a = document.createElement('a'); a.href = u; a.target = '_blank'; a.textContent = l.n; a.dataset.u = u; $('#old-out').append(a); m.remove(); layoutAll();
+  };
+  os.append(m); nm.focus();
+}
+function delLink(l) {
+  [LINKS, ORDER].forEach(a => { const i = a.indexOf(l); if (i >= 0) a.splice(i, 1); });
+  icons.get(l.u).el.remove(); icons.delete(l.u); trashed.delete(l.u); delete saved[l.u]; persistTrash();
+  store.set('piratinha-links', store.get('piratinha-links', []).filter(x => x.u !== l.u));
+  document.querySelectorAll('#old-out a').forEach(a => { if (a.dataset.u === l.u) a.remove(); }); layoutAll();
+}
 document.addEventListener('pointerdown', e => { if (!e.target.closest('#ctx')) ctx.style.display = 'none'; });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') ctx.style.display = 'none'; });
 
 /* mini-apps fixados na taskbar, logo após o separador */
 [['Navegador', '🌐', openBrowser, 'sys:browser'], ['Música', '🎵', openMusic, 'sys:music'], ['Calculadora', '🧮', openCalc, 'sys:calc'], ['Bloco de notas', '📝', openNotes, 'sys:notes'], ['Paint', '🎨', openPaint, 'sys:paint'], ['Terminal', '💻', openTerm, 'sys:term']].forEach(([n, em, fn, id]) => {
-  const b = document.createElement('button'); b.className = 'pin'; b.title = n; b.setAttribute('aria-label', n); b.append(etile(em)());
+  const b = document.createElement('button'); b.className = 'pin'; b.draggable = true; b.title = n; b.setAttribute('aria-label', n); b.append(etile(em)());
   b.onclick = () => { const w = wins.get(id); if (w) toggleWin(w); else fn(); }; pinBtns.set(id, b); $('#tools').append(b);
 });
 $('#startset').onclick = openSettings;
+{ const tl = $('#tools'); let drag = null;
+  store.get('piratinha-tools', []).forEach(n => { const b = [...tl.children].find(x => x.title === n); if (b) tl.append(b); });
+  tl.addEventListener('dragstart', e => { drag = e.target.closest('.pin'); });
+  tl.addEventListener('dragover', e => { e.preventDefault(); const t = e.target.closest('.pin'); if (t && drag && t !== drag) { const r = t.getBoundingClientRect(); tl.insertBefore(drag, e.clientX < r.left + r.width / 2 ? t : t.nextSibling); } });
+  tl.addEventListener('dragend', () => { drag = null; store.set('piratinha-tools', [...tl.children].map(b => b.title)); }); }
 
 /* ---------- jogos (um ícone por jogo na dock; recordes no navegador) ---------- */
 const rec = (k, s) => { const b = store.get('piratinha-rec-' + k, 0); if (k === 'mines' ? (!b || s < b) : s > b) { store.set('piratinha-rec-' + k, s); return s; } return b; };
@@ -1005,11 +1053,15 @@ function openTerm() {
       date: () => print(new Date().toLocaleString('pt-BR')),
       echo: a => print(a), whoami: () => print('pirata'), ls: () => print('Images/  games/  index.html  tesouro.txt'),
       neofetch: () => {
-        const info = ['pirata@piratinha', '-----------------', 'SO: PIRATINHA OS', 'Tela: ' + innerWidth + 'x' + innerHeight, 'Wallpaper: ' + current.n, 'Janelas abertas: ' + wins.size, 'Uptime: ' + Math.round((Date.now() - BOOT) / 1000) + 's', 'Vidro: ' + pref.c];
+        const apps = LINKS.length + $('#dock').children.length + $('#tools').children.length;
+        const info = ['pirata@piratinha', '-----------------', 'SO: PIRATINHA OS ' + verAt(vIdx - 1), 'Uptime: ' + Math.round((Date.now() - BOOT) / 1000) + 's', 'Packages: ' + apps + ' (shipping)', 'WM: Pir-Ate 1.0 (WM)', 'Terminal: Arrg 0.50.2', 'IP: 192.168.1.1', 'Tela: ' + innerWidth + 'x' + innerHeight, 'Wallpaper: ' + current.n, 'Janelas abertas: ' + wins.size, 'Vidro: ' + pref.c];
         print(Array.from({ length: Math.max(LOGO.length, info.length) }, (_, i) => (LOGO[i] || ' '.repeat(LOGO[0].length)) + (info[i] || '')).join('\n'));
       },
       cowsay: a => { a = a || 'Arrr!'; print(' ' + '_'.repeat(a.length + 2) + '\n< ' + a + ' >\n ' + '-'.repeat(a.length + 2) + '\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||'); },
-      hack: async () => { for (const l of ['Conectando ao servidor…', 'Quebrando firewall… [####------]', 'Quebrando firewall… [########--]', 'Acesso concedido.', 'Baixando tesouro.zip… 100%', '(é brincadeira, nada foi hackeado)']) { print(l); await sleep(450); } },
+      hack: async () => {
+        const bar = async l => { const d = print(''); for (let i = 0; i <= 40; i++) { d.textContent = l + ' [' + '█'.repeat(i) + '░'.repeat(40 - i) + '] ' + (i * 2.5 | 0) + '%'; term.scrollTop = term.scrollHeight; await sleep(35); } };
+        await bar('Conectando ao servidor'); await bar('Quebrando o firewall '); await bar('Baixando tesouro.zip '); print('Acesso concedido.');
+      },
       matrix: async () => { const d = print(''); d.style.color = '#22c55e'; for (let i = 0; i < 24; i++) { d.textContent += Array.from({ length: 56 }, () => String.fromCharCode(0xff66 + Math.random() * 50 | 0)).join('') + '\n'; term.scrollTop = term.scrollHeight; await sleep(110); } },
     };
     const run = async s => { print('$ ' + s); const [c, ...a] = s.trim().split(/\s+/); if (!c) return; const f = CMDS[c]; if (f) await f(a.join(' ')); else print(c + ': comando não encontrado. Digite help.'); };
@@ -1041,11 +1093,27 @@ function coldStart() {
   for (let i = ORDER.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; }
   Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll();
 }
-function reboot() { closeStart(); const d = blk('Reiniciando…'); setTimeout(() => { coldStart(); d.remove(); }, 1600); }
+const VERS = ['9.0.1', '9.0.2', '9.0.3', '9.0.5', '9.0.8', '9.1.0', '9.1.1', '9.1.4', '9.2.0'];
+let vIdx = +store.get('piratinha-vidx', 0) || 0;
+const verAt = i => i < 0 ? '9.0.0' : VERS[i] || '9.' + (3 + Math.floor((i - VERS.length) / 5)) + '.' + ((i - VERS.length) % 5 * 2 + 1);
+const nextVer = () => verAt(vIdx);
+const announce = () => setTimeout(() => { if (pref.notif) pushNote(updNote()); }, 3000);
+function forcedUpdate(then) {
+  const d = document.createElement('div'); d.className = 'blackout upd';
+  d.innerHTML = '<div><div class="spin"></div><p>Instalando atualizações</p><p class="up2">0%</p><p class="uw">Não desligue o computador (PIRATINHA OS ' + nextVer() + ')</p></div>'; document.body.append(d); let p = 0;
+  const iv = setInterval(() => { p = Math.min(100, p + 3 + Math.random() * 9); $('.up2', d).textContent = (p | 0) + '%'; if (p >= 100) { clearInterval(iv); vIdx++; store.set('piratinha-vidx', vIdx); d.remove(); then(); } }, 350);
+}
+function reboot() {
+  closeStart();
+  forcedUpdate(() => { const d = blk('Reiniciando…'); setTimeout(() => { coldStart(); d.remove(); announce(); }, 1600); });
+}
 function shutdown() {
-  closeStart(); const d = blk('Sistema desligado. Clique ou pressione uma tecla para ligar.');
-  const on = () => { document.removeEventListener('keydown', on); d.remove(); coldStart(); };
-  setTimeout(() => { document.addEventListener('keydown', on); d.onclick = on; }, 400);
+  closeStart();
+  forcedUpdate(() => {
+    const d = blk('Sistema desligado. Clique ou pressione uma tecla para ligar.');
+    const on = () => { document.removeEventListener('keydown', on); d.remove(); coldStart(); announce(); };
+    setTimeout(() => { document.addEventListener('keydown', on); d.onclick = on; }, 400);
+  });
 }
 function bsod() {
   const d = document.createElement('div'); d.className = 'bsod';
@@ -1065,7 +1133,21 @@ const JOKES = [
   { i: '🛡️', t: 'Antivírus', m: 'tirou o dia de folga.' },
   { i: '📦', t: 'tesouro.zip', m: 'terminou de baixar. Ninguém sabe onde.' },
   { i: '🔋', t: 'Bateria', m: 'em 100%. Desconfie.' },
+  { i: '☠️', t: 'Download iniciado', m: 'Baixando trojan.exe… 99%' },
+  { i: '🤖', t: 'Copilot', m: 'Adquira seu Copilot grátis! Sem pegadinhas. Talvez.' },
+  { i: '🐋', t: 'Notas da versão', m: 'Removemos o bug da baleia.' },
+  { i: '📢', t: 'Anúncio', m: 'GTA VII foi anunciado. Previsão de lançamento: depois do GTA VI.' },
+  { i: '🖥️', t: 'Oferta imperdível', m: 'Adquira sua placa de vídeo virtual. 0 FPS garantidos.' },
+  { i: '📍', t: 'Perto de você', m: 'Femboys na sua área a 5 km!' },
+  { i: '📍', t: 'Perto de você', m: 'Garotas gamer na sua área a 1 km!' },
+  { i: '⏳', t: 'Update', m: 'Um update seco, seco, seco logo chegará.' },
+  { i: '💾', t: 'Download', m: 'Baixando mais RAM… 8 GB de 8 GB. Quase lá.' },
+  { i: '🎁', t: 'Parabéns!', m: 'Seu PC foi selecionado para ganhar um PC.' },
+  { i: '🕒', t: 'Atualização', m: 'Faltam 3 minutos (estimativa feita há 3 horas).' },
+  { i: '🔒', t: 'Pir-Ate Defender', m: 'Detectou 0 ameaças. Duvidamos.' },
+  { i: '📶', t: 'Rede', m: 'Você está conectado à internet. Tente não atrapalhar.' },
 ];
+const updNote = () => ({ i: '⬇️', t: 'Atualização do sistema', m: 'PIRATINHA OS ' + nextVer() + ' está pronto. Clique para instalar.', u: 1 });
 const NOTES = [], bell = $('#bell'), npanel = $('#npanel'), toasts = $('#toasts'); let lastJ = -1;
 const actNote = n => { if (n.u === 1) openUpdate(); else if (n.u === 2) openUpdate(true); };
 function drawPanel() {
@@ -1091,15 +1173,16 @@ function pushNote(j) {
 bell.onclick = e => { e.stopPropagation(); const open = npanel.style.display === 'block'; npanel.style.display = open ? 'none' : 'block'; if (!open) { bell.classList.remove('alert'); drawPanel(); } };
 document.addEventListener('pointerdown', e => { if (!e.target.closest('#npanel') && !e.target.closest('#bell')) npanel.style.display = 'none'; });
 function fire() {
-  if (pref.notif) { let k; do { k = Math.random() * JOKES.length | 0; } while (k === lastJ); lastJ = k; pushNote(JOKES[k]); }
+  if (pref.notif) { let k; do { k = Math.random() * JOKES.length | 0; } while (k === lastJ); lastJ = k; pushNote(k === 0 ? updNote() : JOKES[k]); }
   setTimeout(fire, (30 + Math.random() * 30) * 60000);
 }
 setTimeout(fire, (30 + Math.random() * 30) * 60000);
+lastJ = 0; setTimeout(() => { if (pref.notif) pushNote(updNote()); }, 4000);   // ao abrir o site: pede a atualização do sistema
 function openUpdate(done) {
   createWindow({ id: 'sys:update', title: 'Atualização do sistema', mk: etile('⬇️'), w: 460, h: 300, sys: true, body: (v, w) => {
     v.innerHTML = '<p class="us" style="margin:6px 0 14px">Preparando…</p><div class="pbar"><i></i></div><p class="up" style="color:var(--text-dim);font-size:13px"></p><div class="uact" style="display:none;gap:8px;margin-top:14px"><button class="pill ok">Reiniciar agora</button><button class="pill later">Mais tarde</button></div>';
     const us = $('.us', v), bar = $('.pbar i', v), up = $('.up', v), ua = $('.uact', v), close = () => w.el.querySelector('.close').click();
-    const STEPS = ['Baixando PIRATINHA OS 9.0.1…', 'Instalando o papagaio…', 'Reconfigurando o tesouro…', 'Procurando o mapa… (não achei)', 'Finalizando…'];
+    const STEPS = ['Baixando PIRATINHA OS ' + nextVer() + '…', 'Instalando o papagaio…', 'Reconfigurando o tesouro…', 'Procurando o mapa… (não achei)', 'Finalizando…'];
     const finish = () => { us.textContent = 'Atualização concluída. É preciso reiniciar para aplicá-la.'; bar.style.width = '100%'; up.textContent = ''; ua.style.display = 'flex'; };
     $('.ok', v).onclick = () => { close(); reboot(); };
     $('.later', v).onclick = () => { close(); setTimeout(() => { if (pref.notif) pushNote({ i: '🔄', t: 'Reinício pendente', m: 'Reinicie para concluir a atualização.', u: 2 }); }, 120000); };

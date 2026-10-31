@@ -850,7 +850,7 @@ function showCtx(e, items) {
   ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.max(0, Math.min(e.clientY, innerHeight - 20 - items.length * 38)) + 'px';
 }
 desk.addEventListener('contextmenu', e => {
-  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['↕️ Organizar ícones', organize], ['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['📝 Novo bloco de notas', openNotes], ['⚙️ Configurações', openSettings]]);
+  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['💻 Abrir terminal', openTerm], ['⚙️ Configurações', openSettings]]);
 });
 function organize() {
   const vis = LINKS.filter(l => !trashed.has(l.u)).sort((a, b) => a.n.localeCompare(b.n, 'pt'));
@@ -1036,13 +1036,19 @@ function openPaint() {
 }
 
 /* ---------- Terminal falso ---------- */
+function browserName() {
+  const u = navigator.userAgent; if (navigator.brave) return 'Brave';
+  for (const [k, n] of [['Edg', 'Edge'], ['OPR', 'Opera'], ['Firefox', 'Firefox'], ['Chrome', 'Chrome'], ['Version', 'Safari']]) { const m = u.match(new RegExp(k + '/(\\d+)')); if (m) return n + ' ' + m[1]; }
+  return 'Desconhecido';
+}
 function openTerm() {
-  createWindow({ id: 'sys:term', title: 'Terminal', mk: etile('💻'), w: 640, h: 420, sys: true, body: v => {
+  createWindow({ id: 'sys:term', title: 'Terminal', mk: etile('💻'), w: 760, h: 420, sys: true, body: v => {
     v.innerHTML = '<div class="term"><div class="out"></div><div class="in"><span>piratinha@web:~$&nbsp;</span><input type="text" spellcheck="false" autocomplete="off"></div></div>';
     const term = $('.term', v), out = $('.out', v), inp = $('input', v), hist = []; let hi = 0;
     const print = t => { const d = document.createElement('div'); d.textContent = t; out.append(d); term.scrollTop = term.scrollHeight; return d; };
     const sleep = ms => new Promise(r => setTimeout(r, ms));
-    const LOGO = ['     _.-"""-._    ', '    /  _   _  \\   ', '   |  (o) (o)  |  ', '    \\    ^    /   ', '     | \\___/ |    ', '      \\_____/     ', '    PIRATINHA OS  '];
+    const LOGO = ["                  ~.", "           Ya...___|__..aab     .   .", "            Y88a  Y88o  Y88a   (     )", "             Y88b  Y88b  Y88b   `.oo'", "             :888  :888  :888  ( (`-'", "    .---.    d88P  d88P  d88P   `.`.", "   / .-._)  d8P'\"\"\"|\"\"\"'-Y8P      `.`.", "  ( (`._) .-.  .-. |.-.  .-.  .-.   ) )", "   \\ `---( O )( O )( O )( O )( O )-' /", "    `.    `-'  `-'  `-'  `-'  `-'  .'", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"];
+    const LW = Math.max(...LOGO.map(l => l.length)) + 3;
     const CMDS = {
       help: () => print('Comandos: help, neofetch, cowsay <texto>, matrix, hack, fortune, sl, sudo, bsod, reboot, shutdown, date, echo <texto>, whoami, ls, clear'),
       sudo: () => print('pirata não está no arquivo sudoers. Este incidente será reportado ao papagaio.'),
@@ -1053,9 +1059,9 @@ function openTerm() {
       date: () => print(new Date().toLocaleString('pt-BR')),
       echo: a => print(a), whoami: () => print('pirata'), ls: () => print('Images/  games/  index.html  tesouro.txt'),
       neofetch: () => {
-        const apps = LINKS.length + $('#dock').children.length + $('#tools').children.length;
-        const info = ['pirata@piratinha', '-----------------', 'SO: PIRATINHA OS ' + verAt(vIdx - 1), 'Uptime: ' + Math.round((Date.now() - BOOT) / 1000) + 's', 'Packages: ' + apps + ' (shipping)', 'WM: Pir-Ate 1.0 (WM)', 'Terminal: Arrg 0.50.2', 'IP: 192.168.1.1', 'Tela: ' + innerWidth + 'x' + innerHeight, 'Wallpaper: ' + current.n, 'Janelas abertas: ' + wins.size, 'Vidro: ' + pref.c];
-        print(Array.from({ length: Math.max(LOGO.length, info.length) }, (_, i) => (LOGO[i] || ' '.repeat(LOGO[0].length)) + (info[i] || '')).join('\n'));
+        const apps = LINKS.length + $('#dock').children.length + $('#tools').children.length, v = verAt(vIdx - 1);
+        const info = ['pirata@piratinha', '-----------------', 'OS: PiratinhaOS ' + v + ' x86', 'Kernel: ' + browserName(), 'Uptime: ' + Math.round((Date.now() - BOOT) / 1000) + 's', 'Packages: ' + apps + ' (shipping)', 'Shell: fishing 6.7.' + vIdx, 'WM: Pir-Ate 1.' + vIdx + ' (WM)', 'Terminal: Arrg 0.50.' + (2 + vIdx), 'Display: ' + screen.width + 'x' + screen.height + '@60Hz', 'Fonte: Futura Medium Condensed BT', 'CPU: Intel Celeron G1610 (2) @ 2.60GHz', 'GPU: Intel HD Graphics', 'IP: 192.168.1.1', 'Wallpaper: ' + current.n, 'Janelas abertas: ' + wins.size, 'Vidro: ' + pref.c];
+        print(Array.from({ length: Math.max(LOGO.length, info.length) }, (_, i) => (LOGO[i] || '').padEnd(LW) + (info[i] || '')).join('\n'));
       },
       cowsay: a => { a = a || 'Arrr!'; print(' ' + '_'.repeat(a.length + 2) + '\n< ' + a + ' >\n ' + '-'.repeat(a.length + 2) + '\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||'); },
       hack: async () => {

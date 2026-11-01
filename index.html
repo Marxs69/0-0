@@ -212,7 +212,7 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 .sp { flex: 1; min-width: 0; height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }
 
 /* notificações, modal, reboot */
-#bell { font-size: 18px; color: var(--text); } .dot { position: absolute; top: 7px; right: 9px; width: 9px; height: 9px; border-radius: 50%; background: #e5484d; border: 1px solid var(--glass-strong); display: none; } #bell.alert .dot { display: block; }
+#bell { font-size: 18px; color: var(--text); } #bell .dot { position: absolute; top: 3px; right: 3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: #e5484d; color: #fff; font: normal 10px/16px sans-serif; text-align: center; display: none; } #bell.alert .dot { display: block; }
 #toasts { position: absolute; right: 14px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99996; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
 #os.tbtop #toasts { bottom: 20px; } #os.tbtop #npanel { bottom: auto; top: calc(var(--taskbar-h) + 20px); }
 .toast { pointer-events: auto; display: flex; gap: 12px; align-items: center; width: 310px; padding: 12px 14px; border-radius: 14px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 12px 32px rgba(0,0,0,.35); cursor: pointer; animation: wopen .2s; }
@@ -232,6 +232,28 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 
 .blackout.upd { cursor: default; color: #ddd; background: #0b0d10; } .upd p { margin: 6px 0; } .upd .up2 { font-size: 28px; } .upd .uw { font-size: 14px; color: #888; }
 .spin { width: 44px; height: 44px; margin: 0 auto 18px; border-radius: 50%; border: 4px solid rgba(255,255,255,.2); border-top-color: #fff; animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+
+[hidden] { display: none !important; }
+#storebtn { font-size: 19px; }
+.pc { flex: none; width: 44px; text-align: right; color: var(--text-dim); font-size: 13px; }
+.wgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; }
+.wc { position: relative; aspect-ratio: 4 / 3; border: 2px solid transparent; border-radius: 8px; background: #3b4048 center / cover no-repeat; cursor: pointer; }
+.wc:hover { border-color: rgba(255,255,255,.5); } .wc.on { border-color: var(--accent); }
+.wc .dl, .wc .wx { position: absolute; width: 22px; height: 22px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: rgba(0,0,0,.55); color: #fff; font-size: 12px; text-decoration: none; cursor: pointer; }
+.wc .dl { left: 4px; bottom: 4px; } .wc .wx { right: 4px; top: 4px; }
+.view.sys.st { display: flex; padding: 0; overflow: hidden; }
+.sd { flex: none; width: 170px; padding: 12px 8px; border-right: 1px solid var(--glass-line); display: flex; flex-direction: column; gap: 2px; }
+.cat { padding: 10px 12px; border: 0; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.cat:hover { background: rgba(255,255,255,.1); } .cat.on { background: rgba(255,255,255,.18); }
+.sm { flex: 1; min-width: 0; overflow: auto; padding: 12px 14px; }
+.sbox { width: 100%; height: 38px; margin-bottom: 12px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }
+.sh { margin: 14px 2px 8px; font-size: 13px; font-weight: normal; color: var(--text-dim); }
+.cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: rgba(255,255,255,.06); border: 1px solid var(--glass-line); }
+.card .tile { width: 48px; height: 48px; flex: none; } .card .tile i { font-size: 26px; } .card .tile img { width: 28px; height: 28px; }
+.ct { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .ct b { font-weight: normal; } .ct small { color: var(--text-dim); font-size: 12px; line-height: 1.3; }
+.ca { flex: none; display: flex; flex-direction: column; gap: 4px; }
+.sq *:not(.dot):not(.badge):not(.spin):not(.icon):not(.tile):not(.tile *), .sq *::before, .sq *::after { border-radius: 0 !important; }
 
 /* start menu */
 #start {
@@ -298,6 +320,7 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 
   <div id="taskbar">
     <button id="startbtn" aria-label="Menu Iniciar" aria-expanded="false" title="Iniciar">🏴‍☠️</button>
+    <button id="storebtn" class="pin" title="Loja" aria-label="Loja">🛍️</button>
     <div id="tools"></div>
     <div id="tasks"></div>
     <button id="bell" class="pin" title="Notificações" aria-label="Notificações">🔔<i class="dot"></i></button>
@@ -442,6 +465,7 @@ const ORDER = [...LINKS];
 if (store.get('piratinha-pref', {}).shuf !== false) for (let i = ORDER.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; }
 let frozen = false;
 const trashed = new Set(store.get('piratinha-trash', []));
+const OFF = new Set(store.get('piratinha-off', []));        // apps desinstalados (ids da loja); não vão para a lixeira
 const cell = new Map();                                // posições efetivas
 const icons = new Map();
 const reserved = (c, r) => r === 0 && c === 0;   // célula da lixeira
@@ -463,8 +487,9 @@ function layoutAll() {
   cols = Math.max(2, Math.floor((desk.clientWidth - PAD * 2) / CW));
   rows = Math.max(1, Math.floor((desk.clientHeight - PAD * 2) / CH));
   cell.clear(); setXY(trashEl, 0, 0);
-  const visible = ORDER.filter(l => !trashed.has(l.u));
-  LINKS.forEach(l => { icons.get(l.u).el.style.display = trashed.has(l.u) ? 'none' : ''; });
+  const gone = l => trashed.has(l.u) || OFF.has('link:' + l.u);
+  const visible = ORDER.filter(l => !gone(l));
+  LINKS.forEach(l => { icons.get(l.u).el.style.display = gone(l) ? 'none' : ''; });
   const later = [];
   visible.forEach(l => {                               // 1º passe: quem tem posição salva livre
     const p = saved[l.u];
@@ -629,47 +654,76 @@ async function loadWallpapers() {
     await Promise.all(tests);
   }
   IMAGES = [...names].filter(n => IMG_RE.test(n)).sort().map(n => ({ n, img: imgUrl(n) }));
-  const keep = picked && [...IMAGES, ...COLORS].find(w => w.n === picked);
+  const keep = picked && [...IMAGES, ...MY, ...COLORS].find(w => w.n === picked);
   current = keep || (IMAGES.length ? IMAGES[Math.floor(Math.random() * IMAGES.length)] : COLORS[0]);
   applyWall();
 }
 function initWall() {
   const c = picked && COLORS.find(w => w.n === picked);
-  if (c) current = c; else if (picked) current = { n: picked, img: imgUrl(picked) };   // evita "piscar" enquanto a lista carrega
+  if (c) current = c; else if (picked) current = MY.find(w => w.n === picked) || { n: picked, img: imgUrl(picked) };   // evita "piscar" enquanto a lista carrega
   applyWall(); loadWallpapers();
 }
+const MY = store.get('piratinha-mywalls', []);                    // wallpapers próprios: [{ n, img (dataURL), my: 1 }]
+const saveMY = () => { try { localStorage.setItem('piratinha-mywalls', JSON.stringify(MY)); return true; } catch (e) { return false; } };
+const shrink = f => new Promise(res => {
+  const r = new FileReader(); r.onerror = () => res(null);
+  r.onload = () => { const im = new Image(); im.onerror = () => res(null); im.onload = () => { const k = Math.min(1, 1920 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .85)); }; im.src = r.result; };
+  r.readAsDataURL(f);
+});
+const THEMES = [   // img = nome do arquivo em Images/Wallpaper, sem extensão; v = cor do vidro (RGB); ac = destaque (RGB)
+  { n: 'mar', img: '10_1793395235093_10', v: '79,88,105', ac: '255,137,87' },
+  { n: 'photo', img: '18_1793395252634_18', v: '42,29,34', ac: '255,255,255' },
+  { n: 'clown', img: '', v: '33,28,30', ac: '133,0,0' },
+  { n: 'cafe', img: '48_1793395301336_48', v: '35,22,21', ac: '255,174,0' },
+  { n: 'ondas', img: '56_1793395315707_56', v: '34,28,28', ac: '0,191,255' },
+];
+const hex = s => '#' + s.split(',').map(x => (+x).toString(16).padStart(2, '0')).join('');
+function applyTheme(t, msg) {
+  pref.c = hex(t.v); pref.ac = hex(t.ac); applyPrefs(); let note = '';
+  if (t.img) {
+    const w = IMAGES.find(x => x.n.replace(/\.[^.]+$/, '') === t.img);
+    if (w) { current = w; picked = w.n; store.set('piratinha-wall', picked); applyWall(); } else note = 'Imagem do tema não encontrada em Images/Wallpaper (' + t.img + ').';
+  }
+  msg.textContent = note;
+}
 function openWall() {
-  createWindow({
-    id: 'sys:wall', title: 'Plano de fundo', mk: etile('🖼️'), w: 460, h: 640, sys: true,
-    body: (v, w) => {
-      const rowFor = wl => {
-        const r = document.createElement('div'); r.className = 'srow' + (wl.n === current.n ? ' on' : '');
-        const pick = document.createElement('button'); pick.className = 'pick';
-        const th = document.createElement('div'); th.className = 'thumb';
-        if (wl.c) th.style.background = wl.c; else th.style.backgroundImage = `url("${wl.img}")`;
-        const nm = document.createElement('span'); nm.className = 'grow'; nm.textContent = wl.n;
-        const ck = document.createElement('span'); ck.textContent = wl.n === current.n ? '✓' : '';
-        pick.append(th, nm, ck);
-        pick.onclick = () => { current = wl; picked = wl.n; store.set('piratinha-wall', picked); applyWall(); };
-        r.append(pick);
-        if (wl.img) {
-          const d = document.createElement('a'); d.className = 'pill'; d.href = wl.img; d.download = wl.n; d.textContent = '⬇'; d.title = 'Baixar imagem';
-          r.append(d);
-        }
-        return r;
+  createWindow({ id: 'sys:wall', title: 'Customização', mk: etile('🎨'), w: 480, h: 720, sys: true, body: (v, w) => {
+    const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+    const head = (t, mt) => { const h = el('div', 'sysbar', t); if (mt) h.style.marginTop = '14px'; return h; };
+    const msg = el('p', 'empty'); msg.style.margin = '6px 2px 0';
+    const cell = wl => {
+      const c = el('div', 'wc' + (wl.n === current.n ? ' on' : '')); if (wl.c) { c.style.background = wl.c; c.title = wl.n; } else c.style.backgroundImage = `url("${wl.img}")`;
+      c.onclick = () => { current = wl; picked = wl.n; store.set('piratinha-wall', picked); applyWall(); };
+      if (wl.img) { const d = el('a', 'dl', '⬇'); d.href = wl.img; d.download = /\.\w+$/.test(wl.n) ? wl.n : wl.n + '.jpg'; d.title = 'Baixar imagem'; d.onclick = e => e.stopPropagation(); c.append(d); }
+      if (wl.my) { const x = el('button', 'wx', '✕'); x.title = 'Remover'; x.onclick = e => { e.stopPropagation(); MY.splice(MY.indexOf(wl), 1); saveMY(); if (current === wl) { current = COLORS[0]; picked = current.n; store.set('piratinha-wall', picked); applyWall(); } else w.render(); }; c.append(x); }
+      return c;
+    };
+    w.render = () => {
+      v.innerHTML = '';
+      const th = el('div'); th.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap'; THEMES.forEach(t => th.append(el('button', 'pill', t.n))); 
+      [...th.children].forEach((b, i) => { b.onclick = () => { applyTheme(THEMES[i], msg); w.render(); }; }); v.append(th, msg);
+      const ctl = el('div'); ctl.style.marginTop = '12px';
+      ctl.innerHTML = '<div class="srow"><span class="grow">Cor do vidro</span><input type="color" class="gc"></div><div class="srow"><span class="grow">Opacidade do vidro</span><span class="pc"></span><input type="range" min="0" max="100" class="go"></div><div class="srow"><span class="grow">Desfoque do vidro</span><span class="pc"></span><input type="range" min="0" max="100" class="gb"></div><div class="srow"><span class="grow">Cor de destaque</span><input type="color" class="ga"></div>';
+      const gc = $('.gc', ctl), go = $('.go', ctl), gb = $('.gb', ctl), ga = $('.ga', ctl), pcs = ctl.querySelectorAll('.pc');
+      const pc = () => { pcs[0].textContent = go.value + '%'; pcs[1].textContent = gb.value + '%'; };
+      gc.value = pref.c; go.value = Math.round(pref.a * 100); gb.value = Math.round(pref.bl / .4); ga.value = pref.ac; pc();
+      gc.oninput = () => { pref.c = gc.value; applyPrefs(); }; go.oninput = () => { pref.a = go.value / 100; applyPrefs(); pc(); };
+      gb.oninput = () => { pref.bl = Math.round(gb.value * .4); applyPrefs(); pc(); }; ga.oninput = () => { pref.ac = ga.value; applyPrefs(); };
+      v.append(ctl); const sp = el('div'); sp.style.height = '12px'; v.append(sp);
+      const g = el('div', 'wgrid'); [...IMAGES, ...MY, ...COLORS].forEach(wl => g.append(cell(wl))); v.append(g);
+      if (!IMAGES.length) v.append(el('p', 'empty', 'Nenhuma imagem encontrada em Images/Wallpaper.'));
+      const add = el('label', 'pill', '+ Adicionar wallpaper'); add.style.cssText = 'display:inline-grid;place-items:center;margin-top:10px;cursor:pointer';
+      const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.hidden = true; add.append(inp); v.append(add);
+      inp.onchange = async e => {
+        const f = e.target.files[0]; if (!f) return; const img = await shrink(f);
+        if (!img) { msg.textContent = 'Não foi possível ler essa imagem.'; return; }
+        const it = { n: 'meu-' + Date.now(), img, my: 1 }; MY.push(it);
+        if (!saveMY()) { MY.pop(); msg.textContent = 'Sem espaço no navegador para guardar essa imagem (limite de cerca de 5 MB). Tente uma menor.'; return; }
+        current = it; picked = it.n; store.set('piratinha-wall', picked); applyWall();
       };
-      const head = t => { const h = document.createElement('div'); h.className = 'sysbar'; h.textContent = t; return h; };
-      w.render = () => {
-        v.innerHTML = '';
-        v.append(head('Imagens'));
-        if (!IMAGES.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = location.protocol === 'file:' ? 'Página aberta direto do arquivo (file://): o navegador não permite listar a pasta. Abra por um servidor local (ex.: python3 -m http.server), ou crie Images/Wallpaper/wallpapers.json, ou use WALLPAPER_FILES. Imagens numeradas (1.jpg, 2.png…) são detectadas sozinhas.' : 'Nenhuma imagem encontrada em Images/Wallpaper. O servidor não lista a pasta: crie Images/Wallpaper/wallpapers.json com os nomes, ou use WALLPAPER_FILES.'; v.append(p); }
-        IMAGES.forEach(wl => v.append(rowFor(wl)));
-        const h2 = head('Cores sólidas'); h2.style.marginTop = '14px'; v.append(h2);
-        COLORS.forEach(wl => v.append(rowFor(wl)));
-      };
-      w.render();
-    },
-  });
+    };
+    w.render();
+  } });
 }
 
 /* ---------- menu iniciar (lista, sem ícones) ---------- */
@@ -684,7 +738,9 @@ function row(name, host, fn) {
 function buildStart(q = '') {
   const box = $('#apps'); box.innerHTML = '';
   const qq = q.trim().toLowerCase();
-  const found = LINKS.filter(l => !qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq));
+  const inst = LINKS.filter(l => !OFF.has('link:' + l.u));
+  if (!inst.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nenhum app instalado. Abra a Loja (🛍️) para instalar.'; box.append(p); return; }
+  const found = inst.filter(l => !qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq));
   if (!found.length) {                                  // pegadinha: parece o resultado pedido, mas leva ao link do rodapé
     box.append(row(q.trim(), slug(q) + '.com', () => { closeStart(); window.open(FOOTER_URL, '_blank', 'noopener'); }));
     return;
@@ -731,13 +787,8 @@ GAMES.forEach(l => {
 });
 
 /* ---------- configurações: cor/opacidade do vidro e tamanho dos ícones ---------- */
-const THEMES = [
-  { n: 'Padrão', c: '#222428', a: .48, ac: '#4aa8ff', w: 'Azul celeste' }, { n: 'Pirata', c: '#2b1a0c', a: .55, ac: '#e0a63a', w: 'Marrom café' },
-  { n: 'Meia-noite', c: '#0b0e19', a: .55, ac: '#7c9cff', w: 'Meia-noite' }, { n: 'Sangue', c: '#3a0b0d', a: .5, ac: '#ff5a5f', w: 'Vinho' },
-  { n: 'Floresta', c: '#0e2b2e', a: .5, ac: '#34d399', w: 'Verde petróleo' }, { n: 'Neon', c: '#1e0b36', a: .5, ac: '#e879f9', w: 'Roxo noturno' },
-];
 const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 38 }, m: { n: 'Médio', w: 96, h: 100, t: 46 }, g: { n: 'Grande', w: 116, h: 120, t: 56 } };
-const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#4aa8ff', bl: 22 }, store.get('piratinha-pref', {}));
+const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#4aa8ff', bl: 22, sq: false }, store.get('piratinha-pref', {}));
 function applyPrefs(relayout) {
   const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
   const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
@@ -745,22 +796,18 @@ function applyPrefs(relayout) {
   st.setProperty('--glass-strong', `rgba(${r},${g},${b},${Math.min(.95, pref.a + .2)})`);
   CW = z.w; CH = z.h; os.style.setProperty('--cw', z.w + 'px'); os.style.setProperty('--ch', z.h + 'px'); os.style.setProperty('--ts', z.t + 'px');
   st.setProperty('--accent', pref.ac); st.setProperty('--blur', pref.bl + 'px');
-  os.classList.toggle('tbtop', pref.tb === 't'); document.body.classList.toggle('noanim', !pref.an);
+  os.classList.toggle('tbtop', pref.tb === 't'); document.body.classList.toggle('noanim', !pref.an); document.body.classList.toggle('sq', !!pref.sq);
   if (relayout) { Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll(); }
   store.set('piratinha-pref', pref);
 }
 function openSettings() {
-  createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 440, h: 720, sys: true, body: v => {
-    v.innerHTML = '<div class="sysbar">Temas</div><div class="th" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div><div class="srow"><span class="grow">Cor do vidro</span><input type="color"></div><div class="srow"><span class="grow">Opacidade do vidro</span><input type="range" min="15" max="90"></div><div class="srow"><span class="grow">Desfoque do vidro</span><input type="range" min="0" max="40" class="bl"></div><div class="srow"><span class="grow">Cor de destaque</span><input type="color" class="ac"></div><div class="sysbar" style="margin-top:14px">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Posição da taskbar</div><div class="tbp" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Geral</div><div class="opts"></div><div class="sysbar" style="margin-top:14px">Sistema</div><div style="display:flex;justify-content:space-between;gap:6px"><button class="pill goold">Ir para o modo antigo</button><button class="pill danger reset">Restaurar padrões</button></div>';
-    const [c, a] = v.querySelectorAll('input'), sz = $('.sz', v), tbp = $('.tbp', v), opts = $('.opts', v);
-    const ac = $('.ac', v), bl = $('.bl', v), sync = () => { c.value = pref.c; a.value = Math.round(pref.a * 100); ac.value = pref.ac; bl.value = pref.bl; }; sync();
-    ac.oninput = () => { pref.ac = ac.value; applyPrefs(); }; bl.oninput = () => { pref.bl = +bl.value; applyPrefs(); };
-    THEMES.forEach(t => { const b = document.createElement('button'); b.className = 'pill'; b.textContent = t.n; b.onclick = () => {
-      Object.assign(pref, { c: t.c, a: t.a, ac: t.ac }); const wl = COLORS.find(x => x.n === t.w); if (wl) { current = wl; picked = wl.n; store.set('piratinha-wall', picked); applyWall(); } applyPrefs(); sync(); }; $('.th', v).append(b); });
-    c.oninput = () => { pref.c = c.value; applyPrefs(); }; a.oninput = () => { pref.a = a.value / 100; applyPrefs(); };
+  createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 440, h: 560, sys: true, body: v => {
+    v.innerHTML = '<button class="pill cust" style="margin-bottom:12px">🎨 Customizações</button><div class="sysbar">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Posição da taskbar</div><div class="tbp" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Geral</div><div class="opts"></div><div class="sysbar" style="margin-top:14px">Sistema</div><div style="display:flex;justify-content:space-between;gap:6px"><button class="pill goold">Ir para o modo antigo</button><button class="pill danger reset">Restaurar padrões</button></div>';
+    const sz = $('.sz', v), tbp = $('.tbp', v), opts = $('.opts', v);
+    $('.cust', v).onclick = () => openWall();
     const group = (box, items, key, relayout) => { const draw = () => { box.innerHTML = ''; items.forEach(([k, n]) => { const b = document.createElement('button'); b.className = 'pill' + (k === pref[key] ? ' on' : ''); b.textContent = n; b.onclick = () => { pref[key] = k; applyPrefs(relayout); draw(); }; box.append(b); }); }; draw(); };
     group(sz, Object.entries(SIZES).map(([k, z]) => [k, z.n]), 's', true); group(tbp, [['b', 'Embaixo'], ['t', 'Em cima']], 'tb', true);
-    [['h24', 'Relógio em 24 horas'], ['sec', 'Mostrar segundos no relógio'], ['an', 'Animações das janelas'], ['shuf', 'Embaralhar ícones a cada acesso'], ['notif', 'Notificações']].forEach(([k, n]) => {
+    [['h24', 'Relógio em 24 horas'], ['sec', 'Mostrar segundos no relógio'], ['an', 'Animações das janelas'], ['shuf', 'Embaralhar ícones a cada acesso'], ['sq', 'Cantos quadrados']].forEach(([k, n]) => {
       const l = document.createElement('label'), sp = document.createElement('span'), cb = document.createElement('input'); l.className = 'srow'; sp.className = 'grow'; sp.textContent = n; cb.type = 'checkbox'; cb.checked = !!pref[k];
       cb.onchange = () => { pref[k] = cb.checked; applyPrefs(); tick(); }; l.append(sp, cb); opts.append(l);
     });
@@ -850,7 +897,7 @@ function showCtx(e, items) {
   ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.max(0, Math.min(e.clientY, innerHeight - 20 - items.length * 38)) + 'px';
 }
 desk.addEventListener('contextmenu', e => {
-  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['🔄 Atualizar', () => location.reload()], ['🖼️ Alterar plano de fundo', openWall], ['💻 Abrir terminal', openTerm], ['⚙️ Configurações', openSettings]]);
+  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['🔄 Atualizar', () => location.reload()], ['🎨 Customização', openWall], ['💻 Abrir terminal', openTerm], ['⚙️ Configurações', openSettings]]);
 });
 function organize() {
   const vis = LINKS.filter(l => !trashed.has(l.u)).sort((a, b) => a.n.localeCompare(b.n, 'pt'));
@@ -1154,7 +1201,7 @@ const JOKES = [
   { i: '📶', t: 'Rede', m: 'Você está conectado à internet. Tente não atrapalhar.' },
 ];
 const updNote = () => ({ i: '⬇️', t: 'Atualização do sistema', m: 'PIRATINHA OS ' + nextVer() + ' está pronto. Clique para instalar.', u: 1 });
-const NOTES = [], bell = $('#bell'), npanel = $('#npanel'), toasts = $('#toasts'); let lastJ = -1;
+const NOTES = [], bell = $('#bell'), npanel = $('#npanel'), toasts = $('#toasts'); let lastJ = -1, unread = 0; const dot = $('.dot', bell);
 const actNote = n => { if (n.u === 1) openUpdate(); else if (n.u === 2) openUpdate(true); };
 function drawPanel() {
   npanel.innerHTML = ''; const h = document.createElement('div'); h.className = 'nh'; const t = document.createElement('b'); t.textContent = 'Notificações';
@@ -1174,9 +1221,9 @@ function pushNote(j) {
   $('.ti', t).textContent = j.i; $('b', t).textContent = j.t; $('em', t).textContent = j.m;
   const kill = () => { t.classList.add('out'); setTimeout(() => t.remove(), 250); };
   t.onclick = () => { actNote(n); kill(); }; toasts.append(t); setTimeout(kill, 8000);
-  if (npanel.style.display === 'block') drawPanel(); else bell.classList.add('alert');
+  if (npanel.style.display === 'block') drawPanel(); else { unread++; dot.textContent = unread > 9 ? '9+' : unread; bell.classList.add('alert'); }
 }
-bell.onclick = e => { e.stopPropagation(); const open = npanel.style.display === 'block'; npanel.style.display = open ? 'none' : 'block'; if (!open) { bell.classList.remove('alert'); drawPanel(); } };
+bell.onclick = e => { e.stopPropagation(); const open = npanel.style.display === 'block'; npanel.style.display = open ? 'none' : 'block'; if (!open) { unread = 0; dot.textContent = ''; bell.classList.remove('alert'); drawPanel(); } };
 document.addEventListener('pointerdown', e => { if (!e.target.closest('#npanel') && !e.target.closest('#bell')) npanel.style.display = 'none'; });
 function fire() {
   if (pref.notif) { let k; do { k = Math.random() * JOKES.length | 0; } while (k === lastJ); lastJ = k; pushNote(k === 0 ? updNote() : JOKES[k]); }
@@ -1196,6 +1243,64 @@ function openUpdate(done) {
     const iv = setInterval(() => { if (!v.isConnected) return clearInterval(iv); p = Math.min(100, p + 2 + Math.random() * 7); bar.style.width = p + '%'; us.textContent = STEPS[Math.min(4, p / 20 | 0)]; up.textContent = (p | 0) + '%'; if (p >= 100) { clearInterval(iv); finish(); } }, 450);
   } });
 }
+
+/* ---------- loja (estilo GNOME Software / Fedora) ---------- */
+function updateDock(relayout) {
+  const d = $('#dock'), empty = ![...d.children].some(b => !b.hidden); d.hidden = empty;
+  os.style.setProperty('--dock-h', empty ? '0px' : '70px'); if (relayout) layoutAll();
+}
+function setInst(id, on, winId) {
+  if (on) OFF.delete(id); else { OFF.add(id); const w = wins.get(winId || id); if (w) w.el.querySelector('.close').click(); }
+  store.set('piratinha-off', [...OFF]); const b = pinBtns.get(id); if (b) b.hidden = !on;
+  if (id.startsWith('link:')) { const u = id.slice(5); if (!on) { trashed.delete(u); delete saved[u]; persistTrash(); } layoutAll(); }
+  updateDock(true);
+}
+OFF.forEach(id => { const b = pinBtns.get(id); if (b) b.hidden = true; }); updateDock();
+const APPLIST = [
+  ['jogos', GAMES[0].u, 'DOOM', '👹', 'Tiro em primeira pessoa clássico, rodando Freedoom.', () => openApp(GAMES[0])],
+  ['jogos', 'game:snake', 'Snake', '🐍', 'Coma, cresça e não bata nas paredes.', openSnake],
+  ['jogos', 'game:mines', 'Campo Minado', '💣', 'Abra o campo sem pisar em nenhuma mina.', openMines],
+  ['jogos', 'game:tetris', 'Tetris', '🧱', 'Encaixe as peças e complete as linhas.', openTetris],
+  ['apps', 'sys:browser', 'Navegador', '🌐', 'Navegue em abas dentro do sistema.', openBrowser],
+  ['apps', 'sys:music', 'Música', '🎵', 'Arquivos locais e player do Spotify.', openMusic],
+  ['apps', 'sys:calc', 'Calculadora', '🧮', 'Contas rápidas.', openCalc],
+  ['apps', 'sys:notes', 'Bloco de notas', '📝', 'Anotações salvas no navegador.', openNotes],
+  ['apps', 'sys:paint', 'Paint', '🎨', 'Desenhe e salve em PNG.', openPaint],
+  ['apps', 'sys:term', 'Terminal', '💻', 'Linha de comando do PIRATINHA OS.', openTerm],
+];
+const storeItems = () => [
+  ...APPLIST.map(([c, id, n, e, d, open]) => ({ c, n, d, mk: etile(e), open, on: () => !OFF.has(id), set: on => setInst(id, on) })),
+  ...LINKS.map(l => ({ c: 'piratinha', n: l.n, d: hostOf(l), mk: () => tile(l), open: () => openApp(l), on: () => !OFF.has('link:' + l.u), set: on => setInst('link:' + l.u, on, l.u) })),
+];
+function openStore() {
+  createWindow({ id: 'sys:store', title: 'Loja', mk: etile('🛍️'), w: 820, h: 560, sys: true, body: v => {
+    v.classList.add('st'); v.innerHTML = '<aside class="sd"></aside><section class="sm"><input type="text" class="sbox" placeholder="Buscar na loja" spellcheck="false"><div class="sg"></div></section>';
+    const side = $('.sd', v), box = $('.sg', v), q = $('.sbox', v); let cat = 'all';
+    const mk = (t, c, x, f) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; if (f) e.onclick = f; return e; };
+    const CATS = [['inst', '✔️ Instalados'], ['all', '🧭 Explorar'], ['piratinha', '🏴‍☠️ Piratinha'], ['jogos', '🎮 Jogos'], ['apps', '🧰 Apps']];
+    const drawSide = () => { side.innerHTML = ''; CATS.forEach(([k, n]) => side.append(mk('button', 'cat' + (k === cat ? ' on' : ''), n, () => { cat = k; drawSide(); render(); }))); };
+    const card = it => {
+      const c = mk('div', 'card'), t = mk('div', 'ct'), a = mk('div', 'ca'); t.append(mk('b', '', it.n), mk('small', '', it.d));
+      if (it.on()) a.append(mk('button', 'pill', 'Abrir', it.open), mk('button', 'pill danger', 'Remover', () => { it.set(false); render(); }));
+      else { const b = mk('button', 'pill', 'Instalar'); b.onclick = () => { b.textContent = 'Instalando…'; b.disabled = true; setTimeout(() => { it.set(true); render(); }, 300); }; a.append(b); }
+      c.append(it.mk(), t, a); return c;
+    };
+    function render() {
+      const s = q.value.trim().toLowerCase(); box.innerHTML = '';
+      const list = storeItems().filter(it => (cat === 'all' || cat === 'inst' || it.c === cat) && (cat !== 'inst' || it.on()) && (!s || (it.n + ' ' + it.d).toLowerCase().includes(s)));
+      [['piratinha', 'Piratinha'], ['jogos', 'Jogos'], ['apps', 'Apps']].forEach(([c, t]) => {
+        const g = list.filter(it => it.c === c); if (!g.length) return;
+        if (cat === 'all' || cat === 'inst') box.append(mk('h3', 'sh', t));
+        const grid = mk('div', 'cg'); g.forEach(it => grid.append(card(it))); box.append(grid);
+      });
+      if (!list.length) box.append(mk('p', 'empty', 'Nada encontrado.'));
+    }
+    q.oninput = render; drawSide(); render();
+  } });
+}
+const storebtn = $('#storebtn'); pinBtns.set('sys:store', storebtn);
+storebtn.onclick = () => { const w = wins.get('sys:store'); if (w) toggleWin(w); else openStore(); };
+$('#taskbar').addEventListener('contextmenu', e => { e.preventDefault(); openSettings(); });
 
 /* ---------- init ---------- */
 applyPrefs(); initWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();

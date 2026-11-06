@@ -1,0 +1,34 @@
+/* Dock de jogos: posição, ocultar automático, tamanho e formato */
+
+/* dock de jogos */
+#dock { position: absolute; z-index: 99997; display: flex; gap: 8px; padding: 6px; background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px; backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4); box-shadow: 0 10px 30px rgba(0,0,0,.25); transition: transform .2s, opacity .2s; }
+.dk { position: relative; width: 52px; height: 52px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 14px; background: none; cursor: pointer; }
+.dk:hover { background: rgba(255,255,255,.14); }
+.dk .tile { width: 42px; height: 42px; border-radius: 12px; }
+.dk .tile i { font-size: 24px; }
+.dk.open::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 5px; height: 3px; margin-left: -2px; border-radius: 3px; background: var(--text-dim); }
+.dk.active::after { width: 14px; margin-left: -7px; background: var(--accent); }
+.dk::before { content: attr(data-label); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); padding: 4px 9px; border-radius: 8px; background: var(--glass-strong); border: 1px solid var(--glass-line); color: var(--text); font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .12s; }
+.dk:hover::before { opacity: 1; }
+.dk { background: none; }
+
+/* v11: dock configurável, widget, ícones menores e mais transparentes */
+#dock[data-p="b"] { left: 50%; bottom: var(--dk-off, 78px); transform: translateX(-50%); }
+#dock[data-p="t"] { left: 50%; top: var(--dk-off, 10px); transform: translateX(-50%); }
+#dock[data-p="l"] { top: 50%; left: 10px; transform: translateY(-50%); flex-direction: column; }
+#dock[data-p="r"] { top: 50%; right: 10px; transform: translateY(-50%); flex-direction: column; }
+#dock[data-ah="1"]:not(.show)[data-p="b"] { transform: translate(-50%, 160%); opacity: 0; pointer-events: none; }
+#dock[data-ah="1"]:not(.show)[data-p="t"] { transform: translate(-50%, -160%); opacity: 0; pointer-events: none; }
+#dock[data-ah="1"]:not(.show)[data-p="l"] { transform: translate(-160%, -50%); opacity: 0; pointer-events: none; }
+#dock[data-ah="1"]:not(.show)[data-p="r"] { transform: translate(160%, -50%); opacity: 0; pointer-events: none; }
+#dock[data-p="l"] .dk::before { bottom: auto; top: 50%; left: calc(100% + 10px); transform: translateY(-50%); }
+#dock[data-p="r"] .dk::before { bottom: auto; top: 50%; left: auto; right: calc(100% + 10px); transform: translateY(-50%); }
+#dock[data-p="t"] .dk::before { bottom: auto; top: calc(100% + 10px); }
+#dock[data-z="p"] .dk { width: 44px; height: 44px; } #dock[data-z="p"] .dk .tile { width: 34px; height: 34px; } #dock[data-z="p"] .dk .tile i { font-size: 19px; }
+#dock[data-z="g"] .dk { width: 62px; height: 62px; } #dock[data-z="g"] .dk .tile { width: 50px; height: 50px; } #dock[data-z="g"] .dk .tile i { font-size: 29px; }
+#dock[data-sh="s"], #dock[data-sh="s"] .dk, #dock[data-sh="s"] .dk .tile { border-radius: 0; }
+#dockzone { position: absolute; z-index: 99996; }
+#dockzone[data-p="b"] { left: 25%; right: 25%; height: 10px; bottom: var(--dk-off, 78px); }
+#dockzone[data-p="t"] { left: 25%; right: 25%; height: 10px; top: var(--dk-off, 10px); }
+#dockzone[data-p="l"] { top: 25%; bottom: 25%; width: 10px; left: 0; }
+#dockzone[data-p="r"] { top: 25%; bottom: 25%; width: 10px; right: 0; }

@@ -1,0 +1,35 @@
+/* Janelas: barra de título, botões, conteúdo, maximizar e animações */
+
+/* janelas */
+.win {
+  position: absolute; display: flex; flex-direction: column; min-width: 320px; min-height: 220px;
+  background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: var(--radius);
+  backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
+  box-shadow: 0 18px 50px rgba(0,0,0,.35); resize: both; overflow: hidden;
+}
+.win.min { display: none; }
+.win.max { inset: max(10px, var(--ins-t, 0px)) max(10px, var(--ins-r, 0px)) max(10px, var(--ins-b, 78px)) max(10px, var(--ins-l, 0px)) !important; width: auto !important; height: auto !important; resize: none; }
+.win:not(.active) { box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.win:not(.active) .bar { opacity: .7; }
+.bar { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 10px 0 12px; flex: none; touch-action: none; cursor: default; border-bottom: 1px solid var(--glass-line); }
+.bar .tile { width: 24px; height: 24px; border-radius: 7px; box-shadow: none; }
+.bar .tile img { width: 15px; height: 15px; }
+.bar .tile b { font-size: 12px; }
+.bar .tile i { font-size: 14px; }
+.bar .title { flex: 1; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wbtn { width: 30px; height: 30px; border: 0; border-radius: 9px; background: transparent; color: var(--text); font: inherit; font-size: 15px; display: grid; place-items: center; cursor: pointer; text-decoration: none; }
+.wbtn:hover { background: rgba(255,255,255,.14); }
+.wbtn.close:hover { background: #e5484d; }
+.view { flex: 1; min-height: 0; background: #fff; margin: 0 6px; border-radius: 10px; overflow: hidden; }
+.view iframe { width: 100%; height: 100%; border: 0; display: block; }
+.view.sys { background: transparent; overflow: auto; margin: 0; padding: 10px 12px 12px; }
+.hint { flex: none; padding: 7px 12px 8px; font-size: 12px; color: var(--text-dim); }
+.hint a { color: var(--accent); }
+
+.win { animation: wopen .14s ease-out; }
+@keyframes wopen { from { opacity: 0; } }
+.win.closing { opacity: 0; transition: opacity .12s; pointer-events: none; }
+.noanim .win { animation: none; } .noanim .win.closing { transition: none; }
+@media (prefers-reduced-motion: reduce) { .win { animation: none; } }
+
+@media (max-width: 640px) { .win { min-width: 0; } }

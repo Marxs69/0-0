@@ -1,0 +1,33 @@
+/* Componentes compartilhados: ícone em bloco (tile), botões pill, listas e campos */
+
+/* tile: quadrado de vidro com emoji ou favicon */
+.tile {
+  width: 46px; height: 46px; flex: none; border-radius: 13px; display: grid; place-items: center;
+  background: var(--glass); border: 1px solid var(--glass-line);
+  backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: 0 4px 12px rgba(0,0,0,.18); overflow: hidden;
+}
+.tile img { width: 26px; height: 26px; }
+.tile b { color: var(--text); font-size: 20px; text-shadow: none; }
+.tile i { font-style: normal; font-size: 24px; text-shadow: none; }
+.tile { background: color-mix(in srgb, var(--glass) 36%, transparent); }
+
+/* listas dentro de janelas de sistema (lixeira, plano de fundo) */
+.sysbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; color: var(--text-dim); }
+.pill { height: 32px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.pill:hover { background: rgba(255,255,255,.18); }
+.srow { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; margin-bottom: 4px; border: 1px solid transparent; border-radius: 12px; background: rgba(255,255,255,.05); color: var(--text); font: inherit; font-size: 14px; text-align: left; }
+.srow .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+button.srow { cursor: pointer; }
+button.srow:hover { background: rgba(255,255,255,.14); }
+.srow.on { border-color: var(--accent); }
+.srow .tile { width: 30px; height: 30px; border-radius: 9px; box-shadow: none; }
+.srow .tile img { width: 18px; height: 18px; }
+.srow .tile b { font-size: 14px; }
+.thumb { width: 56px; height: 36px; flex: none; border-radius: 8px; background: #3b4048 center / cover no-repeat; border: 1px solid var(--glass-line); }
+.srow .pick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.srow a.pill { display: inline-grid; place-items: center; width: 32px; padding: 0; text-decoration: none; }
+.empty { margin: 18px 4px; font-size: 14px; color: var(--text-dim); line-height: 1.4; }
+.pill.on { border-color: var(--accent); }
+.pill.danger { background: rgba(229,72,77,.16); border-color: rgba(229,72,77,.5); color: #ffb4b6; } .pill.danger:hover { background: rgba(229,72,77,.3); }
+.sp { flex: 1; min-width: 0; height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }

@@ -1,0 +1,36 @@
+/* Base: fonte, variáveis de tema, reset, barras de rolagem e troca de modo */
+
+@font-face { font-family: "Futura"; src: url('../assets/fonts/futura-medium-condensed-bt.ttf') format('truetype'); }
+
+:root {
+  --wallpaper: #87ceeb;                 /* azul celeste — cor de fundo padrão */
+  --glass: rgba(34, 36, 40, .48);
+  --glass-strong: rgba(28, 30, 34, .68);
+  --glass-line: rgba(255, 255, 255, .14);
+  --text: #f0f2f4;
+  --text-dim: #aeb4bb;
+  --accent: #4aa8ff;
+  --radius: 18px;
+  --taskbar-h: 58px;
+  --blur: 22px;
+  --tb-gap: 20px;
+  --dock-h: 70px;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+html { color-scheme: dark; }
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.28) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.26); border: 2px solid transparent; border-radius: 10px; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); background-clip: padding-box; }
+body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; background: var(--wallpaper); }
+
+[data-mode="old"] #os { display: none; }
+[data-mode="os"] #old { display: none; }
+
+textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
+[hidden] { display: none !important; }
+
+/* tema "cantos quadrados" (Configurações > Geral) */
+.sq *:not(.dot):not(.badge):not(.spin):not(.icon):not(.tile):not(.tile *), .sq *::before, .sq *::after { border-radius: 0 !important; }

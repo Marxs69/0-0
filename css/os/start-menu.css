@@ -1,0 +1,41 @@
+/* Menu Iniciar: cabeçalho, busca, blocos de apps e lista de sites */
+
+/* start menu */
+#start {
+  position: absolute; left: 10px; bottom: calc(var(--taskbar-h) + var(--tb-gap)); z-index: 99998;
+  width: min(340px, calc(100vw - 20px)); max-height: min(520px, calc(100vh - 100px));
+  display: none; flex-direction: column; gap: 12px; padding: 14px;
+  background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 22px;
+  backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+#start.open { display: flex; animation: pop .14s ease-out; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+.starthead { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.starthead b { font-size: 18px; font-weight: normal; letter-spacing: .06em; }
+.starthead button { height: 34px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 11px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.starthead button:hover { background: rgba(255,255,255,.18); }
+#search { width: 100%; height: 40px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: none; user-select: text; -webkit-user-select: text; }
+#search:focus { border-color: var(--accent); }
+#search::placeholder { color: var(--text-dim); }
+#apps { overflow-y: auto; display: flex; flex-direction: column; gap: 2px; padding-right: 2px; }
+#apps h3 { margin: 10px 0 4px 6px; font-size: 12px; font-weight: normal; color: var(--text-dim); }
+#apps h3:first-child { margin-top: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; width: 100%; padding: 9px 12px; border: 0; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.row:hover, .row:focus-visible { background: rgba(255,255,255,.14); outline: none; }
+.row .h { flex: none; font-size: 11px; color: var(--text-dim); }
+.hb { display: flex; gap: 6px; } .starthead { flex-wrap: wrap; }
+
+/* menu Iniciar: botões nas pontas, blocos de apps, aviso de energia */
+.startbar { display: flex; justify-content: space-between; gap: 6px; }
+.startbar button { height: 34px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 11px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.startbar button:hover { background: rgba(255,255,255,.18); }
+.ag { display: grid; grid-template-columns: repeat(3, 65px); justify-content: start; gap: 8px; margin-bottom: 8px; }
+.ab { aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 1px solid var(--glass-line); border-radius: 14px; background: rgba(255,255,255,.06); cursor: pointer; }
+.ab:hover { background: rgba(255,255,255,.16); }
+.ab .tile { width: 30px; height: 30px; pointer-events: none; } .ab .tile i { font-size: 18px; } .ab .tile img { width: 18px; height: 18px; }
+.startfoot { display: flex; justify-content: flex-end; gap: 6px; padding-top: 10px; border-top: 1px solid var(--glass-line); }
+
+#os.tbtop #start { bottom: auto; top: calc(var(--taskbar-h) + var(--tb-gap)); }
+
+@media (prefers-reduced-motion: reduce) { #start.open { animation: none; } }

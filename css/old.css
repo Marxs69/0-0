@@ -1,0 +1,17 @@
+/* Modo antigo: a página original em lista de links */
+
+#old { position: fixed; inset: 0; background: black; text-align: center; overflow: auto; font-family: "Futura", "monospace"; }
+#old h1 { font-size: 125px; margin-top: 50px; color: #d9d9d9; text-align: center; text-shadow: 2px 2px 4px #404040; font-family: "Futura", "monospace"; }
+#old h2 { color: white; font-family: "Futura", "monospace"; font-size: 20px; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
+#old .divider { display: flex; align-items: center; width: 60%; max-width: 600px; margin: 25px auto; }
+#old .divider::before, #old .divider::after { content: ""; flex: 1; height: 1px; background-color: #404040; }
+#old .divider span { padding: 0 15px; font-size: 12px; letter-spacing: 3px; color: #808080; font-family: "Futura", "monospace"; }
+#old section { margin-top: 20px; }
+#old .link { position: relative; font-size: 25px; display: flex; flex-wrap: wrap; justify-content: center; margin-top: 15px; }
+#old .link a:link, #old .link a:visited { box-sizing: border-box; background-color: #0d0d0d; color: #d9d9d9; padding: 20px; border: 2px solid transparent; border-radius: 20px; text-align: center; text-decoration: none; display: inline-block; margin: -1px; }
+#old .link a:hover, #old .link a:active { color: #0066CC; background-color: transparent; border-color: #003568; z-index: 1; position: relative; }
+#old footer { color: #151515; font-size: 8px; position: absolute; bottom: 0; right: 0; }
+#old footer a:link, #old footer a:visited { color: #151515; text-decoration: none; }
+#old footer a:hover, #old footer a:active { color: purple; }
+#oldswitch { position: fixed; left: 14px; bottom: 14px; z-index: 5; height: 34px; padding: 0 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 11px; background: rgba(255,255,255,.08); color: #f0f2f4; font: inherit; font-size: 13px; cursor: pointer; }
+#oldswitch:hover { background: rgba(255,255,255,.18); }

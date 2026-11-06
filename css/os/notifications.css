@@ -1,0 +1,12 @@
+/* Notificações: sino, toasts (incluindo os de "amigo jogando") e painel */
+
+#bell { font-size: 16px; color: var(--text); } #bell .dot { position: absolute; top: 3px; right: 3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: #e5484d; color: #fff; font: normal 10px/16px sans-serif; text-align: center; display: none; } #bell.alert .dot { display: block; }
+#toasts { position: absolute; right: 14px; bottom: calc(var(--taskbar-h) + var(--tb-gap)); z-index: 99996; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+#os.tbtop #toasts { bottom: 20px; } #os.tbtop #npanel { bottom: auto; top: calc(var(--taskbar-h) + var(--tb-gap)); }
+.toast { pointer-events: auto; display: flex; gap: 12px; align-items: center; width: 310px; padding: 12px 14px; border-radius: 14px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 12px 32px rgba(0,0,0,.35); cursor: pointer; animation: wopen .2s; }
+.toast.game { background: linear-gradient(135deg, rgba(23,26,33,.96), rgba(34,48,66,.96)); border-color: rgba(102,192,244,.45); }
+.toast.out { opacity: 0; transition: opacity .25s; } .noanim .toast { animation: none; }
+.toast .ti { font-size: 26px; } .toast b { display: block; font-size: 14px; font-weight: normal; } .toast em { font-style: normal; font-size: 13px; color: var(--text-dim); }
+#npanel { position: absolute; right: 10px; bottom: calc(var(--taskbar-h) + var(--tb-gap)); z-index: 99998; display: none; width: min(360px, calc(100vw - 20px)); max-height: 420px; overflow: auto; padding: 12px; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 18px; backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+.nh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; } .nh b { font-weight: normal; }
+.toast.game { width: 380px; padding: 20px 22px; gap: 16px; border-radius: 0 !important; } .toast.game .ti { font-size: 42px; } .toast.game b { font-size: 17px; } .toast.game em { font-size: 15px; }

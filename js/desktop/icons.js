@@ -1,6 +1,6 @@
 /* Grade de ícones da área de trabalho (posições sorteadas, arrastar e soltar) */
 
-let CW = 96, CH = 100; const PAD = 16;
+let CW = 96, CH = 100, RH = 100; const PAD = 16;              // RH = distância entre linhas (pode ser menor que CH)
 let cols = 1, rows = 1;
 const saved = {};                                      // posições da sessão: url -> [coluna, linha] (sorteadas a cada acesso)
 const ORDER = [...LINKS];
@@ -24,12 +24,14 @@ function nearestFree(c, r, except) {
   }
   return best;
 }
-const setXY = (el, c, r) => { el.style.left = PAD + c * CW + 'px'; el.style.top = PAD + r * CH + 'px'; };
+const setXY = (el, c, r) => { el.style.left = PAD + c * CW + 'px'; el.style.top = PAD + r * RH + 'px'; };
 const valid = p => p && p[0] < cols && p[1] < rows && !reserved(p[0], p[1]);
 
 function layoutAll() {
   cols = Math.max(2, Math.floor((desk.clientWidth - PAD * 2) / CW));
-  rows = Math.max(1, Math.floor((desk.clientHeight - PAD * 2) / CH));
+  const avail = desk.clientHeight - PAD * 2, fit = Math.max(1, Math.floor(avail / CH)), step = (avail - CH) / fit;
+  rows = step >= CH * .85 ? fit + 1 : fit; RH = rows > fit ? step : CH;      // cabe uma linha extra apertando até 15%
+  desk.classList.toggle('tight', RH < CH); desk.style.setProperty('--rh', Math.min(CH, RH) + 'px');
   cell.clear(); setXY(trashEl, 0, 0); trashEl.hidden = OFF.has('sys:trash');
   const gone = l => trashed.has(l.u) || OFF.has(idOf(l)) || placeOf(l) !== 'desktop';
   const visible = ORDER.filter(l => !gone(l));
@@ -91,7 +93,7 @@ function addIcon(l) {
       b._dragged = true; b._dragEnd = Date.now();
       if (ev.type === 'pointerup' && inside(trashEl, ev.clientX, ev.clientY)) { sendToTrash(l); return; }
       let c = Math.max(0, Math.min(cols - 1, Math.floor((ev.clientX - dr.left - PAD) / CW)));
-      let rr = Math.max(0, Math.min(rows - 1, Math.floor((ev.clientY - dr.top - PAD) / CH)));
+      let rr = Math.max(0, Math.min(rows - 1, Math.floor((ev.clientY - dr.top - PAD + RH / 2 - CH / 2) / RH)));
       const p = free(c, rr, l.u) ? [c, rr] : (nearestFree(c, rr, l.u) || cell.get(l.u));
       saved[l.u] = p; layoutAll();
     };

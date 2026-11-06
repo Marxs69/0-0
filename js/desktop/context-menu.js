@@ -4,10 +4,27 @@ const ctx = $('#ctx');
 function showCtx(e, items) {
   e.preventDefault(); e.stopPropagation(); ctx.innerHTML = '';
   items.forEach(([t, f]) => { const b = document.createElement('button'); b.textContent = t; b.onclick = () => { ctx.style.display = 'none'; f(); }; ctx.append(b); });
-  ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.max(0, Math.min(e.clientY, innerHeight - 20 - items.length * 38)) + 'px';
+  ctx.style.display = 'block'; ctx.style.animation = 'none'; ctx.offsetWidth; ctx.style.animation = '';   // reinicia a animação ao reabrir
+  ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.max(0, Math.min(e.clientY, innerHeight - 20 - items.length * 38)) + 'px';
 }
-desk.addEventListener('contextmenu', e => {
-  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['🔄 Atualizar', () => location.reload()], ['💻 Abrir terminal', openTerm], [pref.hi ? '👁️ Mostrar ícones' : '🙈 Esconder ícones', () => { pref.hi = !pref.hi; applyPrefs(); }], ...(current.img ? [['⬇️ Baixar plano de fundo', downloadWall]] : []), ['🎨 Customização', openWall], ['⚙️ Configurações', openSettings]]);
+function deskMenu(e) {
+  showCtx(e, [['🔗 Novo link…', newLink], ['🔄 Atualizar', () => location.reload()], ['💻 Abrir terminal', openTerm], [pref.hi ? '👁️ Mostrar ícones' : '🙈 Esconder ícones', () => { pref.hi = !pref.hi; applyPrefs(); }], ...(current.img ? [['⬇️ Baixar plano de fundo', downloadWall]] : []), ['🎨 Customização', openWall], ['⚙️ Configurações', openSettings]]);
+}
+desk.addEventListener('contextmenu', e => { if (e.target === desk) deskMenu(e); });
+
+/* clique direito em qualquer outra parte do sistema: menu do OS (ou nada) no lugar do menu do navegador */
+const WIDGET_PREF = { widget: 'wg', wmon: 'wmon', wq: 'wq' };
+document.addEventListener('contextmenu', e => {
+  if (e.defaultPrevented || document.body.dataset.mode !== 'os') return;      // já tratado por um menu próprio, ou modo antigo
+  const t = e.target;
+  if (t.closest?.('input, textarea, [contenteditable]') || String(getSelection()).trim()) return;   // campos de texto e texto selecionado: copiar/colar do navegador
+  e.preventDefault();
+  if (t === os || t === desk) return deskMenu(e);
+  const win = t.closest?.('.win'), w = win && [...wins.values()].find(x => x.el === win);
+  if (w) return winMenu(e, w);
+  const wd = t.closest?.('.wd'), key = wd && WIDGET_PREF[wd.id];
+  if (key) return showCtx(e, [['🙈 Ocultar widget', () => { pref[key] = false; applyPrefs(); }], ['⚙️ Configurações', () => openSettings('widget')]]);
+  ctx.style.display = 'none';                                                 // demais áreas (taskbar, dock, menus, avisos): só bloqueia o menu do navegador
 });
 function organize() {
   const vis = LINKS.filter(l => !trashed.has(l.u)).sort((a, b) => a.n.localeCompare(b.n, 'pt'));
@@ -24,7 +41,7 @@ function newLink() {
     if (LINKS.some(l => l.u === u)) { ur.value = ''; ur.placeholder = 'Esse link já existe'; return; }
     const l = { n: nm.value.trim() || new URL(u).hostname.replace(/^www\./, ''), u, g: 'out', c: 1 };
     LINKS.push(l); ORDER.push(l); store.set('piratinha-links', [...store.get('piratinha-links', []), l]); addIcon(l);
-    const a = document.createElement('a'); a.href = u; a.target = '_blank'; a.textContent = l.n; a.dataset.u = u; $('#old-out').append(a); m.remove(); layoutAll();
+    $('#old-out').append(oldLink(l)); m.remove(); layoutAll();
   };
   os.append(m); nm.focus();
 }

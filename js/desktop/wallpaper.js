@@ -17,6 +17,8 @@ const COLORS = [
 let IMAGES = [], current = COLORS[0];
 let picked = store.get('piratinha-wall', null);          // nome escolhido manualmente (senão, sorteio a cada visita)
 if (typeof picked !== 'string') picked = null;
+const DEFAULT_WALL = '59_1793395323852_59.png';                // wallpaper de quem abre o site pela primeira vez
+if (picked === null && store.get('piratinha-pref', null) === null) { picked = DEFAULT_WALL; store.set('piratinha-wall', picked); }
 const imgUrl = n => WALL_DIR + encodeURIComponent(n);
 function applyWall() {
   os.style.backgroundColor = current.c || 'var(--wallpaper)';

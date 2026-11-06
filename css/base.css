@@ -4,15 +4,15 @@
 
 :root {
   --wallpaper: #87ceeb;                 /* azul celeste — cor de fundo padrão */
-  --glass: rgba(34, 36, 40, .48);
-  --glass-strong: rgba(28, 30, 34, .68);
+  --glass: rgba(33, 28, 30, .5);              /* padrão: vidro 33,28,30 a 50% */
+  --glass-strong: rgba(33, 28, 30, .7);
   --glass-line: rgba(255, 255, 255, .14);
   --text: #f0f2f4;
   --text-dim: #aeb4bb;
-  --accent: #4aa8ff;
+  --accent: #b072b1;                    /* padrão: destaque 176,114,177 */
   --radius: 18px;
   --taskbar-h: 58px;
-  --blur: 22px;
+  --blur: 4px;                          /* padrão: desfoque 10% */
   --tb-gap: 20px;
   --dock-h: 70px;
 }
@@ -30,7 +30,12 @@ body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; backgroun
 [data-mode="os"] #old { display: none; }
 
 textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
+input[type=checkbox], input[type=radio], input[type=range], progress, meter { accent-color: var(--accent); }   /* barras e caixas de seleção na cor de destaque */
+input[type=checkbox], input[type=radio] { width: 17px; height: 17px; cursor: pointer; }
+input[type=range] { cursor: pointer; }
 [hidden] { display: none !important; }
+.noanim *:not(.spin), .noanim *::before, .noanim *::after { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) { *:not(.spin), *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
 /* tema "cantos quadrados" (Configurações > Geral) */
 .sq *:not(.dot):not(.badge):not(.spin):not(.icon):not(.tile):not(.tile *), .sq *::before, .sq *::after { border-radius: 0 !important; }

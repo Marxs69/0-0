@@ -2,7 +2,7 @@
 
 Página inicial com cara de sistema operacional, feita só com HTML, CSS e JavaScript puros. Não tem build, dependências nem servidor próprio.
 Ela reúne uma lista de links de sites de jogos numa área de trabalho com janelas, taskbar, dock, menu Iniciar, apps e jogos embutidos.
-A página original, em lista simples, continua disponível como **modo antigo**.
+A página original, em lista, continua disponível como **modo antigo**, agora com cards, favicons e a cor de destaque.
 
 > Todas as preferências, notas, recordes e wallpapers próprios ficam salvos **só no navegador** (`localStorage`). Nada é enviado a servidor nenhum.
 
@@ -12,17 +12,20 @@ A página original, em lista simples, continua disponível como **modo antigo**.
 - Ícones dos sites e apps em grade, **arrastáveis**. A disposição é sorteada a cada acesso, e isso pode ser desligado.
 - **Lixeira**: arraste um ícone até ela para escondê-lo. Ela tem contador de itens e opção para restaurar.
 - **Clique direito** na área de trabalho: novo link, atualizar, terminal, esconder ícones, baixar o plano de fundo, Customização e Configurações.
+- O **clique direito** abre sempre o menu do sistema, e não o do navegador: no conteúdo das janelas (minimizar, maximizar, fechar), nos widgets (ocultar), nos sites do menu Iniciar e nos ícones. Campos de texto, texto selecionado e o modo antigo mantêm o menu do navegador (copiar e colar). Dentro dos sites abertos em `iframe` o navegador não deixa interceptar.
 - **Clique direito** num ícone: abrir, abrir em nova aba, mover para a taskbar, a dock ou o menu Iniciar, mandar para a lixeira, excluir (para links criados por você).
-- **Plano de fundo**: imagens da pasta `assets/wallpapers/` (uma sorteada por visita), cores sólidas ou imagens enviadas por você.
+- **Plano de fundo**: imagens da pasta `assets/wallpapers/`, cores sólidas ou imagens enviadas por você.
+- **Visual padrão para quem chega pela primeira vez**: wallpaper `59_1793395323852_59.png`, vidro RGB 33, 28, 30 com 50% de opacidade e 10% de desfoque, e destaque RGB 176, 114, 177. Caixas de seleção, barras deslizantes e itens selecionados seguem a cor de destaque.
+- A grade ganha **uma linha extra** quando dá para aproximar os ícones em até 15% (por exemplo, 8 por coluna numa tela 1080p).
 
 ### Janelas
-- Mover, redimensionar, minimizar, maximizar (duplo clique na barra) e fechar.
+- Mover, redimensionar, minimizar, maximizar (duplo clique na barra) e fechar, com animações suaves. Elas são desligadas em Configurações → Geral ou pelo modo de movimento reduzido do sistema.
 - Os sites abrem em `iframe`. Quando um site bloqueia exibição incorporada, há um botão **↗** para abrir em nova aba.
 
 ### Taskbar, dock e menu Iniciar
 - Taskbar **flutuante ou acoplada**, embaixo ou em cima, com relógio em tempo real e apps fixados que podem ser **reordenados arrastando**.
 - **Dock de jogos** com posição configurável (embaixo, em cima, esquerda ou direita), ocultar automático, três tamanhos e formato redondo ou quadrado.
-- **Menu Iniciar** com busca, blocos de apps, sites recomendados e outros, e o botão de desligar ou reiniciar. Há uma pegadinha quando a busca não encontra nada.
+- **Menu Iniciar** com busca, nome do app ao passar o mouse, blocos de apps, sites recomendados e outros, e o botão de desligar ou reiniciar. Há uma pegadinha quando a busca não encontra nada.
 
 ### Apps embutidos
 | App | O que faz |

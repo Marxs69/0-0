@@ -26,18 +26,18 @@ function createWindow(o) {
   }
   os.append(el);
 
-  const w = { id: o.id, el, btn };
+  const w = { id: o.id, el, btn, ext: o.ext };
   wins.set(o.id, w);
   o.body($('.view', el), w);
   if (!o.pin) btn.onclick = () => toggleWin(w);
   el.addEventListener('pointerdown', () => focusWin(w));
   $('.mn', el).onclick = () => minimize(w);
-  $('.mx', el).onclick = () => el.classList.toggle('max');
-  $('.close', el).onclick = () => { const kill = () => { el.remove(); if (o.pin) { btn.classList.remove('open', 'active'); const pb = pinBtns.get(o.id); if (pb) pb.classList.remove('open', 'active'); } else btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); }; if (pref.an) { el.classList.add('closing'); setTimeout(kill, 130); } else kill(); };
+  $('.mx', el).onclick = () => toggleMax(el);
+  $('.close', el).onclick = () => { const kill = () => { el.remove(); if (o.pin) { btn.classList.remove('open', 'active'); const pb = pinBtns.get(o.id); if (pb) pb.classList.remove('open', 'active'); } else btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); }; if (pref.an) { el.classList.add('closing'); setTimeout(kill, 180); } else kill(); };
 
   const bar = $('.bar', el);
-  bar.addEventListener('contextmenu', e => showCtx(e, [['➖ Minimizar', () => minimize(w)], [el.classList.contains('max') ? '🗗 Restaurar' : '🗖 Maximizar', () => el.classList.toggle('max')], ...(o.ext ? [['↗ Abrir em nova aba', () => window.open(o.ext, '_blank', 'noopener')]] : []), ['✕ Fechar', () => $('.close', el).click()]]));
-  bar.addEventListener('dblclick', e => { if (!e.target.closest('.wbtn')) el.classList.toggle('max'); });
+  bar.addEventListener('contextmenu', e => winMenu(e, w));
+  bar.addEventListener('dblclick', e => { if (!e.target.closest('.wbtn')) toggleMax(el); });
   bar.addEventListener('pointerdown', e => {
     if (e.target.closest('.wbtn') || el.classList.contains('max')) return;
     const r = el.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
@@ -58,7 +58,21 @@ function createWindow(o) {
   focusWin(w); return w;
 }
 function toggleWin(w) { if (active === w && !w.el.classList.contains('min')) minimize(w); else { w.el.classList.remove('min'); focusWin(w); } }
-function minimize(w) { const f = () => { w.el.classList.add('min'); w.el.classList.remove('closing'); }; if (pref.an) { w.el.classList.add('closing'); setTimeout(f, 130); } else f(); if (active === w) active = null; refresh(); }
+function winMenu(e, w) {                           // clique direito na barra ou no conteúdo de uma janela
+  const el = w.el;
+  showCtx(e, [['➖ Minimizar', () => minimize(w)], [el.classList.contains('max') ? '🗗 Restaurar' : '🗖 Maximizar', () => toggleMax(el)], ...(w.ext ? [['↗ Abrir em nova aba', () => window.open(w.ext, '_blank', 'noopener')]] : []), ['✕ Fechar', () => $('.close', el).click()]]);
+}
+function toggleMax(el) {                           // maximizar/restaurar com transição suave (FLIP)
+  const a = el.getBoundingClientRect(); el.classList.toggle('max');
+  if (!pref.an || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const b = el.getBoundingClientRect(); if (!b.width || !b.height) return;
+  el.style.transition = 'none'; el.style.transformOrigin = '0 0';
+  el.style.transform = `translate(${a.left - b.left}px, ${a.top - b.top}px) scale(${a.width / b.width}, ${a.height / b.height})`;
+  el.getBoundingClientRect();                       // aplica o ponto de partida antes de animar
+  el.style.transition = 'transform .28s cubic-bezier(.2, .8, .2, 1)'; el.style.transform = '';
+  clearTimeout(el._mx); el._mx = setTimeout(() => { el.style.transition = ''; el.style.transformOrigin = ''; }, 300);
+}
+function minimize(w) { const f = () => { w.el.classList.add('min'); w.el.classList.remove('closing'); }; if (pref.an) { w.el.classList.add('closing'); setTimeout(f, 180); } else f(); if (active === w) active = null; refresh(); }
 function focusWin(w) { active = w; w.el.style.zIndex = ++z; refresh(); }
 function refresh() { wins.forEach(w => { const on = w === active && !w.el.classList.contains('min'); w.el.classList.toggle('active', on); w.btn.classList.toggle('active', on); }); }
 

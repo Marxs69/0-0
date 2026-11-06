@@ -1,17 +1,61 @@
-/* Modo antigo: a página original em lista de links */
+/* Modo antigo: a página original em lista de links, com visual moderno */
 
-#old { position: fixed; inset: 0; background: black; text-align: center; overflow: auto; font-family: "Futura", "monospace"; }
-#old h1 { font-size: 125px; margin-top: 50px; color: #d9d9d9; text-align: center; text-shadow: 2px 2px 4px #404040; font-family: "Futura", "monospace"; }
-#old h2 { color: white; font-family: "Futura", "monospace"; font-size: 20px; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
-#old .divider { display: flex; align-items: center; width: 60%; max-width: 600px; margin: 25px auto; }
-#old .divider::before, #old .divider::after { content: ""; flex: 1; height: 1px; background-color: #404040; }
-#old .divider span { padding: 0 15px; font-size: 12px; letter-spacing: 3px; color: #808080; font-family: "Futura", "monospace"; }
-#old section { margin-top: 20px; }
-#old .link { position: relative; font-size: 25px; display: flex; flex-wrap: wrap; justify-content: center; margin-top: 15px; }
-#old .link a:link, #old .link a:visited { box-sizing: border-box; background-color: #0d0d0d; color: #d9d9d9; padding: 20px; border: 2px solid transparent; border-radius: 20px; text-align: center; text-decoration: none; display: inline-block; margin: -1px; }
-#old .link a:hover, #old .link a:active { color: #0066CC; background-color: transparent; border-color: #003568; z-index: 1; position: relative; }
-#old footer { color: #151515; font-size: 8px; position: absolute; bottom: 0; right: 0; }
-#old footer a:link, #old footer a:visited { color: #151515; text-decoration: none; }
-#old footer a:hover, #old footer a:active { color: purple; }
-#oldswitch { position: fixed; left: 14px; bottom: 14px; z-index: 5; height: 34px; padding: 0 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 11px; background: rgba(255,255,255,.08); color: #f0f2f4; font: inherit; font-size: 13px; cursor: pointer; }
-#oldswitch:hover { background: rgba(255,255,255,.18); }
+#old {
+  position: fixed; inset: 0; overflow: auto; padding: 0 16px 90px; text-align: center; color: #ece8ee;
+  font-family: "Futura", system-ui, sans-serif;
+  background:
+    radial-gradient(900px 520px at 50% -8%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+    radial-gradient(700px 500px at 100% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+    #0b0a0d;
+}
+#old h1 {
+  margin: clamp(32px, 7vh, 64px) 0 6px; font-size: clamp(44px, 9vw, 112px); font-weight: normal; letter-spacing: .02em; color: #f4f1f6;
+  text-shadow: 0 8px 40px color-mix(in srgb, var(--accent) 55%, transparent);
+  animation: oldin .5s cubic-bezier(.2, .8, .2, 1);
+}
+#old h2 { margin: 26px 0 0; font-size: 13px; font-weight: normal; letter-spacing: .32em; text-transform: uppercase; color: #b8b0bd; }
+#old .divider { display: flex; align-items: center; width: min(600px, 80%); margin: 40px auto 0; }
+#old .divider::before, #old .divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.16)); }
+#old .divider::after { background: linear-gradient(90deg, rgba(255,255,255,.16), transparent); }
+#old .divider span { padding: 0 16px; font-size: 13px; letter-spacing: .32em; text-transform: uppercase; color: #8d8592; }
+#old section { margin-top: 18px; }
+
+/* grade de cards */
+#old .link { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 1100px; margin: 18px auto 0; font-size: 18px; }
+#old .link a { flex: 0 1 250px; min-width: 0; }
+#old .link a {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; text-align: left; text-decoration: none; color: #ece8ee;
+  background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: transform .22s cubic-bezier(.2, .8, .2, 1), background-color .2s ease, border-color .2s ease, box-shadow .22s ease;
+  animation: oldin .45s cubic-bezier(.2, .8, .2, 1) backwards;
+}
+#old .link a span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#old .link a::after { content: "↗"; flex: none; font-size: 15px; opacity: .3; transition: opacity .2s ease, transform .22s cubic-bezier(.2, .8, .2, 1); }
+#old .link a:hover, #old .link a:focus-visible {
+  outline: none; transform: translateY(-3px); color: #fff;
+  background: color-mix(in srgb, var(--accent) 14%, rgba(255,255,255,.03)); border-color: color-mix(in srgb, var(--accent) 65%, transparent);
+  box-shadow: 0 12px 30px rgba(0,0,0,.4), 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+#old .link a:hover::after, #old .link a:focus-visible::after { opacity: .9; transform: translate(2px, -2px); }
+#old .link a:active { transform: translateY(-1px) scale(.99); }
+#old .tile { width: 34px; height: 34px; flex: none; border-radius: 10px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.08); box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+#old .tile img { width: 20px; height: 20px; }
+#old .tile b { font-size: 16px; }
+@keyframes oldin { from { opacity: 0; transform: translateY(10px); } }
+#old .link a:nth-child(2) { animation-delay: .03s; } #old .link a:nth-child(3) { animation-delay: .06s; } #old .link a:nth-child(4) { animation-delay: .09s; }
+#old .link a:nth-child(5) { animation-delay: .12s; } #old .link a:nth-child(n+6) { animation-delay: .15s; }
+
+/* rodapé escondido (easter egg) e botão de voltar */
+#old footer { position: absolute; right: 8px; bottom: 0; font-size: 8px; color: #18161a; }
+#old footer a:link, #old footer a:visited { color: #18161a; text-decoration: none; }
+#old footer a:hover, #old footer a:active { color: var(--accent); }
+#oldswitch {
+  position: fixed; left: 16px; bottom: 16px; z-index: 5; height: 38px; padding: 0 16px; border-radius: 12px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.14); background: rgba(20,18,22,.6); color: #f0f2f4; font: inherit; font-size: 14px;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  transition: background-color .15s ease, border-color .15s ease, transform .2s cubic-bezier(.2, .8, .2, 1);
+}
+#oldswitch:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 22%, rgba(20,18,22,.6)); transform: translateY(-2px); }
+
+@media (max-width: 520px) { #old .link { font-size: 16px; } #old .link a { flex-basis: 100%; } }

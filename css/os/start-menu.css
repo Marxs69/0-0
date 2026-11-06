@@ -9,8 +9,11 @@
   backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
   box-shadow: 0 20px 60px rgba(0,0,0,.4);
 }
-#start.open { display: flex; animation: pop .14s ease-out; }
-@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+#start.open { display: flex; animation: pop .24s cubic-bezier(.2, .8, .2, 1); transform-origin: bottom left; }
+#os.tbtop #start.open { transform-origin: top left; }
+@keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.97); } }
+.ab { transition: background-color .15s ease, transform .18s cubic-bezier(.2, .8, .2, 1); } .ab:hover { transform: translateY(-2px); }
+.row { transition: background-color .15s ease; }
 .starthead { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .starthead b { font-size: 18px; font-weight: normal; letter-spacing: .06em; }
 .starthead button { height: 34px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 11px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
@@ -34,6 +37,8 @@
 .ab { aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 1px solid var(--glass-line); border-radius: 14px; background: rgba(255,255,255,.06); cursor: pointer; }
 .ab:hover { background: rgba(255,255,255,.16); }
 .ab .tile { width: 30px; height: 30px; pointer-events: none; } .ab .tile i { font-size: 18px; } .ab .tile img { width: 18px; height: 18px; }
+#tip { position: fixed; z-index: 100002; padding: 4px 9px; border-radius: 8px; background: var(--glass-strong); border: 1px solid var(--glass-line); color: var(--text); font-size: 12px; line-height: 1.4; white-space: nowrap; pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% + 4px)); transition: opacity .15s, transform .15s; backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); }
+#tip.on { opacity: 1; transform: translate(-50%, -100%); }
 .startfoot { display: flex; justify-content: flex-end; gap: 6px; padding-top: 10px; border-top: 1px solid var(--glass-line); }
 
 #os.tbtop #start { bottom: auto; top: calc(var(--taskbar-h) + var(--tb-gap)); }

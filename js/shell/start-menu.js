@@ -21,18 +21,28 @@ function buildStart(q = '') {
   if (apps.length) {                                    // apps em blocos de 3 por linha: o bloco é só o ícone
     const h = document.createElement('h3'); h.textContent = 'Apps'; box.append(h);
     const g = document.createElement('div'); g.className = 'ag';
-    apps.forEach(l => { const b = document.createElement('button'); b.className = 'ab'; b.title = l.n; b.setAttribute('aria-label', l.n); b.append(tile(l)); b.onclick = () => openApp(l); b.addEventListener('contextmenu', e => itemMenu(e, l, placeOf(l))); g.append(b); });
+    apps.forEach(l => { const b = document.createElement('button'); b.className = 'ab'; b.dataset.label = l.n; b.setAttribute('aria-label', l.n); b.append(tile(l)); b.onclick = () => openApp(l); b.addEventListener('contextmenu', e => itemMenu(e, l, placeOf(l))); g.append(b); });
     box.append(g);
   }
   [['rec', 'Recomendados'], ['out', 'Outros']].forEach(([g, name]) => {
     const items = found.filter(l => l.g === g); if (!items.length) return;
     const h = document.createElement('h3'); h.textContent = name; box.append(h);
-    items.forEach(l => box.append(row(l.n, l.local ? (l.file || 'jogo') : hostOf(l), () => openApp(l))));
+    items.forEach(l => { const r = row(l.n, l.local ? (l.file || 'jogo') : hostOf(l), () => openApp(l)); r.addEventListener('contextmenu', e => itemMenu(e, l, placeOf(l))); box.append(r); });
   });
 }
 $('#search').addEventListener('input', e => buildStart(e.target.value));
 $('#search').addEventListener('keydown', e => { if (e.key === 'Enter') { const f = $('.row', startEl); if (f) f.click(); } });
-function closeStart() { startEl.classList.remove('open'); startBtn.setAttribute('aria-expanded', 'false'); }
+/* dica com o nome do app ao passar o mouse (fora do menu, para não ser cortada pela rolagem) */
+const tip = document.createElement('div'); tip.id = 'tip'; os.append(tip);
+const hideTip = () => tip.classList.remove('on');
+$('#apps').addEventListener('pointerover', e => {
+  const b = e.target.closest('.ab'); if (!b) return;
+  const r = b.getBoundingClientRect(); tip.textContent = b.dataset.label;
+  tip.style.left = r.left + r.width / 2 + 'px'; tip.style.top = r.top - 10 + 'px'; tip.classList.add('on');
+});
+$('#apps').addEventListener('pointerout', e => { if (!e.relatedTarget || e.relatedTarget.closest?.('.ab') !== e.target.closest('.ab')) hideTip(); });
+$('#apps').addEventListener('scroll', hideTip);
+function closeStart() { hideTip(); startEl.classList.remove('open'); startBtn.setAttribute('aria-expanded', 'false'); }
 startBtn.onclick = e => {
   e.stopPropagation();
   const open = startEl.classList.toggle('open'); startBtn.setAttribute('aria-expanded', open);

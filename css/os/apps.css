@@ -45,7 +45,7 @@
 .view.sys.st { display: flex; padding: 0; overflow: hidden; }
 .sd { flex: none; width: 170px; padding: 12px 8px; border-right: 1px solid var(--glass-line); display: flex; flex-direction: column; gap: 2px; }
 .cat { padding: 10px 12px; border: 0; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
-.cat:hover { background: rgba(255,255,255,.1); } .cat.on { background: rgba(255,255,255,.18); }
+.cat:hover { background: rgba(255,255,255,.1); } .cat.on { background: color-mix(in srgb, var(--accent) 30%, transparent); box-shadow: inset 3px 0 0 var(--accent); }
 .sm { flex: 1; min-width: 0; overflow: auto; padding: 12px 14px; }
 .sbox { width: 100%; height: 38px; margin-bottom: 12px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }
 .sh { margin: 14px 2px 8px; font-size: 13px; font-weight: normal; color: var(--text-dim); }

@@ -16,6 +16,7 @@ const D = [
 ['Configurações','Settings','Configuración','Paramètres','Einstellungen','Настройки'],
 ['Customização','Customization','Personalización','Personnalisation','Anpassung','Персонализация'],
 ['Excluir link','Delete link','Eliminar enlace','Supprimer le lien','Link löschen','Удалить ссылку'],
+['Ocultar widget','Hide widget','Ocultar widget','Masquer le widget','Widget ausblenden','Скрыть виджет'],
 ['Fechar','Close','Cerrar','Fermer','Schließen','Закрыть'],
 ['Maximizar','Maximize','Maximizar','Agrandir','Maximieren','Развернуть'],
 ['Minimizar','Minimize','Minimizar','Réduire','Minimieren','Свернуть'],

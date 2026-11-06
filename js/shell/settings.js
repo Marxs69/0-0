@@ -1,7 +1,7 @@
 /* Preferências salvas e janela de Configurações */
 
 const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 38 }, m: { n: 'Médio', w: 96, h: 100, t: 46 }, g: { n: 'Grande', w: 116, h: 120, t: 56 } };
-const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#4aa8ff', bl: 22, sq: false, ts: 'f', lang: 'en', dk: true, da: false, dp: 'b', dsh: 'r', dz: 'm', hi: false, wg: true, wm: false, wmon: true, wq: true }, store.get('piratinha-pref', {}));
+const pref = Object.assign({ c: '#211c1e', a: .5, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#b072b1', bl: 4, sq: false, ts: 'f', lang: 'en', dk: true, da: false, dp: 'b', dsh: 'r', dz: 'm', hi: false, wg: true, wm: false, wmon: true, wq: true }, store.get('piratinha-pref', {}));
 function applyPrefs(relayout) {
   const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
   const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));

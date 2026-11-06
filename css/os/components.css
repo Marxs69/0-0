@@ -15,12 +15,14 @@
 /* listas dentro de janelas de sistema (lixeira, plano de fundo) */
 .sysbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; color: var(--text-dim); }
 .pill { height: 32px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.pill { transition: background-color .15s ease, border-color .15s ease; }
+.srow, .cat, .task, .pin, .startbar button { transition: background-color .15s ease, border-color .15s ease; }
 .pill:hover { background: rgba(255,255,255,.18); }
 .srow { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; margin-bottom: 4px; border: 1px solid transparent; border-radius: 12px; background: rgba(255,255,255,.05); color: var(--text); font: inherit; font-size: 14px; text-align: left; }
 .srow .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 button.srow { cursor: pointer; }
 button.srow:hover { background: rgba(255,255,255,.14); }
-.srow.on { border-color: var(--accent); }
+.srow.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .srow .tile { width: 30px; height: 30px; border-radius: 9px; box-shadow: none; }
 .srow .tile img { width: 18px; height: 18px; }
 .srow .tile b { font-size: 14px; }
@@ -28,6 +30,6 @@ button.srow:hover { background: rgba(255,255,255,.14); }
 .srow .pick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .srow a.pill { display: inline-grid; place-items: center; width: 32px; padding: 0; text-decoration: none; }
 .empty { margin: 18px 4px; font-size: 14px; color: var(--text-dim); line-height: 1.4; }
-.pill.on { border-color: var(--accent); }
+.pill.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 26%, transparent); }
 .pill.danger { background: rgba(229,72,77,.16); border-color: rgba(229,72,77,.5); color: #ffb4b6; } .pill.danger:hover { background: rgba(229,72,77,.3); }
 .sp { flex: 1; min-width: 0; height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }

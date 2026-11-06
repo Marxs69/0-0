@@ -18,7 +18,7 @@ const LINKS = [
   { n: 'My Abandonware',      u: 'https://www.myabandonware.com/',                   g: 'scene',  i: ICO('myabandonware-com') },
   { n: 'RexaGames',           u: 'https://rexagames.com/',                           g: 'scene',  i: ICO('rexagames-com') },
   { n: 'ByXatab',             u: 'https://byxatab.com/',                             g: 'scene',  i: ICO('byxatab-com') },
-  { n: 'Online-Fix - Запуск игр по сети', u: 'https://online-fix.me/',               g: 'tools',  i: ICO('online-fix-me') },
+  { n: 'Online-Fix',          u: 'https://online-fix.me/',                        g: 'tools',  i: ICO('online-fix-me') },
   { n: 'FLiNG Trainer',       u: 'https://flingtrainer.com/',                        g: 'tools',  i: ICO('flingtrainer-com') },
   { n: 'GameCopyWorld',       u: 'https://gamecopyworld.com/games/index.php',        g: 'tools',  i: ICO('gamecopyworld-com') },
   { n: 'BetterRepack',        u: 'https://dl.betterrepack.com/public/',              g: 'out',    i: ICO('dl-betterrepack-com') },

@@ -19,6 +19,7 @@
   --radius: 18px;
   --taskbar-h: 58px;
   --blur: 22px;
+  --tb-gap: 20px;
   --dock-h: 70px;
 }
 * { box-sizing: border-box; }
@@ -41,7 +42,7 @@ body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; backgroun
 }
 #os.dragging iframe { pointer-events: none; }
 
-#desktop { position: absolute; inset: 0 0 calc(var(--taskbar-h) + 20px + var(--dock-h)) 0; z-index: 1; }
+#desktop { position: absolute; inset: var(--ins-t, 0px) var(--ins-r, 0px) var(--ins-b, 78px) var(--ins-l, 0px); z-index: 1; }
 .icon {
   position: absolute; width: var(--cw, 96px); height: var(--ch, 100px); display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: 8px 4px; border-radius: 14px; border: 1px solid transparent; background: none;
@@ -74,7 +75,7 @@ body { font-family: "Futura", system-ui, sans-serif; overflow: hidden; backgroun
   box-shadow: 0 18px 50px rgba(0,0,0,.35); resize: both; overflow: hidden;
 }
 .win.min { display: none; }
-.win.max { inset: 10px 10px calc(var(--taskbar-h) + 20px + var(--dock-h)) 10px !important; width: auto !important; height: auto !important; resize: none; }
+.win.max { inset: max(10px, var(--ins-t, 0px)) max(10px, var(--ins-r, 0px)) max(10px, var(--ins-b, 78px)) max(10px, var(--ins-l, 0px)) !important; width: auto !important; height: auto !important; resize: none; }
 .win:not(.active) { box-shadow: 0 8px 24px rgba(0,0,0,.25); }
 .win:not(.active) .bar { opacity: .7; }
 .bar { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 10px 0 12px; flex: none; touch-action: none; cursor: default; border-bottom: 1px solid var(--glass-line); }
@@ -146,13 +147,7 @@ button.srow:hover { background: rgba(255,255,255,.14); }
 .pin.active::after { width: 14px; margin-left: -7px; background: var(--accent); }
 
 /* dock de jogos */
-#dock {
-  position: absolute; left: 50%; bottom: calc(var(--taskbar-h) + 20px); transform: translateX(-50%); z-index: 99997;
-  display: flex; gap: 8px; padding: 6px; max-width: calc(100vw - 20px);
-  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
-  backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
-}
+#dock { position: absolute; z-index: 99997; display: flex; gap: 8px; padding: 6px; background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px; backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4); box-shadow: 0 10px 30px rgba(0,0,0,.25); transition: transform .2s, opacity .2s; }
 .dk { position: relative; width: 52px; height: 52px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 14px; background: none; cursor: pointer; }
 .dk:hover { background: rgba(255,255,255,.14); }
 .dk .tile { width: 42px; height: 42px; border-radius: 12px; }
@@ -197,10 +192,7 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 .noanim .win { animation: none; } .noanim .win.closing { transition: none; }
 @media (prefers-reduced-motion: reduce) { .win { animation: none; } }
 #os.tbtop #taskbar { bottom: auto; top: 10px; }
-#os.tbtop #start { bottom: auto; top: calc(var(--taskbar-h) + 20px); }
-#os.tbtop #dock { bottom: 10px; }
-#os.tbtop #desktop { inset: calc(var(--taskbar-h) + 20px) 0 calc(var(--dock-h) + 10px) 0; }
-#os.tbtop .win.max { inset: calc(var(--taskbar-h) + 20px) 10px calc(var(--dock-h) + 10px) 10px !important; }
+#os.tbtop #start { bottom: auto; top: calc(var(--taskbar-h) + var(--tb-gap)); }
 .gw { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .gw canvas { max-width: 100%; border: 1px solid var(--glass-line); border-radius: 8px; }
 .hud { font-size: 14px; color: var(--text-dim); text-align: center; }
@@ -213,13 +205,13 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 
 /* notificações, modal, reboot */
 #bell { font-size: 18px; color: var(--text); } #bell .dot { position: absolute; top: 3px; right: 3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: #e5484d; color: #fff; font: normal 10px/16px sans-serif; text-align: center; display: none; } #bell.alert .dot { display: block; }
-#toasts { position: absolute; right: 14px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99996; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
-#os.tbtop #toasts { bottom: 20px; } #os.tbtop #npanel { bottom: auto; top: calc(var(--taskbar-h) + 20px); }
+#toasts { position: absolute; right: 14px; bottom: calc(var(--taskbar-h) + var(--tb-gap)); z-index: 99996; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+#os.tbtop #toasts { bottom: 20px; } #os.tbtop #npanel { bottom: auto; top: calc(var(--taskbar-h) + var(--tb-gap)); }
 .toast { pointer-events: auto; display: flex; gap: 12px; align-items: center; width: 310px; padding: 12px 14px; border-radius: 14px; background: var(--glass-strong); border: 1px solid var(--glass-line); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 12px 32px rgba(0,0,0,.35); cursor: pointer; animation: wopen .2s; }
 .toast.game { background: linear-gradient(135deg, rgba(23,26,33,.96), rgba(34,48,66,.96)); border-color: rgba(102,192,244,.45); }
 .toast.out { opacity: 0; transition: opacity .25s; } .noanim .toast { animation: none; }
 .toast .ti { font-size: 26px; } .toast b { display: block; font-size: 14px; font-weight: normal; } .toast em { font-style: normal; font-size: 13px; color: var(--text-dim); }
-#npanel { position: absolute; right: 10px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99998; display: none; width: min(360px, calc(100vw - 20px)); max-height: 420px; overflow: auto; padding: 12px; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 18px; backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+#npanel { position: absolute; right: 10px; bottom: calc(var(--taskbar-h) + var(--tb-gap)); z-index: 99998; display: none; width: min(360px, calc(100vw - 20px)); max-height: 420px; overflow: auto; padding: 12px; background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 18px; backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
 .nh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; } .nh b { font-weight: normal; }
 .pill.danger { background: rgba(229,72,77,.16); border-color: rgba(229,72,77,.5); color: #ffb4b6; } .pill.danger:hover { background: rgba(229,72,77,.3); }
 .modal { position: fixed; inset: 0; z-index: 100001; display: grid; place-items: center; background: rgba(0,0,0,.45); }
@@ -255,9 +247,77 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 .ca { flex: none; display: flex; flex-direction: column; gap: 4px; }
 .sq *:not(.dot):not(.badge):not(.spin):not(.icon):not(.tile):not(.tile *), .sq *::before, .sq *::after { border-radius: 0 !important; }
 
+#os.tbdock { --tb-gap: 10px; }
+#os.tbdock #taskbar { left: 0; right: 0; bottom: 0; border-radius: 0; border-width: 1px 0 0; }
+#os.tbdock.tbtop #taskbar { top: 0; bottom: auto; border-width: 0 0 1px; }
+#startbtn { position: relative; }
+.pin[data-label]::before, #startbtn[data-label]::before { content: attr(data-label); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); padding: 4px 9px; border-radius: 8px; background: var(--glass-strong); border: 1px solid var(--glass-line); color: var(--text); font-size: 12px; line-height: 1.4; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 5; }
+.pin[data-label]:hover::before, #startbtn[data-label]:hover::before { opacity: 1; }
+#os.tbtop .pin[data-label]::before, #os.tbtop #startbtn[data-label]::before { bottom: auto; top: calc(100% + 10px); }
+.hb { display: flex; gap: 6px; } .starthead { flex-wrap: wrap; }
+.wsep { border: 0; border-top: 1px solid var(--glass-line); margin: 12px 0; }
+
+/* v11: dock configurável, widget, ícones menores e mais transparentes */
+#dock[data-p="b"] { left: 50%; bottom: var(--dk-off, 78px); transform: translateX(-50%); }
+#dock[data-p="t"] { left: 50%; top: var(--dk-off, 10px); transform: translateX(-50%); }
+#dock[data-p="l"] { top: 50%; left: 10px; transform: translateY(-50%); flex-direction: column; }
+#dock[data-p="r"] { top: 50%; right: 10px; transform: translateY(-50%); flex-direction: column; }
+#dock[data-ah="1"]:not(.show)[data-p="b"] { transform: translate(-50%, 160%); opacity: 0; pointer-events: none; }
+#dock[data-ah="1"]:not(.show)[data-p="t"] { transform: translate(-50%, -160%); opacity: 0; pointer-events: none; }
+#dock[data-ah="1"]:not(.show)[data-p="l"] { transform: translate(-160%, -50%); opacity: 0; pointer-events: none; }
+#dock[data-ah="1"]:not(.show)[data-p="r"] { transform: translate(160%, -50%); opacity: 0; pointer-events: none; }
+#dock[data-p="l"] .dk::before { bottom: auto; top: 50%; left: calc(100% + 10px); transform: translateY(-50%); }
+#dock[data-p="r"] .dk::before { bottom: auto; top: 50%; left: auto; right: calc(100% + 10px); transform: translateY(-50%); }
+#dock[data-p="t"] .dk::before { bottom: auto; top: calc(100% + 10px); }
+#dock[data-z="p"] .dk { width: 44px; height: 44px; } #dock[data-z="p"] .dk .tile { width: 34px; height: 34px; } #dock[data-z="p"] .dk .tile i { font-size: 19px; }
+#dock[data-z="g"] .dk { width: 62px; height: 62px; } #dock[data-z="g"] .dk .tile { width: 50px; height: 50px; } #dock[data-z="g"] .dk .tile i { font-size: 29px; }
+#dock[data-sh="s"], #dock[data-sh="s"] .dk, #dock[data-sh="s"] .dk .tile { border-radius: 0; }
+#dockzone { position: absolute; z-index: 99996; }
+#dockzone[data-p="b"] { left: 25%; right: 25%; height: 10px; bottom: var(--dk-off, 78px); }
+#dockzone[data-p="t"] { left: 25%; right: 25%; height: 10px; top: var(--dk-off, 10px); }
+#dockzone[data-p="l"] { top: 25%; bottom: 25%; width: 10px; left: 0; }
+#dockzone[data-p="r"] { top: 25%; bottom: 25%; width: 10px; right: 0; }
+#startbtn { width: 48px; height: 48px; font-size: 30px; }
+.pin { width: 36px; height: 34px; background: rgba(255,255,255,.025); } .pin:hover { background: rgba(255,255,255,.1); }
+.pin .tile { width: 22px; height: 22px; border-radius: 7px; } .pin .tile img { width: 14px; height: 14px; } .pin .tile b { font-size: 11px; } .pin .tile i { font-size: 13px; }
+#storebtn { font-size: 17px; } #bell { font-size: 16px; }
+.task { background: rgba(255,255,255,.025); } .dk { background: none; }
+.tile { background: color-mix(in srgb, var(--glass) 36%, transparent); }
+body.hideicons .icon { display: none !important; }
+#widget { position: absolute; top: 12px; right: 12px; z-index: 4; width: 250px; padding: 10px 12px; border-radius: 16px; background: rgba(20,22,26,.12); border: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: var(--text); text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+#os.tbtop #widget { top: calc(var(--taskbar-h) + var(--tb-gap)); }
+#widget.min { width: auto; padding: 0; background: none; border: 0; backdrop-filter: none; -webkit-backdrop-filter: none; }
+#widget.min .wbody { display: none; } #widget:not(.min) .wic { display: none; }
+.wic { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); background: rgba(20,22,26,.16); font-size: 20px; cursor: pointer; }
+.whead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 13px; }
+#widget .np { font-size: 13px; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-dim); }
+#widget audio { width: 100%; height: 30px; } #widget .wl { max-height: 110px; overflow: auto; margin: 6px 0; } #widget .srow { padding: 5px 8px; font-size: 12px; background: rgba(255,255,255,.05); }
+.toast.game { width: 380px; padding: 20px 22px; gap: 16px; border-radius: 0 !important; } .toast.game .ti { font-size: 42px; } .toast.game b { font-size: 17px; } .toast.game em { font-size: 15px; }
+
+/* menu Iniciar: botões nas pontas, blocos de apps, aviso de energia */
+.startbar { display: flex; justify-content: space-between; gap: 6px; }
+.startbar button { height: 34px; padding: 0 12px; border: 1px solid var(--glass-line); border-radius: 11px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.startbar button:hover { background: rgba(255,255,255,.18); }
+.ag { display: grid; grid-template-columns: repeat(3, 65px); justify-content: start; gap: 8px; margin-bottom: 8px; }
+.ab { aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 1px solid var(--glass-line); border-radius: 14px; background: rgba(255,255,255,.06); cursor: pointer; }
+.ab:hover { background: rgba(255,255,255,.16); }
+.ab .tile { width: 30px; height: 30px; pointer-events: none; } .ab .tile i { font-size: 18px; } .ab .tile img { width: 18px; height: 18px; }
+.pwb { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.pwb button { height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--glass-line); border-radius: 16px; background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 15px; cursor: pointer; }
+.pwb button:hover { background: rgba(255,255,255,.18); } .pwb i { font-style: normal; font-size: 32px; }
+.pwn { font-size: 13px; color: var(--text-dim); }
+
+/* widgets: monitor, frase do dia, notas adesivas */
+.wd { position: absolute; z-index: 4; width: 250px; padding: 10px 12px; border-radius: 16px; background: rgba(20,22,26,.12); border: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: var(--text); text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+#wq { right: 12px; top: 300px; } #wmon { right: 12px; top: 430px; }
+.mrow { display: grid; grid-template-columns: 34px 1fr 62px; align-items: center; gap: 8px; margin: 4px 0; font-size: 12px; }
+.mrow canvas { width: 100%; height: 28px; } .mrow b { font-weight: normal; text-align: right; }
+.malert { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(229,72,77,.3); border: 1px solid rgba(229,72,77,.6); font-size: 12px; } .malert button { margin-top: 6px; }
+#wq .qt { font-size: 14px; line-height: 1.45; }
+
 /* start menu */
 #start {
-  position: absolute; left: 10px; bottom: calc(var(--taskbar-h) + 20px); z-index: 99998;
+  position: absolute; left: 10px; bottom: calc(var(--taskbar-h) + var(--tb-gap)); z-index: 99998;
   width: min(340px, calc(100vw - 20px)); max-height: min(520px, calc(100vh - 100px));
   display: none; flex-direction: column; gap: 12px; padding: 14px;
   background: var(--glass-strong); border: 1px solid var(--glass-line); border-radius: 22px;
@@ -307,23 +367,25 @@ textarea, input[type=text] { user-select: text; -webkit-user-select: text; }
 <div id="os">
   <div id="desktop"></div>
   <div id="dock"></div>
+  <div id="dockzone"></div>
+  <div id="widget"></div>
   <div id="ctx"></div>
   <div id="toasts"></div>
   <div id="npanel"></div>
 
   <div id="start" role="dialog" aria-label="Menu Iniciar">
-    <div class="starthead"><b>🏴‍☠️ PIRATINHA</b><button id="startset">Configurações</button></div>
+    <div class="starthead"><b>🏴‍☠️ PIRATINHA</b></div>
+    <div class="startbar"><button id="startcust">Customização</button><button id="startset">Configurações</button></div>
     <input id="search" type="search" placeholder="Buscar site…" autocomplete="off">
     <div id="apps"></div>
-    <div class="startfoot"><button class="pill" id="st-off">⏻ Desligar</button><button class="pill" id="st-re">⟳ Reiniciar</button></div>
+    <div class="startfoot"><button class="pill" id="st-off">⏻ Desligar</button></div>
   </div>
 
   <div id="taskbar">
-    <button id="startbtn" aria-label="Menu Iniciar" aria-expanded="false" title="Iniciar">🏴‍☠️</button>
-    <button id="storebtn" class="pin" title="Loja" aria-label="Loja">🛍️</button>
+    <button id="startbtn" aria-label="Menu Iniciar" aria-expanded="false" data-label="Iniciar">🏴‍☠️</button>
     <div id="tools"></div>
     <div id="tasks"></div>
-    <button id="bell" class="pin" title="Notificações" aria-label="Notificações">🔔<i class="dot"></i></button>
+    <button id="bell" class="pin" data-label="Notificações" aria-label="Notificações">🔔<i class="dot"></i></button>
     <div id="clock"></div>
   </div>
 </div>
@@ -361,6 +423,20 @@ const LINKS = [
 const GAMES = [                                  // aparecem na dock; adicione novos jogos aqui
   { n: 'DOOM', file: 'DOOM.exe', u: './games/index.html', g: 'game', e: '👹', local: true, max: true },
 ];
+const APPITEMS = [   // apps e jogos: aparecem na área de trabalho, na taskbar ou na dock (botão direito: "Mover para…")
+  { id: 'sys:store', n: 'Loja', e: '🛍️', cat: 'apps', d: 'Instale e remova apps e jogos.', fn: () => openStore(), p0: 'taskbar' },
+  { id: 'sys:browser', n: 'Navegador', e: '🌐', cat: 'apps', d: 'Navegue em abas dentro do sistema.', fn: () => openBrowser(), p0: 'taskbar' },
+  { id: 'sys:term', n: 'Terminal', e: '💻', cat: 'apps', d: 'Linha de comando do PIRATINHA OS.', fn: () => openTerm(), p0: 'taskbar' },
+  { id: 'sys:calc', n: 'Calculadora', e: '🧮', cat: 'apps', d: 'Contas rápidas.', fn: () => openCalc(), p0: 'menu' },
+  { id: 'sys:notes', n: 'Bloco de notas', e: '📝', cat: 'apps', d: 'Anotações salvas no navegador.', fn: () => openNotes(), p0: 'menu' },
+  { id: 'sys:paint', n: 'Paint', e: '🎨', cat: 'apps', d: 'Desenhe e salve em PNG.', fn: () => openPaint(), p0: 'menu' },
+  { id: GAMES[0].u, n: 'DOOM', e: '👹', cat: 'jogos', d: 'Tiro em primeira pessoa clássico, rodando Freedoom.', fn: () => openApp(GAMES[0]), p0: 'dock' },
+  { id: 'game:match', n: 'Blocos Coloridos', e: '🟪', cat: 'jogos', d: 'Troque blocos vizinhos e combine três ou mais da mesma cor.', fn: () => openMatch(), p0: 'dock' },
+  { id: 'game:snake', n: 'Snake', e: '🐍', cat: 'jogos', d: 'Coma, cresça e não bata nas paredes.', fn: () => openSnake(), p0: 'dock' },
+  { id: 'game:mines', n: 'Campo Minado', e: '💣', cat: 'jogos', d: 'Abra o campo sem pisar em nenhuma mina.', fn: () => openMines(), p0: 'dock' },
+  { id: 'game:tetris', n: 'Tetris', e: '🧱', cat: 'jogos', d: 'Encaixe as peças e complete as linhas.', fn: () => openTetris(), p0: 'dock' },
+].map(a => Object.assign({ app: true, u: a.id, win: a.id, local: true, g: 'app' }, a));
+LINKS.push(...APPITEMS);
 const FOOTER_URL = 'https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria';
 
 
@@ -393,6 +469,7 @@ function createWindow(o) {
   const o2 = offset - 48;                          // pequeno deslocamento para janelas não ficarem exatamente empilhadas
   el.style.cssText = `width:${W}px;height:${H}px;left:${Math.max(10, Math.min(Math.round((vw - W) / 2 + o2), vw - W - 10))}px;top:${Math.max(10, Math.round((vh - H) / 2 + o2))}px`;
   offset = (offset + 24) % 120;
+  if (o.tr) { el.style.left = Math.max(10, vw - W - 10) + 'px'; el.style.top = (os.classList.contains('tbtop') ? 78 : 10) + 'px'; }
   el.innerHTML = `<div class="bar"><span class="title"></span>${o.ext ? '<a class="wbtn ext" target="_blank" rel="noopener" title="Abrir em nova aba">↗</a>' : ''}
     <button class="wbtn mn" title="Minimizar">–</button><button class="wbtn mx" title="Maximizar">▢</button><button class="wbtn close" title="Fechar">✕</button></div>
     <div class="view${o.sys ? ' sys' : ''}"></div>${o.hint || ''}`;
@@ -404,7 +481,7 @@ function createWindow(o) {
   else {
     btn = document.createElement('button'); btn.className = 'task';
     btn.append(o.mk()); const sp = document.createElement('span'); sp.textContent = o.title; btn.append(sp);
-    $('#tasks').append(btn);
+    $('#tasks').append(btn); btn.addEventListener('contextmenu', e => showCtx(e, [['✕ Fechar', () => $('.close', el).click()]]));
   }
   os.append(el);
 
@@ -415,7 +492,7 @@ function createWindow(o) {
   el.addEventListener('pointerdown', () => focusWin(w));
   $('.mn', el).onclick = () => minimize(w);
   $('.mx', el).onclick = () => el.classList.toggle('max');
-  $('.close', el).onclick = () => { const kill = () => { el.remove(); if (o.pin) btn.classList.remove('open', 'active'); else btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); }; if (pref.an) { el.classList.add('closing'); setTimeout(kill, 130); } else kill(); };
+  $('.close', el).onclick = () => { const kill = () => { el.remove(); if (o.pin) { btn.classList.remove('open', 'active'); const pb = pinBtns.get(o.id); if (pb) pb.classList.remove('open', 'active'); } else btn.remove(); wins.delete(o.id); if (active === w) active = null; refresh(); }; if (pref.an) { el.classList.add('closing'); setTimeout(kill, 130); } else kill(); };
 
   const bar = $('.bar', el);
   bar.addEventListener('contextmenu', e => showCtx(e, [['➖ Minimizar', () => minimize(w)], [el.classList.contains('max') ? '🗗 Restaurar' : '🗖 Maximizar', () => el.classList.toggle('max')], ...(o.ext ? [['↗ Abrir em nova aba', () => window.open(o.ext, '_blank', 'noopener')]] : []), ['✕ Fechar', () => $('.close', el).click()]]));
@@ -447,11 +524,12 @@ function refresh() { wins.forEach(w => { const on = w === active && !w.el.classL
 const pinBtns = new Map();                           // url -> botão fixado (taskbar ou dock)
 function toggleApp(l) { const w = wins.get(l.u); if (w) toggleWin(w); else openApp(l); }
 function openApp(l) {
+  if (l.fn) return l.fn();
   const isNew = !wins.has(l.u);
   const w = createWindow({
     pin: pinBtns.get(l.u),
     id: l.u, title: l.n, mk: () => tile(l), w: l.local ? 1000 : 960, h: l.local ? 660 : 620, ext: l.u,
-    hint: l.local ? `<div class="hint">Clique dentro do jogo para ativar teclado e mouse. <a target="_blank" rel="noopener" href="${l.u}">Abrir em nova aba</a></div>` : `<div class="hint">Página em branco ou recusada? O site bloqueia exibição incorporada. <a target="_blank" rel="noopener" href="${l.u}">Abrir em nova aba</a></div>`,
+    hint: l.old ? '' : l.local ? `<div class="hint">Clique dentro do jogo para ativar teclado e mouse. <a target="_blank" rel="noopener" href="${l.u}">Abrir em nova aba</a></div>` : `<div class="hint">Página em branco ou recusada? O site bloqueia exibição incorporada. <a target="_blank" rel="noopener" href="${l.u}">Abrir em nova aba</a></div>`,
     body: v => { v.innerHTML = `<iframe src="${l.u}" referrerpolicy="no-referrer" allow="fullscreen"></iframe>`; $('iframe', v).title = l.n; },
   });
   if (isNew && l.max) w.el.classList.add('max');      // jogos abrem maximizados
@@ -465,7 +543,9 @@ const ORDER = [...LINKS];
 if (store.get('piratinha-pref', {}).shuf !== false) for (let i = ORDER.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; }
 let frozen = false;
 const trashed = new Set(store.get('piratinha-trash', []));
-const OFF = new Set(store.get('piratinha-off', []));        // apps desinstalados (ids da loja); não vão para a lixeira
+const OFF = new Set(store.get('piratinha-off', []));        // desinstalados (ids da loja); não vão para a lixeira
+const PLACE = store.get('piratinha-place', {});              // onde cada item aparece: 'desktop' | 'taskbar' | 'dock'
+const idOf = l => l.app ? l.id : 'link:' + l.u, placeOf = l => PLACE[idOf(l)] || l.p0 || 'desktop';
 const cell = new Map();                                // posições efetivas
 const icons = new Map();
 const reserved = (c, r) => r === 0 && c === 0;   // célula da lixeira
@@ -486,8 +566,8 @@ const valid = p => p && p[0] < cols && p[1] < rows && !reserved(p[0], p[1]);
 function layoutAll() {
   cols = Math.max(2, Math.floor((desk.clientWidth - PAD * 2) / CW));
   rows = Math.max(1, Math.floor((desk.clientHeight - PAD * 2) / CH));
-  cell.clear(); setXY(trashEl, 0, 0);
-  const gone = l => trashed.has(l.u) || OFF.has('link:' + l.u);
+  cell.clear(); setXY(trashEl, 0, 0); trashEl.hidden = OFF.has('sys:trash');
+  const gone = l => trashed.has(l.u) || OFF.has(idOf(l)) || placeOf(l) !== 'desktop';
   const visible = ORDER.filter(l => !gone(l));
   LINKS.forEach(l => { icons.get(l.u).el.style.display = gone(l) ? 'none' : ''; });
   const later = [];
@@ -528,7 +608,7 @@ store.get('piratinha-links', []).forEach(l => { if (!LINKS.some(x => x.u === l.u
 function addIcon(l) {
   const b = mkIcon(l.n, () => tile(l), () => openApp(l));
   icons.set(l.u, { l, el: b });
-  b.addEventListener('contextmenu', e => showCtx(e, [['📂 Abrir', () => openApp(l)], ['↗ Abrir em nova aba', () => window.open(l.u, '_blank', 'noopener')], ['🗑️ Mover para a lixeira', () => sendToTrash(l)], ...(l.c ? [['❌ Excluir link', () => delLink(l)]] : [])]));
+  b.addEventListener('contextmenu', e => showCtx(e, [['📂 Abrir', () => openApp(l)], ...(l.fn ? [] : [['↗ Abrir em nova aba', () => window.open(l.u, '_blank', 'noopener')]]), ['📌 Mover para a taskbar', () => setPlace(l, 'taskbar')], ['🧷 Mover para a dock', () => setPlace(l, 'dock')], ...(l.app ? [['📋 Mover para o menu Iniciar', () => setPlace(l, 'menu')]] : []), ['🗑️ Mover para a lixeira', () => sendToTrash(l)], ...(l.c ? [['❌ Excluir link', () => delLink(l)]] : [])]));
   b.addEventListener('pointerdown', e => {
     if (e.button !== 0) return;
     b._dragged = false;
@@ -670,38 +750,28 @@ const shrink = f => new Promise(res => {
   r.onload = () => { const im = new Image(); im.onerror = () => res(null); im.onload = () => { const k = Math.min(1, 1920 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .85)); }; im.src = r.result; };
   r.readAsDataURL(f);
 });
-const THEMES = [   // img = nome do arquivo em Images/Wallpaper, sem extensão; v = cor do vidro (RGB); ac = destaque (RGB)
-  { n: 'mar', img: '10_1793395235093_10', v: '79,88,105', ac: '255,137,87' },
-  { n: 'photo', img: '18_1793395252634_18', v: '42,29,34', ac: '255,255,255' },
-  { n: 'clown', img: '', v: '33,28,30', ac: '133,0,0' },
-  { n: 'cafe', img: '48_1793395301336_48', v: '35,22,21', ac: '255,174,0' },
-  { n: 'ondas', img: '56_1793395315707_56', v: '34,28,28', ac: '0,191,255' },
-];
-const hex = s => '#' + s.split(',').map(x => (+x).toString(16).padStart(2, '0')).join('');
-function applyTheme(t, msg) {
-  pref.c = hex(t.v); pref.ac = hex(t.ac); applyPrefs(); let note = '';
-  if (t.img) {
-    const w = IMAGES.find(x => x.n.replace(/\.[^.]+$/, '') === t.img);
-    if (w) { current = w; picked = w.n; store.set('piratinha-wall', picked); applyWall(); } else note = 'Imagem do tema não encontrada em Images/Wallpaper (' + t.img + ').';
-  }
-  msg.textContent = note;
+const thumbs = new Map(); let thumbChain = Promise.resolve(), thumbIO;
+const makeThumb = url => new Promise(res => { const im = new Image(); im.decoding = 'async'; im.onerror = () => res(url); im.onload = () => { const k = Math.min(1, 200 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.max(1, im.width * k | 0); c.height = Math.max(1, im.height * k | 0); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .7)); }; im.src = url; });
+const thumbOf = url => { if (!thumbs.has(url)) thumbs.set(url, thumbChain = thumbChain.then(() => makeThumb(url))); return thumbs.get(url); };
+function lazyThumb(c, url) {                       // só gera a miniatura quando o quadrado aparece na tela
+  thumbIO = thumbIO || new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { thumbIO.unobserve(e.target); thumbOf(e.target.dataset.src).then(d => { e.target.style.backgroundImage = `url("${d}")`; }); } }), { rootMargin: '150px' });
+  c.dataset.src = url; thumbIO.observe(c);
 }
+function downloadWall() { const a = document.createElement('a'); a.href = current.img; a.download = /\.\w+$/.test(current.n) ? current.n : current.n + '.jpg'; document.body.append(a); a.click(); a.remove(); }
 function openWall() {
   createWindow({ id: 'sys:wall', title: 'Customização', mk: etile('🎨'), w: 480, h: 720, sys: true, body: (v, w) => {
     const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
     const head = (t, mt) => { const h = el('div', 'sysbar', t); if (mt) h.style.marginTop = '14px'; return h; };
     const msg = el('p', 'empty'); msg.style.margin = '6px 2px 0';
     const cell = wl => {
-      const c = el('div', 'wc' + (wl.n === current.n ? ' on' : '')); if (wl.c) { c.style.background = wl.c; c.title = wl.n; } else c.style.backgroundImage = `url("${wl.img}")`;
+      const c = el('div', 'wc' + (wl.n === current.n ? ' on' : '')); if (wl.c) { c.style.background = wl.c; c.title = wl.n; } else lazyThumb(c, wl.img);
       c.onclick = () => { current = wl; picked = wl.n; store.set('piratinha-wall', picked); applyWall(); };
-      if (wl.img) { const d = el('a', 'dl', '⬇'); d.href = wl.img; d.download = /\.\w+$/.test(wl.n) ? wl.n : wl.n + '.jpg'; d.title = 'Baixar imagem'; d.onclick = e => e.stopPropagation(); c.append(d); }
       if (wl.my) { const x = el('button', 'wx', '✕'); x.title = 'Remover'; x.onclick = e => { e.stopPropagation(); MY.splice(MY.indexOf(wl), 1); saveMY(); if (current === wl) { current = COLORS[0]; picked = current.n; store.set('piratinha-wall', picked); applyWall(); } else w.render(); }; c.append(x); }
       return c;
     };
     w.render = () => {
       v.innerHTML = '';
-      const th = el('div'); th.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap'; THEMES.forEach(t => th.append(el('button', 'pill', t.n))); 
-      [...th.children].forEach((b, i) => { b.onclick = () => { applyTheme(THEMES[i], msg); w.render(); }; }); v.append(th, msg);
+      v.append(msg);
       const ctl = el('div'); ctl.style.marginTop = '12px';
       ctl.innerHTML = '<div class="srow"><span class="grow">Cor do vidro</span><input type="color" class="gc"></div><div class="srow"><span class="grow">Opacidade do vidro</span><span class="pc"></span><input type="range" min="0" max="100" class="go"></div><div class="srow"><span class="grow">Desfoque do vidro</span><span class="pc"></span><input type="range" min="0" max="100" class="gb"></div><div class="srow"><span class="grow">Cor de destaque</span><input type="color" class="ga"></div>';
       const gc = $('.gc', ctl), go = $('.go', ctl), gb = $('.gb', ctl), ga = $('.ga', ctl), pcs = ctl.querySelectorAll('.pc');
@@ -710,7 +780,8 @@ function openWall() {
       gc.oninput = () => { pref.c = gc.value; applyPrefs(); }; go.oninput = () => { pref.a = go.value / 100; applyPrefs(); pc(); };
       gb.oninput = () => { pref.bl = Math.round(gb.value * .4); applyPrefs(); pc(); }; ga.oninput = () => { pref.ac = ga.value; applyPrefs(); };
       v.append(ctl); const sp = el('div'); sp.style.height = '12px'; v.append(sp);
-      const g = el('div', 'wgrid'); [...IMAGES, ...MY, ...COLORS].forEach(wl => g.append(cell(wl))); v.append(g);
+      if (MY.length) { const g1 = el('div', 'wgrid'); MY.forEach(wl => g1.append(cell(wl))); v.append(g1, el('hr', 'wsep')); }   // imagens próprias primeiro, com separador
+      const g = el('div', 'wgrid'); [...IMAGES, ...COLORS].forEach(wl => g.append(cell(wl))); v.append(g);
       if (!IMAGES.length) v.append(el('p', 'empty', 'Nenhuma imagem encontrada em Images/Wallpaper.'));
       const add = el('label', 'pill', '+ Adicionar wallpaper'); add.style.cssText = 'display:inline-grid;place-items:center;margin-top:10px;cursor:pointer';
       const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.hidden = true; add.append(inp); v.append(add);
@@ -727,7 +798,7 @@ function openWall() {
 }
 
 /* ---------- menu iniciar (lista, sem ícones) ---------- */
-const hostOf = l => l.local ? 'jogo' : new URL(l.u).hostname.replace(/^www\./, '');
+const hostOf = l => l.local ? (l.file || 'jogo') : new URL(l.u).hostname.replace(/^www\./, '');
 const slug = q => q.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '') || 'site';
 function row(name, host, fn) {
   const b = document.createElement('button'); b.className = 'row';
@@ -737,13 +808,19 @@ function row(name, host, fn) {
 }
 function buildStart(q = '') {
   const box = $('#apps'); box.innerHTML = '';
-  const qq = q.trim().toLowerCase();
-  const inst = LINKS.filter(l => !OFF.has('link:' + l.u));
-  if (!inst.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nenhum app instalado. Abra a Loja (🛍️) para instalar.'; box.append(p); return; }
-  const found = inst.filter(l => !qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq));
-  if (!found.length) {                                  // pegadinha: parece o resultado pedido, mas leva ao link do rodapé
-    box.append(row(q.trim(), slug(q) + '.com', () => { closeStart(); window.open(FOOTER_URL, '_blank', 'noopener'); }));
+  const qq = q.trim().toLowerCase(), live = l => !OFF.has(idOf(l));
+  const apps = LINKS.filter(l => l.app && l.cat === 'apps' && live(l) && (!qq || l.n.toLowerCase().includes(qq)));
+  const found = LINKS.filter(l => !l.app && live(l) && (!qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq)));
+  if (!apps.length && !found.length) {
+    if (qq) box.append(row(q.trim(), slug(q) + '.com', () => { closeStart(); window.open(FOOTER_URL, '_blank', 'noopener'); }));      // pegadinha: leva ao link do rodapé
+    else { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nenhum app instalado. Abra a Loja para instalar.'; box.append(p); }
     return;
+  }
+  if (apps.length) {                                    // apps em blocos de 3 por linha: o bloco é só o ícone
+    const h = document.createElement('h3'); h.textContent = 'Apps'; box.append(h);
+    const g = document.createElement('div'); g.className = 'ag';
+    apps.forEach(l => { const b = document.createElement('button'); b.className = 'ab'; b.title = l.n; b.setAttribute('aria-label', l.n); b.append(tile(l)); b.onclick = () => openApp(l); b.addEventListener('contextmenu', e => itemMenu(e, l, placeOf(l))); g.append(b); });
+    box.append(g);
   }
   [['rec', 'Recomendados'], ['out', 'Outros']].forEach(([g, name]) => {
     const items = found.filter(l => l.g === g); if (!items.length) return;
@@ -768,27 +845,25 @@ LINKS.forEach(l => {
   const a = document.createElement('a'); a.href = l.u; a.target = '_blank'; a.textContent = l.n; a.dataset.u = l.u;
   $(l.g === 'rec' ? '#old-rec' : '#old-out').append(a);
 });
-function setMode(m) { document.body.dataset.mode = m; closeStart(); if (m === 'os') layoutAll(); try { localStorage.setItem('piratinha-mode', m); } catch (e) {} }
+function setMode(m) { document.body.dataset.mode = m; closeStart(); if (m === 'os') layoutAll(); if (!EMB) try { localStorage.setItem('piratinha-mode', m); } catch (e) {} }
 document.querySelectorAll('[data-switch]').forEach(b => b.addEventListener('click', () => setMode(document.body.dataset.mode === 'os' ? 'old' : 'os')));
-try { const m = localStorage.getItem('piratinha-mode'); if (m === 'old' || m === 'os') document.body.dataset.mode = m; } catch (e) {}
+const EMB = window.top !== window.self;                       // aberto dentro de uma janela do sistema (Piratinha Old)
+if (/[?&]old\b/.test(location.search)) { document.body.dataset.mode = 'old'; if (EMB) $('#oldswitch').hidden = true; }
+else try { const m = localStorage.getItem('piratinha-mode'); if (m === 'old' || m === 'os') document.body.dataset.mode = m; } catch (e) {}
 
 /* ---------- relógio em tempo real (sincronizado com a virada do minuto) ---------- */
 function tick() {
   const d = new Date(), o = { hour: '2-digit', minute: '2-digit', hour12: !pref.h24 }; if (pref.sec) o.second = '2-digit';
-  $('#clock').innerHTML = d.toLocaleTimeString('pt-BR', o) + '<small>' + d.toLocaleDateString('pt-BR') + '</small>';
+  $('#clock').innerHTML = d.toLocaleTimeString(LOC[pref.lang], o) + '<small>' + d.toLocaleDateString(LOC[pref.lang]) + '</small>';
   clearTimeout(tick.t); tick.t = setTimeout(tick, (pref.sec ? 1000 : 60000 - d.getSeconds() * 1000) - d.getMilliseconds() + 30);
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 
 /* ---------- favoritos fixados na taskbar e dock de jogos ---------- */
-GAMES.forEach(l => {
-  const b = document.createElement('button'); b.className = 'dk'; b.dataset.label = l.file || l.n; b.setAttribute('aria-label', l.file || l.n); b.append(tile(l));
-  b.onclick = () => toggleApp(l); pinBtns.set(l.u, b); $('#dock').append(b);
-});
 
 /* ---------- configurações: cor/opacidade do vidro e tamanho dos ícones ---------- */
 const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 38 }, m: { n: 'Médio', w: 96, h: 100, t: 46 }, g: { n: 'Grande', w: 116, h: 120, t: 56 } };
-const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#4aa8ff', bl: 22, sq: false }, store.get('piratinha-pref', {}));
+const pref = Object.assign({ c: '#222428', a: .48, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#4aa8ff', bl: 22, sq: false, ts: 'f', lang: 'en', dk: true, da: false, dp: 'b', dsh: 'r', dz: 'm', hi: false, wg: true, wm: false, wmon: true, wq: true }, store.get('piratinha-pref', {}));
 function applyPrefs(relayout) {
   const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
   const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
@@ -796,23 +871,45 @@ function applyPrefs(relayout) {
   st.setProperty('--glass-strong', `rgba(${r},${g},${b},${Math.min(.95, pref.a + .2)})`);
   CW = z.w; CH = z.h; os.style.setProperty('--cw', z.w + 'px'); os.style.setProperty('--ch', z.h + 'px'); os.style.setProperty('--ts', z.t + 'px');
   st.setProperty('--accent', pref.ac); st.setProperty('--blur', pref.bl + 'px');
-  os.classList.toggle('tbtop', pref.tb === 't'); document.body.classList.toggle('noanim', !pref.an); document.body.classList.toggle('sq', !!pref.sq);
-  if (relayout) { Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll(); }
+  os.classList.toggle('tbtop', pref.tb === 't'); os.classList.toggle('tbdock', pref.ts === 'd'); if (pref.lang !== curLang) setLang(pref.lang); document.body.classList.toggle('noanim', !pref.an); document.body.classList.toggle('sq', !!pref.sq);
+  document.body.classList.toggle('hideicons', !!pref.hi);
+  const dk = $('#dock'); dk.dataset.p = pref.dp; dk.dataset.sh = pref.dsh; dk.dataset.z = pref.dz; dk.dataset.ah = pref.da ? '1' : ''; $('#dockzone').dataset.p = pref.dp;
+  wg.hidden = !pref.wg; wg.classList.toggle('min', !!pref.wm); mon.hidden = !pref.wmon; qw.hidden = !pref.wq; updateDock();
+  if (relayout === 'soft') layoutAll(); else if (relayout) { Object.keys(saved).forEach(k => delete saved[k]); frozen = false; layoutAll(); }
   store.set('piratinha-pref', pref);
 }
-function openSettings() {
-  createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 440, h: 560, sys: true, body: v => {
-    v.innerHTML = '<button class="pill cust" style="margin-bottom:12px">🎨 Customizações</button><div class="sysbar">Tamanho dos ícones</div><div class="sz" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Posição da taskbar</div><div class="tbp" style="display:flex;gap:6px"></div><div class="sysbar" style="margin-top:14px">Geral</div><div class="opts"></div><div class="sysbar" style="margin-top:14px">Sistema</div><div style="display:flex;justify-content:space-between;gap:6px"><button class="pill goold">Ir para o modo antigo</button><button class="pill danger reset">Restaurar padrões</button></div>';
-    const sz = $('.sz', v), tbp = $('.tbp', v), opts = $('.opts', v);
-    $('.cust', v).onclick = () => openWall();
-    const group = (box, items, key, relayout) => { const draw = () => { box.innerHTML = ''; items.forEach(([k, n]) => { const b = document.createElement('button'); b.className = 'pill' + (k === pref[key] ? ' on' : ''); b.textContent = n; b.onclick = () => { pref[key] = k; applyPrefs(relayout); draw(); }; box.append(b); }); }; draw(); };
-    group(sz, Object.entries(SIZES).map(([k, z]) => [k, z.n]), 's', true); group(tbp, [['b', 'Embaixo'], ['t', 'Em cima']], 'tb', true);
-    [['h24', 'Relógio em 24 horas'], ['sec', 'Mostrar segundos no relógio'], ['an', 'Animações das janelas'], ['shuf', 'Embaralhar ícones a cada acesso'], ['sq', 'Cantos quadrados']].forEach(([k, n]) => {
-      const l = document.createElement('label'), sp = document.createElement('span'), cb = document.createElement('input'); l.className = 'srow'; sp.className = 'grow'; sp.textContent = n; cb.type = 'checkbox'; cb.checked = !!pref[k];
-      cb.onchange = () => { pref[k] = cb.checked; applyPrefs(); tick(); }; l.append(sp, cb); opts.append(l);
-    });
-    $('.goold', v).onclick = () => setMode('old');
-    $('.reset', v).onclick = () => ask('Restaurar os padrões e apagar todos os dados salvos neste navegador (notas, recordes, lixeira e preferências)? Isso não pode ser desfeito.', () => { try { localStorage.clear(); } catch (e) {} location.reload(); });
+function openSettings(sec) {
+  createWindow({ id: 'sys:set', title: 'Configurações', mk: etile('⚙️'), w: 700, h: 480, sys: true, body: v => {
+    v.classList.add('st'); v.innerHTML = '<aside class="sd"></aside><section class="sm"></section>';
+    const side = $('.sd', v), main = $('.sm', v);
+    const mk = (t, c, x, f) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; if (f) e.onclick = f; return e; };
+    const grp = (label, items, key, rl) => {
+      main.append(mk('div', 'sysbar', label)); const box = mk('div'); box.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px';
+      const draw = () => { box.innerHTML = ''; items.forEach(([k, n]) => box.append(mk('button', 'pill' + (k === pref[key] ? ' on' : ''), n, () => { pref[key] = k; applyPrefs(rl); draw(); }))); }; draw(); main.append(box);
+    };
+    const chk = (label, key, rl) => {
+      const l = mk('label', 'srow'), cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!pref[key];
+      cb.onchange = () => { pref[key] = cb.checked; applyPrefs(rl); tick(); }; l.append(mk('span', 'grow', label), cb); main.append(l);
+    };
+    const SECS = [
+      ['geral', 'Geral', () => { chk('Relógio em 24 horas', 'h24'); chk('Mostrar segundos no relógio', 'sec'); chk('Animações das janelas', 'an'); chk('Cantos quadrados', 'sq'); }],
+      ['idioma', 'Idioma', () => grp('Idioma', [['en', 'EN'], ['pt', 'BR'], ['es', 'ES'], ['fr', 'FR'], ['de', 'DE'], ['ru', 'RU']], 'lang')],
+      ['taskbar', 'Taskbar', () => { grp('Posição da taskbar', [['b', 'Embaixo'], ['t', 'Em cima']], 'tb', 'soft'); grp('Estilo da taskbar', [['f', 'Flutuante'], ['d', 'Acoplada']], 'ts', 'soft'); }],
+      ['dock', 'Dock', () => {
+        chk('Habilitada', 'dk', 'soft'); chk('Ocultar automaticamente', 'da', 'soft');
+        grp('Posição da dock', [['b', 'Embaixo'], ['t', 'Em cima'], ['l', 'Esquerda'], ['r', 'Direita']], 'dp', 'soft');
+        grp('Formato', [['r', 'Arredondado'], ['s', 'Quadrado']], 'dsh'); grp('Tamanho dos ícones da dock', [['p', 'Pequeno'], ['m', 'Médio'], ['g', 'Grande']], 'dz', 'soft');
+      }],
+      ['icones', 'Ícones', () => { grp('Tamanho dos ícones', Object.entries(SIZES).map(([k, z]) => [k, z.n]), 's', true); chk('Embaralhar ícones a cada acesso', 'shuf'); chk('Esconder ícones', 'hi'); }],
+      ['widget', 'Widget', () => { chk('Mostrar widget de música', 'wg'); chk('Mostrar monitor do sistema', 'wmon'); chk('Mostrar frase do dia', 'wq'); }],
+      ['sistema', 'Sistema', () => {
+        const r = mk('div'); r.style.cssText = 'display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap'; const left = mk('div'); left.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap';
+        left.append(mk('button', 'pill', 'Ir para o modo antigo', () => setMode('old')));
+        r.append(left, mk('button', 'pill danger', 'Restaurar padrões', () => ask('Restaurar os padrões e apagar todos os dados salvos neste navegador (notas, recordes, lixeira e preferências)? Isso não pode ser desfeito.', () => { try { localStorage.clear(); } catch (e) {} location.reload(); }))); main.append(r);
+      }],
+    ];
+    const show = k => { side.innerHTML = ''; SECS.forEach(([id, n]) => side.append(mk('button', 'cat' + (id === k ? ' on' : ''), n, () => show(id)))); main.innerHTML = ''; SECS.find(s => s[0] === k)[2](); };
+    show(typeof sec === 'string' && SECS.some(s => s[0] === sec) ? sec : 'geral');
   } });
 }
 
@@ -836,25 +933,9 @@ function openCalc() {
     });
   } });
 }
-function openMusic() {
-  createWindow({ id: 'sys:music', title: 'Música', mk: etile('🎵'), w: 460, h: 660, sys: true, body: v => {
-    const list = []; let i = -1;
-    v.innerHTML = '<div class="sysbar"><span class="np">Nenhuma faixa</span><span style="display:flex;gap:6px"><button class="pill pv">⏮</button><button class="pill nx">⏭</button><label class="pill" style="display:grid;place-items:center">+ Arquivos<input type="file" accept="audio/*" multiple hidden></label></span></div><audio controls style="width:100%"></audio><div class="pl" style="margin-top:10px"></div><div class="sysbar" style="margin-top:14px">Spotify</div><div style="display:flex;gap:6px"><input type="text" class="sp" placeholder="Cole o link de uma playlist, álbum ou faixa"><button class="pill spg">Abrir</button></div><iframe class="spf" style="display:none;width:100%;border:0;border-radius:12px;margin-top:10px" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
-    const au = $('audio', v), pl = $('.pl', v), np = $('.np', v);
-    const draw = () => { pl.innerHTML = ''; list.forEach((t, k) => { const b = document.createElement('button'); b.className = 'srow' + (k === i ? ' on' : ''); b.textContent = t.name; b.onclick = () => play(k); pl.append(b); }); };
-    function play(k) { if (k < 0 || k >= list.length) return; i = k; au.src = list[k].url; au.play(); np.textContent = list[k].name; draw(); }
-    $('input', v).onchange = e => { [...e.target.files].forEach(f => list.push({ name: f.name.replace(/\.[^.]+$/, ''), url: URL.createObjectURL(f) })); if (i < 0) play(0); else draw(); e.target.value = ''; };
-    $('.pv', v).onclick = () => play(i - 1); $('.nx', v).onclick = () => play(i + 1); au.onended = () => play(i + 1);
-    $('.spg', v).onclick = () => {
-      const inp = $('.sp', v), f = $('.spf', v), m = inp.value.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist|artist|episode|show)\/([A-Za-z0-9]+)/);
-      if (!m) { f.style.display = 'none'; inp.value = ''; inp.placeholder = 'Link inválido. Ex.: https://open.spotify.com/playlist/…'; return; }
-      f.src = 'https://open.spotify.com/embed/' + m[1] + '/' + m[2]; f.height = /track|episode/.test(m[1]) ? 152 : 352; f.style.display = 'block';
-    };
-  } });
-}
 function openBrowser() {
   createWindow({ id: 'sys:browser', title: 'Navegador', mk: etile('🌐'), w: 1000, h: 640, sys: true,
-    hint: '<div class="hint">Alguns sites (Google, YouTube, GitHub, redes sociais…) proíbem ser exibidos dentro de outras páginas. Nesses casos use ↗ para abrir em nova aba.</div>',
+    hint: '<div class="hint">Alguns sites recusam ser exibidos aqui. Use ↗ para abrir em nova aba.</div>',
     body: v => {
       v.classList.add('br');
       v.innerHTML = '<div class="tabs"></div><div class="addr"><button class="pill" title="Recarregar">⟳</button><input type="text" placeholder="Endereço ou pesquisa (Wikipédia)" spellcheck="false"><button class="pill" title="Abrir em nova aba">↗</button></div><div class="frames"><div class="bmsg"></div></div>';
@@ -897,7 +978,7 @@ function showCtx(e, items) {
   ctx.style.display = 'block'; ctx.style.left = Math.min(e.clientX, innerWidth - 240) + 'px'; ctx.style.top = Math.max(0, Math.min(e.clientY, innerHeight - 20 - items.length * 38)) + 'px';
 }
 desk.addEventListener('contextmenu', e => {
-  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['🔄 Atualizar', () => location.reload()], ['🎨 Customização', openWall], ['💻 Abrir terminal', openTerm], ['⚙️ Configurações', openSettings]]);
+  if (e.target === desk) showCtx(e, [['🔗 Novo link…', newLink], ['🔄 Atualizar', () => location.reload()], ['💻 Abrir terminal', openTerm], [pref.hi ? '👁️ Mostrar ícones' : '🙈 Esconder ícones', () => { pref.hi = !pref.hi; applyPrefs(); }], ...(current.img ? [['⬇️ Baixar plano de fundo', downloadWall]] : []), ['🎨 Customização', openWall], ['⚙️ Configurações', openSettings]]);
 });
 function organize() {
   const vis = LINKS.filter(l => !trashed.has(l.u)).sort((a, b) => a.n.localeCompare(b.n, 'pt'));
@@ -927,17 +1008,7 @@ function delLink(l) {
 document.addEventListener('pointerdown', e => { if (!e.target.closest('#ctx')) ctx.style.display = 'none'; });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') ctx.style.display = 'none'; });
 
-/* mini-apps fixados na taskbar, logo após o separador */
-[['Navegador', '🌐', openBrowser, 'sys:browser'], ['Música', '🎵', openMusic, 'sys:music'], ['Calculadora', '🧮', openCalc, 'sys:calc'], ['Bloco de notas', '📝', openNotes, 'sys:notes'], ['Paint', '🎨', openPaint, 'sys:paint'], ['Terminal', '💻', openTerm, 'sys:term']].forEach(([n, em, fn, id]) => {
-  const b = document.createElement('button'); b.className = 'pin'; b.draggable = true; b.title = n; b.setAttribute('aria-label', n); b.append(etile(em)());
-  b.onclick = () => { const w = wins.get(id); if (w) toggleWin(w); else fn(); }; pinBtns.set(id, b); $('#tools').append(b);
-});
-$('#startset').onclick = openSettings;
-{ const tl = $('#tools'); let drag = null;
-  store.get('piratinha-tools', []).forEach(n => { const b = [...tl.children].find(x => x.title === n); if (b) tl.append(b); });
-  tl.addEventListener('dragstart', e => { drag = e.target.closest('.pin'); });
-  tl.addEventListener('dragover', e => { e.preventDefault(); const t = e.target.closest('.pin'); if (t && drag && t !== drag) { const r = t.getBoundingClientRect(); tl.insertBefore(drag, e.clientX < r.left + r.width / 2 ? t : t.nextSibling); } });
-  tl.addEventListener('dragend', () => { drag = null; store.set('piratinha-tools', [...tl.children].map(b => b.title)); }); }
+$('#startset').onclick = () => openSettings(); $('#startcust').onclick = () => openWall();
 
 /* ---------- jogos (um ícone por jogo na dock; recordes no navegador) ---------- */
 const rec = (k, s) => { const b = store.get('piratinha-rec-' + k, 0); if (k === 'mines' ? (!b || s < b) : s > b) { store.set('piratinha-rec-' + k, s); return s; } return b; };
@@ -948,6 +1019,54 @@ function gameWin(id, title, e, W, H, setup) {
     setup(box, hud, () => box.isConnected && active === w);
   } });
 }
+function openMatch() {
+  gameWin('game:match', 'Blocos Coloridos', '🟪', 390, 560, (box, hud) => {
+    const N = 8, K = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
+    const grid = document.createElement('div'); grid.style.cssText = 'display:grid;grid-template-columns:repeat(8,40px);gap:3px'; box.append(grid);
+    const rb = document.createElement('button'); rb.className = 'pill'; rb.textContent = 'Reiniciar'; box.append(rb);
+    let b, sel, sc, mv, busy, best = store.get('piratinha-rec-match', 0);
+    const rnd = () => Math.random() * K.length | 0, sleep = ms => new Promise(r => setTimeout(r, ms));
+    const found = () => {
+      const s = new Set();
+      for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+        const k = b[r][c];
+        if (c < N - 2 && b[r][c + 1] === k && b[r][c + 2] === k) [0, 1, 2].forEach(i => s.add(r * N + c + i));
+        if (r < N - 2 && b[r + 1][c] === k && b[r + 2][c] === k) [0, 1, 2].forEach(i => s.add((r + i) * N + c));
+      }
+      return s;
+    };
+    const settle = async () => {
+      let s, chain = 0;
+      while ((s = found()).size) {
+        chain++; sc += s.size * 10 * chain; s.forEach(i => { b[i / N | 0][i % N] = -1; }); draw(); await sleep(160);
+        for (let c = 0; c < N; c++) { const col = []; for (let r = N - 1; r >= 0; r--) if (b[r][c] >= 0) col.push(b[r][c]); while (col.length < N) col.push(rnd()); for (let r = N - 1, i = 0; r >= 0; r--, i++) b[r][c] = col[i]; }
+        draw(); await sleep(160);
+      }
+    };
+    const swap = (r1, c1, r2, c2) => { const t = b[r1][c1]; b[r1][c1] = b[r2][c2]; b[r2][c2] = t; };
+    const tap = async (r, c) => {
+      if (busy || mv <= 0) return; if (!sel) { sel = [r, c]; return draw(); }
+      const [r0, c0] = sel; if (Math.abs(r - r0) + Math.abs(c - c0) !== 1) { sel = [r, c]; return draw(); }
+      sel = null; busy = true; swap(r0, c0, r, c); draw(); await sleep(120);
+      if (!found().size) { swap(r0, c0, r, c); } else { mv--; await settle(); if (mv <= 0) best = rec('match', sc); }
+      busy = false; draw();
+    };
+    function draw() {
+      grid.innerHTML = '';
+      for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+        const d = document.createElement('div'); d.style.cssText = 'width:40px;height:40px;border-radius:10px;cursor:pointer;background:' + K[b[r][c]] + ';box-shadow:inset 0 -4px 0 rgba(0,0,0,.25);' + (b[r][c] < 0 ? 'opacity:0;' : '') + (sel && sel[0] === r && sel[1] === c ? 'outline:3px solid #fff;' : '');
+        d.onclick = () => tap(r, c); grid.append(d);
+      }
+      hud.textContent = 'Pontos ' + sc + ' · Movimentos ' + mv + ' · Recorde ' + Math.max(best, sc) + (mv <= 0 ? ' · Fim de jogo!' : '');
+    }
+    const reset = () => {
+      b = []; for (let r = 0; r < N; r++) { b.push([]); for (let c = 0; c < N; c++) { let k; do { k = rnd(); } while ((c > 1 && b[r][c - 1] === k && b[r][c - 2] === k) || (r > 1 && b[r - 1][c] === k && b[r - 2][c] === k)); b[r].push(k); } }
+      sc = 0; mv = 30; sel = null; busy = false; draw();
+    };
+    rb.onclick = reset; reset();
+  });
+}
+
 function openSnake() {
   gameWin('game:snake', 'Snake', '🐍', 380, 470, (box, hud, live) => {
     const N = 20, S = 17, cv = document.createElement('canvas'); cv.width = cv.height = N * S; box.append(cv);
@@ -979,7 +1098,7 @@ function openMines() {
     const rb = document.createElement('button'); rb.className = 'pill'; rb.textContent = 'Reiniciar'; box.append(rb);
     let cells, over, t0, secs;
     const nb = i => { const x = i % N, y = i / N | 0, r = []; for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) { const X = x + a, Y = y + b; if ((a || b) && X >= 0 && Y >= 0 && X < N && Y < N) r.push(Y * N + X); } return r; };
-    const info = () => { const b = store.get('piratinha-rec-mines', 0); hud.textContent = 'Minas ' + (M - cells.filter(c => c.f).length) + ' · Tempo ' + secs + 's · Melhor ' + (b ? b + 's' : '—') + (over === 1 ? ' · Perdeu!' : over === 2 ? ' · Venceu!' : ' · Botão direito = bandeira'); };
+    const info = () => { const b = store.get('piratinha-rec-mines', 0); hud.textContent = 'Minas ' + (M - cells.filter(c => c.f).length) + ' · Tempo ' + secs + 's · Melhor ' + (b ? b + 's' : '-') + (over === 1 ? ' · Perdeu!' : over === 2 ? ' · Venceu!' : ' · Botão direito = bandeira'); };
     const reset = () => { cells = Array.from({ length: N * N }, () => ({ m: 0, n: 0, o: 0, f: 0 })); over = 0; t0 = 0; secs = 0; draw(); };
     const place = s => { let k = 0; while (k < M) { const i = Math.random() * N * N | 0; if (i !== s && !cells[i].m) { cells[i].m = 1; k++; } } cells.forEach((c, i) => { c.n = nb(i).filter(j => cells[j].m).length; }); };
     const reveal = i => { const c = cells[i]; if (c.o || c.f) return; c.o = 1; if (!c.n && !c.m) nb(i).forEach(reveal); };
@@ -1091,46 +1210,48 @@ function browserName() {
 function openTerm() {
   createWindow({ id: 'sys:term', title: 'Terminal', mk: etile('💻'), w: 760, h: 420, sys: true, body: v => {
     v.innerHTML = '<div class="term"><div class="out"></div><div class="in"><span>piratinha@web:~$&nbsp;</span><input type="text" spellcheck="false" autocomplete="off"></div></div>';
-    const term = $('.term', v), out = $('.out', v), inp = $('input', v), hist = []; let hi = 0;
+    const term = $('.term', v), out = $('.out', v), inp = $('input', v), hist = []; let hi = 0, pending = null;
     const print = t => { const d = document.createElement('div'); d.textContent = t; out.append(d); term.scrollTop = term.scrollHeight; return d; };
     const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const pbar = async (l, ms) => { const d = print(''), t0 = Date.now(); for (;;) { const p = Math.min(1, (Date.now() - t0) / ms), n = p * 40 | 0; d.textContent = l + ' [' + '█'.repeat(n) + '░'.repeat(40 - n) + '] ' + (p * 100 | 0) + '%'; term.scrollTop = term.scrollHeight; if (p >= 1) break; await sleep(100); } };
     const LOGO = ["                  ~.", "           Ya...___|__..aab     .   .", "            Y88a  Y88o  Y88a   (     )", "             Y88b  Y88b  Y88b   `.oo'", "             :888  :888  :888  ( (`-'", "    .---.    d88P  d88P  d88P   `.`.", "   / .-._)  d8P'\"\"\"|\"\"\"'-Y8P      `.`.", "  ( (`._) .-.  .-. |.-.  .-.  .-.   ) )", "   \\ `---( O )( O )( O )( O )( O )-' /", "    `.    `-'  `-'  `-'  `-'  `-'  .'", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"];
     const LW = Math.max(...LOGO.map(l => l.length)) + 3;
     const CMDS = {
-      help: () => print('Comandos: help, neofetch, cowsay <texto>, matrix, hack, fortune, sl, sudo, bsod, reboot, shutdown, date, echo <texto>, whoami, ls, clear'),
-      sudo: () => print('pirata não está no arquivo sudoers. Este incidente será reportado ao papagaio.'),
-      fortune: () => print(['Quem cala, consente. Quem baixa, repacka.', 'Todo tesouro tem um mapa. O seu está no outro casaco.', 'Hoje é um bom dia para fazer backup.', 'O papagaio sabe a sua senha.', 'Uma atualização é só um reinício com esperança.'][Math.random() * 5 | 0]),
-      bsod: () => bsod(), reboot: () => reboot(), shutdown: a => (/-r/.test(a) ? reboot() : shutdown()),
+      help: () => print('Commands: help, neofetch, cowsay <text>, matrix, hack, fortune, sl, bsod, sudo fishmen -ins, shutdown now, restart now, date, echo <text>, whoami, ls, clear'),
+      sudo: async a => { if (/^fishmen(\s+-ins)?$/.test(a.trim())) return CMDS.fishmen(a.trim().replace(/^fishmen\s*/, ''), true); print('pirate is not in the sudoers file. This incident will be reported to the parrot.'); },
+      fishmen: async (a, root) => {
+        if (!root) return print('fishmen: permission denied. Try: sudo fishmen -ins'); if (a.trim() !== '-ins') return print('usage: sudo fishmen -ins');
+        print('Checking for updates…'); await sleep(700); print('Found: PIRATINHA OS ' + nextVer()); await pbar('Downloading', 8000); await pbar('Installing  ', 3000);
+        print('Update installed. A restart is required to finish.'); print('Restart now? [y/N]');
+        pending = s => { if (/^y(es)?$/i.test(s.trim())) reboot(); else print('Okay. Restart later with: restart now'); };
+      },
+      fortune: () => print(['Silence is consent. Downloading is repacking.', 'Every treasure has a map. Yours is in the other coat.', 'Today is a good day to make a backup.', 'The parrot knows your password.', 'An update is just a restart with hope.'][Math.random() * 5 | 0]),
+      bsod: () => bsod(), reboot: () => reboot(), shutdown: a => (/^now$/.test(a.trim()) ? shutdown() : print('usage: shutdown now')), restart: a => (/^now$/.test(a.trim()) ? reboot() : print('usage: restart now')),
       sl: async () => { const T = ['      ____            ', ' ____|    |======    ', '|____|____|__O__O____', '   (o)(o)(o)(o)      ']; const d = print(''); for (let i = 0; i < 60; i += 2) { d.textContent = T.map(l => ' '.repeat(i) + l).join('\n'); await sleep(35); } d.remove(); print('Choo choo!'); },
       clear: () => { out.innerHTML = ''; },
-      date: () => print(new Date().toLocaleString('pt-BR')),
-      echo: a => print(a), whoami: () => print('pirata'), ls: () => print('Images/  games/  index.html  tesouro.txt'),
+      date: () => print(new Date().toLocaleString(LOC[pref.lang])),
+      echo: a => print(a), whoami: () => print('pirata'), ls: () => print('Images/  games/  index.html  treasure.txt'),
       neofetch: () => {
-        const apps = LINKS.length + $('#dock').children.length + $('#tools').children.length, v = verAt(vIdx - 1);
-        const info = ['pirata@piratinha', '-----------------', 'OS: PiratinhaOS ' + v + ' x86', 'Kernel: ' + browserName(), 'Uptime: ' + Math.round((Date.now() - BOOT) / 1000) + 's', 'Packages: ' + apps + ' (shipping)', 'Shell: fishing 6.7.' + vIdx, 'WM: Pir-Ate 1.' + vIdx + ' (WM)', 'Terminal: Arrg 0.50.' + (2 + vIdx), 'Display: ' + screen.width + 'x' + screen.height + '@60Hz', 'Fonte: Futura Medium Condensed BT', 'CPU: Intel Celeron G1610 (2) @ 2.60GHz', 'GPU: Intel HD Graphics', 'IP: 192.168.1.1', 'Wallpaper: ' + current.n, 'Janelas abertas: ' + wins.size, 'Vidro: ' + pref.c];
+        const apps = LINKS.filter(l => !OFF.has(idOf(l))).length, v = verAt(vIdx - 1);
+        const info = ['pirata@piratinha', '-----------------', 'OS: PiratinhaOS ' + v + ' x86', 'Kernel: ' + browserName(), 'Uptime: ' + Math.round((Date.now() - BOOT) / 1000) + 's', 'Packages: ' + apps + ' (shipping)', 'Shell: fishing 6.7.' + vIdx, 'WM: Pir-Ate 1.' + vIdx + ' (WM)', 'Terminal: Arrg 0.50.' + (2 + vIdx), 'Display: ' + screen.width + 'x' + screen.height + '@60Hz', 'Font: Futura Medium Condensed BT', 'CPU: Intel Celeron G1610 (2) @ 2.60GHz', 'GPU: Intel HD Graphics', 'IP: 192.168.1.1', 'Wallpaper: ' + current.n, 'Open windows: ' + wins.size, 'Glass: ' + pref.c];
         print(Array.from({ length: Math.max(LOGO.length, info.length) }, (_, i) => (LOGO[i] || '').padEnd(LW) + (info[i] || '')).join('\n'));
       },
       cowsay: a => { a = a || 'Arrr!'; print(' ' + '_'.repeat(a.length + 2) + '\n< ' + a + ' >\n ' + '-'.repeat(a.length + 2) + '\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||'); },
       hack: async () => {
         const bar = async l => { const d = print(''); for (let i = 0; i <= 40; i++) { d.textContent = l + ' [' + '█'.repeat(i) + '░'.repeat(40 - i) + '] ' + (i * 2.5 | 0) + '%'; term.scrollTop = term.scrollHeight; await sleep(35); } };
-        await bar('Conectando ao servidor'); await bar('Quebrando o firewall '); await bar('Baixando tesouro.zip '); print('Acesso concedido.');
+        await bar('Connecting to server'); await bar('Breaking the firewall'); await bar('Downloading treasure.zip'); print('Access granted.');
       },
       matrix: async () => { const d = print(''); d.style.color = '#22c55e'; for (let i = 0; i < 24; i++) { d.textContent += Array.from({ length: 56 }, () => String.fromCharCode(0xff66 + Math.random() * 50 | 0)).join('') + '\n'; term.scrollTop = term.scrollHeight; await sleep(110); } },
     };
-    const run = async s => { print('$ ' + s); const [c, ...a] = s.trim().split(/\s+/); if (!c) return; const f = CMDS[c]; if (f) await f(a.join(' ')); else print(c + ': comando não encontrado. Digite help.'); };
+    const run = async s => { print('$ ' + s); const [c, ...a] = s.trim().split(/\s+/); if (!c) return; const f = CMDS[c]; if (f) await f(a.join(' ')); else print(c + ': command not found. Type help.'); };
     inp.onkeydown = e => {
-      if (e.key === 'Enter') { const s = inp.value; inp.value = ''; if (s.trim()) { hist.push(s); hi = hist.length; } run(s); }
+      if (e.key === 'Enter') { const s = inp.value; inp.value = ''; if (pending) { const f = pending; pending = null; print('> ' + s); f(s); return; } if (s.trim()) { hist.push(s); hi = hist.length; } run(s); }
       else if (e.key === 'ArrowUp' && hi > 0) inp.value = hist[--hi]; else if (e.key === 'ArrowDown') inp.value = hist[++hi] || '';
     };
-    term.onclick = () => inp.focus(); CMDS.neofetch(); print('Digite help.'); setTimeout(() => inp.focus(), 50);
+    term.onclick = () => inp.focus(); CMDS.neofetch(); print('Type help.'); setTimeout(() => inp.focus(), 50);
   } });
 }
 
-/* jogos na dock */
-[['Snake', '🐍', openSnake, 'game:snake'], ['Campo Minado', '💣', openMines, 'game:mines'], ['Tetris', '🧱', openTetris, 'game:tetris']].forEach(([n, em, fn, id]) => {
-  const b = document.createElement('button'); b.className = 'dk'; b.dataset.label = n; b.setAttribute('aria-label', n); b.append(etile(em)());
-  b.onclick = () => { const w = wins.get(id); if (w) toggleWin(w); else fn(); }; pinBtns.set(id, b); $('#dock').append(b);
-});
 
 /* ---------- reiniciar, desligar, aviso de confirmação ---------- */
 let BOOT = Date.now();
@@ -1153,8 +1274,14 @@ const nextVer = () => verAt(vIdx);
 const announce = () => setTimeout(() => { if (pref.notif) pushNote(updNote()); }, 3000);
 function forcedUpdate(then) {
   const d = document.createElement('div'); d.className = 'blackout upd';
-  d.innerHTML = '<div><div class="spin"></div><p>Instalando atualizações</p><p class="up2">0%</p><p class="uw">Não desligue o computador (PIRATINHA OS ' + nextVer() + ')</p></div>'; document.body.append(d); let p = 0;
-  const iv = setInterval(() => { p = Math.min(100, p + 3 + Math.random() * 9); $('.up2', d).textContent = (p | 0) + '%'; if (p >= 100) { clearInterval(iv); vIdx++; store.set('piratinha-vidx', vIdx); d.remove(); then(); } }, 350);
+  d.innerHTML = '<div><div class="spin"></div><p>Instalando atualizações</p><p class="up2">0%</p><p class="uw">Não desligue o computador (PIRATINHA OS ' + nextVer() + ')</p></div>'; document.body.append(d); let p = 0; const t0 = Date.now();
+  const iv = setInterval(() => { p = Math.min(100, (Date.now() - t0) / 150); $('.up2', d).textContent = (p | 0) + '%'; if (p >= 100) { clearInterval(iv); vIdx++; store.set('piratinha-vidx', vIdx); d.remove(); then(); } }, 350);
+}
+function powerDialog() {                                  // duas opções em blocos, com aviso da atualização forçada
+  closeStart(); const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = '<div class="box"><div class="pwb"><button class="p1"><i>⏻</i><span>Desligar</span></button><button class="p2"><i>⟳</i><span>Reiniciar</span></button></div><p class="pwn"></p><div class="mb"><button class="pill">Cancelar</button></div></div>';
+  $('.pwn', m).textContent = 'Uma atualização do sistema será instalada antes de continuar (PIRATINHA OS ' + nextVer() + ').';
+  $('.p1', m).onclick = () => { m.remove(); shutdown(); }; $('.p2', m).onclick = () => { m.remove(); reboot(); }; $('.mb button', m).onclick = () => m.remove(); os.append(m);
 }
 function reboot() {
   closeStart();
@@ -1173,7 +1300,7 @@ function bsod() {
   d.innerHTML = '<div style="font-size:90px">:(</div><p>Seu PIRATINHA OS encontrou um problema e precisa reiniciar. Estamos coletando algumas informações de erro e já reiniciamos para você.</p><p class="bp">0% concluído</p><p style="font-size:13px;opacity:.8">Código de parada: PAPAGAIO_COMEU_O_CABO</p>'; document.body.append(d);
   let p = 0; const iv = setInterval(() => { p += 5 + Math.random() * 10; if (p >= 100) { clearInterval(iv); d.remove(); reboot(); } else $('.bp', d).textContent = (p | 0) + '% concluído'; }, 400);
 }
-$('#st-off').onclick = shutdown; $('#st-re').onclick = reboot;
+$('#st-off').onclick = () => powerDialog();
 
 /* ---------- notificações (piadas) e sino ---------- */
 const JOKES = [
@@ -1211,7 +1338,7 @@ function drawPanel() {
   NOTES.forEach(n => {
     const r = document.createElement('button'), a = document.createElement('span'), b = document.createElement('span'), s = document.createElement('small');
     r.className = 'srow'; a.textContent = n.i; b.className = 'grow'; b.style.whiteSpace = 'normal'; b.textContent = n.t + ' — ' + n.m;
-    s.textContent = n.time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); r.append(a, b, s);
+    s.textContent = n.time.toLocaleTimeString(LOC[pref.lang], { hour: '2-digit', minute: '2-digit' }); r.append(a, b, s);
     r.onclick = () => { npanel.style.display = 'none'; actNote(n); }; npanel.append(r);
   });
 }
@@ -1225,11 +1352,15 @@ function pushNote(j) {
 }
 bell.onclick = e => { e.stopPropagation(); const open = npanel.style.display === 'block'; npanel.style.display = open ? 'none' : 'block'; if (!open) { unread = 0; dot.textContent = ''; bell.classList.remove('alert'); drawPanel(); } };
 document.addEventListener('pointerdown', e => { if (!e.target.closest('#npanel') && !e.target.closest('#bell')) npanel.style.display = 'none'; });
+let fireN = 0;
 function fire() {
-  if (pref.notif) { let k; do { k = Math.random() * JOKES.length | 0; } while (k === lastJ); lastJ = k; pushNote(k === 0 ? updNote() : JOKES[k]); }
-  setTimeout(fire, (30 + Math.random() * 30) * 60000);
+  if (pref.notif) {
+    fireN++; if (fireN % 3 === 0) pushNote(updNote());                      // a cada 15 min: atualização
+    else { let k; do { k = 1 + (Math.random() * (JOKES.length - 1) | 0); } while (k === lastJ); lastJ = k; pushNote(JOKES[k]); }   // a cada 5 min: piada
+  }
+  setTimeout(fire, 5 * 60000);
 }
-setTimeout(fire, (30 + Math.random() * 30) * 60000);
+setTimeout(fire, 5 * 60000);
 lastJ = 0; setTimeout(() => { if (pref.notif) pushNote(updNote()); }, 4000);   // ao abrir o site: pede a atualização do sistema
 function openUpdate(done) {
   createWindow({ id: 'sys:update', title: 'Atualização do sistema', mk: etile('⬇️'), w: 460, h: 300, sys: true, body: (v, w) => {
@@ -1239,39 +1370,12 @@ function openUpdate(done) {
     const finish = () => { us.textContent = 'Atualização concluída. É preciso reiniciar para aplicá-la.'; bar.style.width = '100%'; up.textContent = ''; ua.style.display = 'flex'; };
     $('.ok', v).onclick = () => { close(); reboot(); };
     $('.later', v).onclick = () => { close(); setTimeout(() => { if (pref.notif) pushNote({ i: '🔄', t: 'Reinício pendente', m: 'Reinicie para concluir a atualização.', u: 2 }); }, 120000); };
-    if (done) return finish(); let p = 0;
-    const iv = setInterval(() => { if (!v.isConnected) return clearInterval(iv); p = Math.min(100, p + 2 + Math.random() * 7); bar.style.width = p + '%'; us.textContent = STEPS[Math.min(4, p / 20 | 0)]; up.textContent = (p | 0) + '%'; if (p >= 100) { clearInterval(iv); finish(); } }, 450);
+    if (done) return finish(); let p = 0; const t0 = Date.now();
+    const iv = setInterval(() => { if (!v.isConnected) return clearInterval(iv); p = Math.min(100, (Date.now() - t0) / 80); bar.style.width = p + '%'; us.textContent = STEPS[Math.min(4, p / 20 | 0)]; up.textContent = (p | 0) + '%'; if (p >= 100) { clearInterval(iv); finish(); } }, 450);
   } });
 }
 
 /* ---------- loja (estilo GNOME Software / Fedora) ---------- */
-function updateDock(relayout) {
-  const d = $('#dock'), empty = ![...d.children].some(b => !b.hidden); d.hidden = empty;
-  os.style.setProperty('--dock-h', empty ? '0px' : '70px'); if (relayout) layoutAll();
-}
-function setInst(id, on, winId) {
-  if (on) OFF.delete(id); else { OFF.add(id); const w = wins.get(winId || id); if (w) w.el.querySelector('.close').click(); }
-  store.set('piratinha-off', [...OFF]); const b = pinBtns.get(id); if (b) b.hidden = !on;
-  if (id.startsWith('link:')) { const u = id.slice(5); if (!on) { trashed.delete(u); delete saved[u]; persistTrash(); } layoutAll(); }
-  updateDock(true);
-}
-OFF.forEach(id => { const b = pinBtns.get(id); if (b) b.hidden = true; }); updateDock();
-const APPLIST = [
-  ['jogos', GAMES[0].u, 'DOOM', '👹', 'Tiro em primeira pessoa clássico, rodando Freedoom.', () => openApp(GAMES[0])],
-  ['jogos', 'game:snake', 'Snake', '🐍', 'Coma, cresça e não bata nas paredes.', openSnake],
-  ['jogos', 'game:mines', 'Campo Minado', '💣', 'Abra o campo sem pisar em nenhuma mina.', openMines],
-  ['jogos', 'game:tetris', 'Tetris', '🧱', 'Encaixe as peças e complete as linhas.', openTetris],
-  ['apps', 'sys:browser', 'Navegador', '🌐', 'Navegue em abas dentro do sistema.', openBrowser],
-  ['apps', 'sys:music', 'Música', '🎵', 'Arquivos locais e player do Spotify.', openMusic],
-  ['apps', 'sys:calc', 'Calculadora', '🧮', 'Contas rápidas.', openCalc],
-  ['apps', 'sys:notes', 'Bloco de notas', '📝', 'Anotações salvas no navegador.', openNotes],
-  ['apps', 'sys:paint', 'Paint', '🎨', 'Desenhe e salve em PNG.', openPaint],
-  ['apps', 'sys:term', 'Terminal', '💻', 'Linha de comando do PIRATINHA OS.', openTerm],
-];
-const storeItems = () => [
-  ...APPLIST.map(([c, id, n, e, d, open]) => ({ c, n, d, mk: etile(e), open, on: () => !OFF.has(id), set: on => setInst(id, on) })),
-  ...LINKS.map(l => ({ c: 'piratinha', n: l.n, d: hostOf(l), mk: () => tile(l), open: () => openApp(l), on: () => !OFF.has('link:' + l.u), set: on => setInst('link:' + l.u, on, l.u) })),
-];
 function openStore() {
   createWindow({ id: 'sys:store', title: 'Loja', mk: etile('🛍️'), w: 820, h: 560, sys: true, body: v => {
     v.classList.add('st'); v.innerHTML = '<aside class="sd"></aside><section class="sm"><input type="text" class="sbox" placeholder="Buscar na loja" spellcheck="false"><div class="sg"></div></section>';
@@ -1298,9 +1402,414 @@ function openStore() {
     q.oninput = render; drawSide(); render();
   } });
 }
-const storebtn = $('#storebtn'); pinBtns.set('sys:store', storebtn);
-storebtn.onclick = () => { const w = wins.get('sys:store'); if (w) toggleWin(w); else openStore(); };
-$('#taskbar').addEventListener('contextmenu', e => { e.preventDefault(); openSettings(); });
+$('#taskbar').addEventListener('contextmenu', e => e.preventDefault());       // o botão direito na taskbar nunca abre as configurações
+
+/* ---------- onde cada item aparece: área de trabalho, taskbar ou dock ---------- */
+const BTN = new Map();
+function btnOf(l, w) {
+  const id = idOf(l); let m = BTN.get(id); if (!m) BTN.set(id, m = {});
+  if (!m[w]) {
+    const b = document.createElement('button'); b.className = w === 'dock' ? 'dk' : 'pin'; b.dataset.label = l.n; b.dataset.id = id; b.setAttribute('aria-label', l.n); b.append(tile(l));
+    b.onclick = () => toggleApp(l); b.addEventListener('contextmenu', e => itemMenu(e, l, w)); if (w === 'taskbar') b.draggable = true;
+    (w === 'dock' ? $('#dock') : $('#tools')).append(b); m[w] = b;
+  }
+  return m[w];
+}
+function syncItem(l) {
+  const id = idOf(l), p = placeOf(l), on = !OFF.has(id), m = BTN.get(id) || {}, key = l.win || l.u;
+  ['taskbar', 'dock'].forEach(w => { if (p === w && on) btnOf(l, w).hidden = false; else if (m[w]) m[w].hidden = true; });
+  const cur = on && (p === 'taskbar' || p === 'dock') ? BTN.get(id)[p] : null, old = pinBtns.get(key);
+  if (old && old !== cur) old.classList.remove('open', 'active');
+  if (cur) pinBtns.set(key, cur); else pinBtns.delete(key);
+  const w = wins.get(key); if (w && cur && !w.btn.classList.contains('task')) { cur.classList.add('open'); w.btn = cur; }
+}
+function setPlace(l, w) {
+  PLACE[idOf(l)] = w; store.set('piratinha-place', PLACE); delete saved[l.u];
+  if (w === 'dock' && !pref.dk) { pref.dk = true; applyPrefs(); }
+  syncItem(l); updateDock(); layoutAll();
+}
+function itemMenu(e, l, where) {
+  const w = wins.get(l.win || l.u), items = [w ? ['✕ Fechar', () => w.el.querySelector('.close').click()] : ['📂 Abrir', () => openApp(l)]];
+  [['taskbar', '📌 Mover para a taskbar'], ['dock', '🧷 Mover para a dock'], ['desktop', '🖥️ Mover para a área de trabalho'], ['menu', '📋 Mover para o menu Iniciar']].forEach(([k, t]) => { if (k !== where && (k !== 'menu' || l.app)) items.push([t, () => setPlace(l, k)]); });
+  showCtx(e, items);
+}
+function setInst(l, on) {
+  const id = idOf(l);
+  if (on) OFF.delete(id); else { OFF.add(id); const w = wins.get(l.win || l.u); if (w) w.el.querySelector('.close').click(); trashed.delete(l.u); delete saved[l.u]; persistTrash(); }
+  store.set('piratinha-off', [...OFF]); syncItem(l); updateDock(); layoutAll();
+}
+function updateDock(relayout) {
+  const d = $('#dock'), z = { p: 66, m: 74, g: 84 }[pref.dz] || 74, tb = 58 + (pref.ts === 'd' ? 10 : 20);
+  d.hidden = !pref.dk || ![...d.children].some(b => !b.hidden); $('#dockzone').hidden = d.hidden || !pref.da;
+  let t = 0, b = 0, l = 0, r = 0; if (pref.tb === 't') t = tb; else b = tb;
+  if (!d.hidden && !pref.da) { if (pref.dp === 'b') b += z; else if (pref.dp === 't') t += z; else if (pref.dp === 'l') l += z; else r += z; }
+  [['t', t], ['b', b], ['l', l], ['r', r]].forEach(([k, n]) => os.style.setProperty('--ins-' + k, n + 'px'));
+  os.style.setProperty('--dk-off', (pref.dp === pref.tb ? tb : 10) + 'px');
+  if (relayout) layoutAll();
+}
+LINKS.forEach(syncItem);
+{ const tl = $('#tools'); let drag = null;                       // reordenar os ícones da taskbar arrastando
+  store.get('piratinha-tools', []).forEach(n => { const b = [...tl.children].find(x => x.dataset.id === n); if (b) tl.append(b); });
+  tl.addEventListener('dragstart', e => { drag = e.target.closest('.pin'); });
+  tl.addEventListener('dragover', e => { e.preventDefault(); const t = e.target.closest('.pin'); if (t && drag && t !== drag) { const r = t.getBoundingClientRect(); tl.insertBefore(drag, e.clientX < r.left + r.width / 2 ? t : t.nextSibling); } });
+  tl.addEventListener('dragend', () => { drag = null; store.set('piratinha-tools', [...tl.children].map(b => b.dataset.id)); }); }
+{ const d = $('#dock'), z = $('#dockzone'); let t;                // dock com ocultar automático
+  const show = () => { clearTimeout(t); d.classList.add('show'); }, hide = () => { clearTimeout(t); t = setTimeout(() => d.classList.remove('show'), 450); };
+  [z, d].forEach(x => { x.addEventListener('pointerenter', show); x.addEventListener('pointerleave', hide); }); }
+
+/* ---------- loja ---------- */
+const TRASHITEM = { c: 'apps', n: 'Lixeira', d: 'Veja e restaure os itens apagados.', mk: etile('🗑️'), open: () => openTrash(), on: () => !OFF.has('sys:trash'),
+  set: on => { if (on) OFF.delete('sys:trash'); else { OFF.add('sys:trash'); const w = wins.get('sys:trash'); if (w) w.el.querySelector('.close').click(); } store.set('piratinha-off', [...OFF]); layoutAll(); } };
+const storeItems = () => [
+  ...LINKS.filter(l => l.id !== 'sys:store').map(l => ({ c: l.app ? l.cat : 'piratinha', n: l.n, d: l.d || hostOf(l), mk: () => tile(l), open: () => openApp(l), on: () => !OFF.has(idOf(l)), set: on => setInst(l, on) })),
+  TRASHITEM,
+];
+
+/* ---------- widget de música (canto superior direito, quase translúcido) ---------- */
+const wg = $('#widget');
+wg.innerHTML = '<button class="wic" title="Música">🎵</button><div class="wbody"><div class="whead"><span>Música</span><button class="wmin wbtn" title="Minimizar">–</button></div><div class="np">Nenhuma faixa</div><audio controls></audio><div class="wl"></div><label class="pill">+ Arquivos<input type="file" accept="audio/*" multiple hidden></label></div>';
+{ const list = []; let i = -1; const au = $('audio', wg), np = $('.np', wg), pl = $('.wl', wg);
+  const draw = () => { pl.innerHTML = ''; list.forEach((t, k) => { const b = document.createElement('button'); b.className = 'srow' + (k === i ? ' on' : ''); b.textContent = t.name; b.onclick = () => play(k); pl.append(b); }); };
+  function play(k) { if (k < 0 || k >= list.length) return; i = k; au.src = list[k].url; au.play(); np.textContent = list[k].name; draw(); }
+  $('input', wg).onchange = e => { [...e.target.files].forEach(f => list.push({ name: f.name.replace(/\.[^.]+$/, ''), url: URL.createObjectURL(f) })); if (i < 0) play(0); else draw(); e.target.value = ''; };
+  au.onended = () => play(i + 1);
+  $('.wmin', wg).onclick = () => { pref.wm = true; applyPrefs(); }; $('.wic', wg).onclick = () => { pref.wm = false; applyPrefs(); }; }
+
+/* ---------- widgets arrastáveis: monitor do sistema, frase do dia, notas adesivas ---------- */
+const WPOS = store.get('piratinha-wpos', {});
+function dragEl(el, handle, done) {
+  handle.style.touchAction = 'none';
+  handle.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return;
+    const r = el.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top; handle.setPointerCapture(e.pointerId); os.classList.add('dragging');
+    const mv = ev => { el.style.left = Math.max(0, Math.min(innerWidth - 60, ev.clientX - dx)) + 'px'; el.style.top = Math.max(0, Math.min(innerHeight - 60, ev.clientY - dy)) + 'px'; el.style.right = 'auto'; el.style.bottom = 'auto'; };
+    const up = () => { os.classList.remove('dragging'); handle.removeEventListener('pointermove', mv); handle.removeEventListener('pointerup', up); handle.removeEventListener('pointercancel', up); const b = el.getBoundingClientRect(); done(Math.round(b.left), Math.round(b.top)); };
+    handle.addEventListener('pointermove', mv); handle.addEventListener('pointerup', up); handle.addEventListener('pointercancel', up);
+  });
+}
+function dragWidget(el, handle, id) {
+  const p = WPOS[id]; if (p) { el.style.left = Math.max(0, Math.min(p[0], innerWidth - 60)) + 'px'; el.style.top = Math.max(0, Math.min(p[1], innerHeight - 60)) + 'px'; el.style.right = 'auto'; }
+  handle.style.cursor = 'grab'; dragEl(el, handle, (x, y) => { WPOS[id] = [x, y]; store.set('piratinha-wpos', WPOS); });
+}
+wg.classList.add('wd'); dragWidget(wg, $('.whead', wg), 'music');
+
+/* monitor do sistema (falso): picos aleatórios e alertas de mineração ou vírus */
+const mon = document.createElement('div'); mon.id = 'wmon'; mon.className = 'wd';
+mon.innerHTML = '<div class="whead"><span>Monitor do sistema</span></div><div class="mrow"><span>CPU</span><canvas width="120" height="28"></canvas><b></b></div><div class="mrow"><span>RAM</span><canvas width="120" height="28"></canvas><b></b></div><div class="mrow"><span>Rede</span><canvas width="120" height="28"></canvas><b></b></div><div class="malert" hidden><div class="mtx"></div><button class="pill">Encerrar processo</button></div>';
+os.append(mon); dragWidget(mon, $('.whead', mon), 'mon');
+{
+  const cvs = [...mon.querySelectorAll('canvas')], vals = [...mon.querySelectorAll('.mrow b')], al = $('.malert', mon), tx = $('.mtx', mon), btn = $('.malert button', mon);
+  const H = [[], [], []], clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  let cpu = 18, ram = 46, net = 6, spike = 0, mining = 0, next = 45 + Math.random() * 60;
+  const NAMES = { mine: ['xmrig.exe', 'minerd.exe', 'parrot-miner.bin', 'coinhive.js'], virus: ['trojan.win32.fishy', 'worm.parrot.a', 'adware.gancho.exe'] };
+  const alertOn = kind => {
+    const name = NAMES[kind][Math.random() * NAMES[kind].length | 0], msg = (kind === 'mine' ? 'Mineração de criptomoeda detectada: ' : 'Possível vírus detectado: ') + name;
+    mining = 25; tx.textContent = msg; btn.hidden = false; al.hidden = false; if (pref.notif) pushNote({ i: '⚠️', t: 'Monitor do sistema', m: msg });
+  };
+  const stop = () => { mining = 0; tx.textContent = 'Processo encerrado.'; btn.hidden = true; setTimeout(() => { if (!mining) al.hidden = true; }, 2500); };
+  btn.onclick = stop;
+  const spark = (cv, arr, max) => { const g = cv.getContext('2d'); g.clearRect(0, 0, 120, 28); g.strokeStyle = mining ? '#ff6b6b' : pref.ac; g.lineWidth = 1.6; g.beginPath(); arr.forEach((v, i) => { const x = i * 3, y = 27 - v / max * 26; if (i) g.lineTo(x, y); else g.moveTo(x, y); }); g.stroke(); };
+  setInterval(() => {
+    if (mon.hidden) return;
+    next -= 1; if (!mining && next <= 0) { alertOn(Math.random() < .65 ? 'mine' : 'virus'); next = 180 + Math.random() * 180; }
+    if (mining) { mining--; if (!mining) stop(); }
+    spike = Math.max(0, spike - 1); if (!spike && Math.random() < .07) spike = 2 + Math.random() * 4 | 0;
+    cpu = mining ? 90 + Math.random() * 9 : clamp(cpu + (Math.random() - .5) * 12 + (spike ? 22 : 0) - (cpu > 35 ? 5 : 0), 3, 99);
+    ram = clamp(ram + (Math.random() - .5) * 2.5 + (mining ? .7 : -.15), 30, 96);
+    net = clamp(net + (Math.random() - .5) * 7 + (spike ? 18 : 0) + (mining ? 5 : 0) - (net > 25 ? 4 : 0), 0, 100);
+    [cpu, ram, net].forEach((v, i) => { H[i].push(v); if (H[i].length > 40) H[i].shift(); spark(cvs[i], H[i], 100); });
+    vals[0].textContent = (cpu | 0) + '%'; vals[1].textContent = (ram | 0) + '%'; vals[2].textContent = (net | 0) + ' Mb/s';
+  }, 1000);
+}
+
+/* frase do dia (no estilo das piadas das notificações) */
+const FRASES = ['Todo bug é uma feature com baixa autoestima.', 'Quem tem backup não tem medo de reiniciar.', 'O papagaio disse que a senha é 123456. Nós avisamos.', 'Baixar é fácil. Difícil é achar o botão de download certo.', 'Se o jogo travou, a culpa é do ping. Sempre do ping.', 'Limpar o cache resolve tudo. Menos a vida.', 'Um bom pirata desconfia de todo botão verde gigante.', 'Hoje é um ótimo dia para atualizar. Amanhã também.'];
+const qw = document.createElement('div'); qw.id = 'wq'; qw.className = 'wd';
+qw.innerHTML = '<div class="whead"><span>Frase do dia</span><button class="wbtn" title="Outra">↻</button></div><div class="qt"></div>';
+os.append(qw); dragWidget(qw, $('.whead', qw), 'quote');
+{ let k = Math.floor(Date.now() / 864e5) % FRASES.length; const t = $('.qt', qw); t.textContent = FRASES[k]; $('.wbtn', qw).onclick = () => { k = (k + 1) % FRASES.length; t.textContent = FRASES[k]; }; }
+
+/* ---------- idiomas: EN (padrão), BR, ES, FR, DE, RU ---------- */
+// O texto-fonte do código está em português (BR). Cada linha: [pt, en, es, fr, de, ru]. "{}" = trecho variável (número, nome…).
+const D = [
+['Abrir','Open','Abrir','Ouvrir','Öffnen','Открыть'],
+['Abrir em nova aba','Open in new tab','Abrir en pestaña nueva','Ouvrir dans un nouvel onglet','In neuem Tab öffnen','Открыть в новой вкладке'],
+['Abrir terminal','Open terminal','Abrir terminal','Ouvrir le terminal','Terminal öffnen','Открыть терминал'],
+['Adicionar','Add','Añadir','Ajouter','Hinzufügen','Добавить'],
+['Adicionar wallpaper','Add wallpaper','Añadir fondo','Ajouter un fond d’écran','Hintergrund hinzufügen','Добавить обои'],
+['Ativar','Enable','Activar','Activer','Aktivieren','Включить'],
+['Desativar','Disable','Desactivar','Désactiver','Deaktivieren','Выключить'],
+['Atualizar','Refresh','Actualizar','Actualiser','Aktualisieren','Обновить'],
+['Baixar plano de fundo','Download wallpaper','Descargar fondo','Télécharger le fond d’écran','Hintergrund herunterladen','Скачать обои'],
+['Cancelar','Cancel','Cancelar','Annuler','Abbrechen','Отмена'],
+['Confirmar','Confirm','Confirmar','Confirmer','Bestätigen','Подтвердить'],
+['Configurações','Settings','Configuración','Paramètres','Einstellungen','Настройки'],
+['Customização','Customization','Personalización','Personnalisation','Anpassung','Персонализация'],
+['Excluir link','Delete link','Eliminar enlace','Supprimer le lien','Link löschen','Удалить ссылку'],
+['Fechar','Close','Cerrar','Fermer','Schließen','Закрыть'],
+['Maximizar','Maximize','Maximizar','Agrandir','Maximieren','Развернуть'],
+['Minimizar','Minimize','Minimizar','Réduire','Minimieren','Свернуть'],
+['Mover para a lixeira','Move to trash','Mover a la papelera','Mettre à la corbeille','In den Papierkorb','В корзину'],
+['Novo link…','New link…','Nuevo enlace…','Nouveau lien…','Neuer Link…','Новая ссылка…'],
+['Novo link','New link','Nuevo enlace','Nouveau lien','Neuer Link','Новая ссылка'],
+['Nome','Name','Nombre','Nom','Name','Название'],
+['Restaurar','Restore','Restaurar','Restaurer','Wiederherstellen','Восстановить'],
+['Restaurar tudo','Restore all','Restaurar todo','Tout restaurer','Alle wiederherstellen','Восстановить всё'],
+['Remover','Remove','Quitar','Retirer','Entfernen','Удалить'],
+['Iniciar','Start','Inicio','Démarrer','Start','Пуск'],
+['Menu Iniciar','Start menu','Menú de inicio','Menu Démarrer','Startmenü','Меню «Пуск»'],
+['Loja','Store','Tienda','Boutique','Store','Магазин'],
+['Notificações','Notifications','Notificaciones','Notifications','Benachrichtigungen','Уведомления'],
+['Buscar site…','Search sites…','Buscar sitio…','Rechercher un site…','Website suchen…','Поиск сайта…'],
+['Recomendados','Recommended','Recomendados','Recommandés','Empfohlen','Рекомендуемые'],
+['Outros','Others','Otros','Autres','Weitere','Другие'],
+['Nenhum app instalado. Abra a Loja para instalar.','No apps installed. Open the Store to install some.','Ninguna app instalada. Abre la Tienda para instalar.','Aucune application installée. Ouvrez la boutique pour en installer.','Keine Apps installiert. Öffne den Store, um welche zu installieren.','Нет установленных приложений. Откройте магазин, чтобы установить.'],
+['Desligar','Shut down','Apagar','Éteindre','Herunterfahren','Выключить компьютер'],
+['Reiniciar','Restart','Reiniciar','Redémarrer','Neu starten','Перезагрузить'],
+['Nenhuma notificação ainda.','No notifications yet.','Aún no hay notificaciones.','Aucune notification pour l’instant.','Noch keine Benachrichtigungen.','Уведомлений пока нет.'],
+['Notificações desativadas.','Notifications are off.','Notificaciones desactivadas.','Notifications désactivées.','Benachrichtigungen sind aus.','Уведомления отключены.'],
+['Barba-Negra','Blackbeard','Barbanegra','Barbe Noire','Schwarzbart','Чёрная Борода'],
+['Capitão Gancho','Captain Hook','Capitán Garfio','Capitaine Crochet','Käpt’n Hook','Капитан Крюк'],
+['Papagaio','Parrot','Loro','Perroquet','Papagei','Попугай'],
+['começou a jogar DOOM.','started playing DOOM.','empezó a jugar a DOOM.','a commencé à jouer à DOOM.','hat angefangen, DOOM zu spielen.','начал играть в DOOM.'],
+['começou a jogar Campo Minado.','started playing Minesweeper.','empezó a jugar al Buscaminas.','a commencé à jouer au Démineur.','hat angefangen, Minesweeper zu spielen.','начал играть в «Сапёр».'],
+['começou a jogar Tetris.','started playing Tetris.','empezó a jugar a Tetris.','a commencé à jouer à Tetris.','hat angefangen, Tetris zu spielen.','начал играть в Тетрис.'],
+['começou a jogar Snake e já perdeu.','started playing Snake and already lost.','empezó a jugar a Snake y ya perdió.','a commencé à jouer à Snake et a déjà perdu.','hat Snake angefangen und schon verloren.','начал играть в «Змейку» и уже проиграл.'],
+['instalou 14 extensões sem perguntar.','installed 14 extensions without asking.','instaló 14 extensiones sin preguntar.','a installé 14 extensions sans demander.','hat 14 Erweiterungen ohne zu fragen installiert.','установил 14 расширений без спроса.'],
+['Antivírus','Antivirus','Antivirus','Antivirus','Virenschutz','Антивирус'],
+['tirou o dia de folga.','took the day off.','se tomó el día libre.','a pris un jour de congé.','hat sich freigenommen.','взял выходной.'],
+['terminou de baixar. Ninguém sabe onde.','finished downloading. Nobody knows where.','terminó de descargarse. Nadie sabe dónde.','a fini de télécharger. Personne ne sait où.','ist fertig heruntergeladen. Niemand weiß, wo.','скачан. Никто не знает, куда.'],
+['Bateria','Battery','Batería','Batterie','Akku','Батарея'],
+['em 100%. Desconfie.','at 100%. Be suspicious.','al 100 %. Desconfía.','à 100 %. Méfiez-vous.','bei 100 %. Sei misstrauisch.','100 %. Подозрительно.'],
+['Download iniciado','Download started','Descarga iniciada','Téléchargement lancé','Download gestartet','Загрузка началась'],
+['Baixando trojan.exe… 99%','Downloading trojan.exe… 99%','Descargando trojan.exe… 99 %','Téléchargement de trojan.exe… 99 %','trojan.exe wird geladen… 99 %','Загрузка trojan.exe… 99 %'],
+['Adquira seu Copilot grátis! Sem pegadinhas. Talvez.','Get your free Copilot! No catch. Maybe.','¡Consigue tu Copilot gratis! Sin trampas. Quizás.','Obtenez votre Copilot gratuit ! Sans piège. Peut-être.','Hol dir deinen kostenlosen Copilot! Kein Haken. Vielleicht.','Получите бесплатный Copilot! Без подвоха. Наверное.'],
+['Notas da versão','Release notes','Notas de la versión','Notes de version','Versionshinweise','Примечания к выпуску'],
+['Removemos o bug da baleia.','We removed the whale bug.','Eliminamos el bug de la ballena.','Nous avons supprimé le bug de la baleine.','Wir haben den Wal-Bug entfernt.','Мы убрали баг с китом.'],
+['Anúncio','Announcement','Anuncio','Annonce','Ankündigung','Анонс'],
+['GTA VII foi anunciado. Previsão de lançamento: depois do GTA VI.','GTA VII was announced. Release date: after GTA VI.','Se anunció GTA VII. Lanzamiento previsto: después de GTA VI.','GTA VII est annoncé. Sortie prévue : après GTA VI.','GTA VII wurde angekündigt. Release: nach GTA VI.','Анонсирована GTA VII. Релиз: после GTA VI.'],
+['Oferta imperdível','Unmissable offer','Oferta imperdible','Offre à ne pas manquer','Unschlagbares Angebot','Выгодное предложение'],
+['Adquira sua placa de vídeo virtual. 0 FPS garantidos.','Get your virtual graphics card. 0 FPS guaranteed.','Consigue tu tarjeta gráfica virtual. 0 FPS garantizados.','Procurez-vous votre carte graphique virtuelle. 0 FPS garantis.','Hol dir deine virtuelle Grafikkarte. 0 FPS garantiert.','Купите виртуальную видеокарту. 0 FPS гарантировано.'],
+['Perto de você','Near you','Cerca de ti','Près de chez vous','In deiner Nähe','Рядом с вами'],
+['Femboys na sua área a 5 km!','Femboys in your area, 5 km away!','¡Femboys en tu zona, a 5 km!','Des femboys dans votre secteur, à 5 km !','Femboys in deiner Gegend, 5 km entfernt!','Фембои в вашем районе, в 5 км!'],
+['Garotas gamer na sua área a 1 km!','Gamer girls in your area, 1 km away!','¡Chicas gamer en tu zona, a 1 km!','Des gameuses dans votre secteur, à 1 km !','Gamerinnen in deiner Gegend, 1 km entfernt!','Девушки-геймеры в вашем районе, в 1 км!'],
+['Update','Update','Actualización','Mise à jour','Update','Обновление'],
+['Um update seco, seco, seco logo chegará.','A dry, dry, dry update is coming soon.','Pronto llegará una actualización seca, seca, seca.','Une mise à jour sèche, sèche, sèche arrive bientôt.','Ein trockenes, trockenes, trockenes Update kommt bald.','Скоро выйдет сухое, сухое, сухое обновление.'],
+['Download','Download','Descarga','Téléchargement','Download','Загрузка'],
+['Baixando mais RAM… 8 GB de 8 GB. Quase lá.','Downloading more RAM… 8 GB of 8 GB. Almost there.','Descargando más RAM… 8 GB de 8 GB. Casi listo.','Téléchargement de RAM… 8 Go sur 8 Go. Presque fini.','Mehr RAM wird geladen… 8 GB von 8 GB. Fast fertig.','Загрузка оперативной памяти… 8 ГБ из 8 ГБ. Почти готово.'],
+['Parabéns!','Congratulations!','¡Felicidades!','Félicitations !','Glückwunsch!','Поздравляем!'],
+['Seu PC foi selecionado para ganhar um PC.','Your PC was selected to win a PC.','Tu PC fue seleccionado para ganar un PC.','Votre PC a été sélectionné pour gagner un PC.','Dein PC wurde ausgewählt, einen PC zu gewinnen.','Ваш ПК выбран, чтобы выиграть ПК.'],
+['Atualização','Update','Actualización','Mise à jour','Aktualisierung','Обновление'],
+['Faltam 3 minutos (estimativa feita há 3 horas).','3 minutes left (estimate made 3 hours ago).','Faltan 3 minutos (estimación hecha hace 3 horas).','Il reste 3 minutes (estimation faite il y a 3 heures).','Noch 3 Minuten (Schätzung von vor 3 Stunden).','Осталось 3 минуты (оценка 3-часовой давности).'],
+['Detectou 0 ameaças. Duvidamos.','Detected 0 threats. We doubt it.','Detectó 0 amenazas. Lo dudamos.','0 menace détectée. On en doute.','0 Bedrohungen erkannt. Wir bezweifeln das.','Угроз не обнаружено. Мы сомневаемся.'],
+['Rede','Network','Red','Réseau','Netzwerk','Сеть'],
+['Você está conectado à internet. Tente não atrapalhar.','You are connected to the internet. Try not to break it.','Estás conectado a internet. Intenta no estropearlo.','Vous êtes connecté à Internet. Essayez de ne pas le casser.','Du bist mit dem Internet verbunden. Mach nichts kaputt.','Вы подключены к интернету. Постарайтесь ничего не сломать.'],
+['Reinício pendente','Restart pending','Reinicio pendiente','Redémarrage en attente','Neustart ausstehend','Ожидается перезагрузка'],
+['Reinicie para concluir a atualização.','Restart to finish the update.','Reinicia para completar la actualización.','Redémarrez pour terminer la mise à jour.','Starte neu, um das Update abzuschließen.','Перезагрузитесь, чтобы завершить обновление.'],
+['Atualização do sistema','System update','Actualización del sistema','Mise à jour du système','Systemupdate','Обновление системы'],
+['PIRATINHA OS {} está pronto. Clique para instalar.','PIRATINHA OS {} is ready. Click to install.','PIRATINHA OS {} está listo. Haz clic para instalar.','PIRATINHA OS {} est prêt. Cliquez pour installer.','PIRATINHA OS {} ist bereit. Zum Installieren klicken.','PIRATINHA OS {} готова. Нажмите, чтобы установить.'],
+['Preparando…','Preparing…','Preparando…','Préparation…','Vorbereiten…','Подготовка…'],
+['Baixando PIRATINHA OS {}…','Downloading PIRATINHA OS {}…','Descargando PIRATINHA OS {}…','Téléchargement de PIRATINHA OS {}…','PIRATINHA OS {} wird geladen…','Загрузка PIRATINHA OS {}…'],
+['Instalando o papagaio…','Installing the parrot…','Instalando el loro…','Installation du perroquet…','Papagei wird installiert…','Установка попугая…'],
+['Reconfigurando o tesouro…','Reconfiguring the treasure…','Reconfigurando el tesoro…','Reconfiguration du trésor…','Schatz wird neu konfiguriert…','Перенастройка сокровища…'],
+['Procurando o mapa… (não achei)','Looking for the map… (not found)','Buscando el mapa… (no lo encontré)','Recherche de la carte… (introuvable)','Karte wird gesucht… (nicht gefunden)','Поиск карты… (не нашёл)'],
+['Finalizando…','Finishing…','Finalizando…','Finalisation…','Abschließen…','Завершение…'],
+['Atualização concluída. É preciso reiniciar para aplicá-la.','Update complete. Restart to apply it.','Actualización completada. Reinicia para aplicarla.','Mise à jour terminée. Redémarrez pour l’appliquer.','Update abgeschlossen. Zum Anwenden neu starten.','Обновление завершено. Перезагрузитесь, чтобы применить.'],
+['Reiniciar agora','Restart now','Reiniciar ahora','Redémarrer maintenant','Jetzt neu starten','Перезагрузить сейчас'],
+['Mais tarde','Later','Más tarde','Plus tard','Später','Позже'],
+['Instalando atualizações','Installing updates','Instalando actualizaciones','Installation des mises à jour','Updates werden installiert','Установка обновлений'],
+['Não desligue o computador (PIRATINHA OS {})','Do not turn off your computer (PIRATINHA OS {})','No apagues el equipo (PIRATINHA OS {})','N’éteignez pas votre ordinateur (PIRATINHA OS {})','Schalte den Computer nicht aus (PIRATINHA OS {})','Не выключайте компьютер (PIRATINHA OS {})'],
+['Reiniciando…','Restarting…','Reiniciando…','Redémarrage…','Neustart…','Перезагрузка…'],
+['Sistema desligado. Clique ou pressione uma tecla para ligar.','System is off. Click or press a key to turn on.','Sistema apagado. Haz clic o pulsa una tecla para encender.','Système éteint. Cliquez ou appuyez sur une touche pour allumer.','System ist aus. Klicken oder Taste drücken zum Einschalten.','Система выключена. Нажмите кнопку или клавишу, чтобы включить.'],
+['Seu PIRATINHA OS encontrou um problema e precisa reiniciar. Estamos coletando algumas informações de erro e já reiniciamos para você.','Your PIRATINHA OS ran into a problem and needs to restart. We are just collecting some error info, and then we will restart for you.','Tu PIRATINHA OS tuvo un problema y debe reiniciarse. Estamos recopilando información del error y reiniciaremos por ti.','Votre PIRATINHA OS a rencontré un problème et doit redémarrer. Nous collectons des informations sur l’erreur, puis nous redémarrerons pour vous.','Dein PIRATINHA OS hat ein Problem festgestellt und muss neu gestartet werden. Wir sammeln nur kurz Fehlerinformationen und starten dann für dich neu.','В PIRATINHA OS возникла проблема, и ей нужно перезагрузиться. Мы собираем сведения об ошибке и скоро перезагрузим систему.'],
+['{}% concluído','{}% complete','{} % completado','{} % terminé','{} % abgeschlossen','{}% выполнено'],
+['Código de parada: PAPAGAIO_COMEU_O_CABO','Stop code: PARROT_ATE_THE_CABLE','Código de detención: EL_LORO_SE_COMIO_EL_CABLE','Code d’arrêt : LE_PERROQUET_A_MANGE_LE_CABLE','Stoppcode: PAPAGEI_HAT_DAS_KABEL_GEFRESSEN','Код остановки: ПОПУГАЙ_СЪЕЛ_КАБЕЛЬ'],
+['Restaurar os padrões e apagar todos os dados salvos neste navegador (notas, recordes, lixeira e preferências)? Isso não pode ser desfeito.','Restore defaults and erase all data saved in this browser (notes, records, trash and preferences)? This cannot be undone.','¿Restaurar los valores predeterminados y borrar todos los datos guardados en este navegador (notas, récords, papelera y preferencias)? No se puede deshacer.','Restaurer les valeurs par défaut et effacer toutes les données enregistrées dans ce navigateur (notes, records, corbeille et préférences) ? Cette action est irréversible.','Standardwerte wiederherstellen und alle in diesem Browser gespeicherten Daten löschen (Notizen, Rekorde, Papierkorb und Einstellungen)? Das kann nicht rückgängig gemacht werden.','Восстановить настройки по умолчанию и удалить все данные в этом браузере (заметки, рекорды, корзину и настройки)? Это нельзя отменить.'],
+['Tamanho dos ícones','Icon size','Tamaño de los iconos','Taille des icônes','Symbolgröße','Размер значков'],
+['Pequeno','Small','Pequeño','Petit','Klein','Маленький'],
+['Médio','Medium','Mediano','Moyen','Mittel','Средний'],
+['Grande','Large','Grande','Grand','Groß','Большой'],
+['Posição da taskbar','Taskbar position','Posición de la barra','Position de la barre','Position der Taskleiste','Положение панели задач'],
+['Embaixo','Bottom','Abajo','En bas','Unten','Снизу'],
+['Em cima','Top','Arriba','En haut','Oben','Сверху'],
+['Estilo da taskbar','Taskbar style','Estilo de la barra','Style de la barre','Stil der Taskleiste','Стиль панели задач'],
+['Flutuante','Floating','Flotante','Flottante','Schwebend','Плавающая'],
+['Acoplada','Docked','Acoplada','Ancrée','Angedockt','Закреплённая'],
+['Geral','General','General','Général','Allgemein','Общие'],
+['Relógio em 24 horas','24-hour clock','Reloj de 24 horas','Horloge 24 h','24-Stunden-Uhr','24-часовой формат'],
+['Mostrar segundos no relógio','Show seconds on the clock','Mostrar segundos en el reloj','Afficher les secondes','Sekunden anzeigen','Показывать секунды'],
+['Animações das janelas','Window animations','Animaciones de ventanas','Animations des fenêtres','Fensteranimationen','Анимации окон'],
+['Embaralhar ícones a cada acesso','Shuffle icons on every visit','Mezclar iconos en cada visita','Mélanger les icônes à chaque visite','Symbole bei jedem Besuch mischen','Перемешивать значки при каждом входе'],
+['Cantos quadrados','Square corners','Esquinas cuadradas','Coins carrés','Eckige Ecken','Квадратные углы'],
+['Idioma','Language','Idioma','Langue','Sprache','Язык'],
+['Sistema','System','Sistema','Système','System','Система'],
+['Ir para o modo antigo','Go to the old mode','Ir al modo antiguo','Passer à l’ancien mode','Zum alten Modus wechseln','Перейти в старый режим'],
+['Restaurar padrões','Restore defaults','Restaurar valores','Rétablir les valeurs par défaut','Standard wiederherstellen','Сбросить настройки'],
+['Cor do vidro','Glass color','Color del cristal','Couleur du verre','Glasfarbe','Цвет стекла'],
+['Opacidade do vidro','Glass opacity','Opacidad del cristal','Opacité du verre','Glasdeckkraft','Непрозрачность стекла'],
+['Desfoque do vidro','Glass blur','Desenfoque del cristal','Flou du verre','Glasunschärfe','Размытие стекла'],
+['Cor de destaque','Accent color','Color de énfasis','Couleur d’accent','Akzentfarbe','Акцентный цвет'],
+['Nenhuma imagem encontrada em Images/Wallpaper.','No images found in Images/Wallpaper.','No se encontraron imágenes en Images/Wallpaper.','Aucune image trouvée dans Images/Wallpaper.','Keine Bilder in Images/Wallpaper gefunden.','В Images/Wallpaper нет изображений.'],
+['Não foi possível ler essa imagem.','Could not read this image.','No se pudo leer esta imagen.','Impossible de lire cette image.','Dieses Bild konnte nicht gelesen werden.','Не удалось прочитать это изображение.'],
+['Sem espaço no navegador para guardar essa imagem (limite de cerca de 5 MB). Tente uma menor.','Not enough browser space to store this image (limit of about 5 MB). Try a smaller one.','No hay espacio en el navegador para guardar esta imagen (límite de unos 5 MB). Prueba con una menor.','Pas assez d’espace dans le navigateur pour stocker cette image (limite d’environ 5 Mo). Essayez-en une plus petite.','Nicht genug Browserspeicher für dieses Bild (Limit ca. 5 MB). Versuche ein kleineres.','Недостаточно места в браузере для этого изображения (лимит около 5 МБ). Попробуйте меньшее.'],
+['Azul celeste','Sky blue','Azul cielo','Bleu ciel','Himmelblau','Небесно-голубой'],
+['Vinho','Wine','Vino','Bordeaux','Weinrot','Винный'],
+['Meia-noite','Midnight','Medianoche','Minuit','Mitternacht','Полночь'],
+['Roxo noturno','Night purple','Morado nocturno','Violet nocturne','Nachtviolett','Ночной фиолетовый'],
+['Verde petróleo','Petrol green','Verde petróleo','Vert pétrole','Petrolgrün','Бензиновый зелёный'],
+['Marrom café','Coffee brown','Marrón café','Brun café','Kaffeebraun','Кофейный коричневый'],
+['Lixeira','Trash','Papelera','Corbeille','Papierkorb','Корзина'],
+['A lixeira está vazia. Arraste um ícone da área de trabalho até ela para guardá-lo aqui.','The trash is empty. Drag a desktop icon onto it to keep it here.','La papelera está vacía. Arrastra un icono del escritorio hasta ella para guardarlo aquí.','La corbeille est vide. Faites glisser une icône du bureau dessus pour la ranger ici.','Der Papierkorb ist leer. Ziehe ein Desktop-Symbol hierher, um es abzulegen.','Корзина пуста. Перетащите сюда значок с рабочего стола.'],
+['{} itens','{} items','{} elementos','{} éléments','{} Elemente','Элементов: {}'],
+['{} item','{} item','{} elemento','{} élément','{} Element','Элементов: {}'],
+['Buscar na loja','Search the store','Buscar en la tienda','Rechercher dans la boutique','Im Store suchen','Поиск в магазине'],
+['Explorar','Explore','Explorar','Explorer','Entdecken','Обзор'],
+['Jogos','Games','Juegos','Jeux','Spiele','Игры'],
+['Apps','Apps','Apps','Applis','Apps','Приложения'],
+['Instalados','Installed','Instaladas','Installées','Installiert','Установленные'],
+['Nada encontrado.','Nothing found.','No se encontró nada.','Rien trouvé.','Nichts gefunden.','Ничего не найдено.'],
+['Instalar','Install','Instalar','Installer','Installieren','Установить'],
+['Instalando…','Installing…','Instalando…','Installation…','Wird installiert…','Установка…'],
+['Tiro em primeira pessoa clássico, rodando Freedoom.','Classic first-person shooter, running Freedoom.','Clásico shooter en primera persona, con Freedoom.','Classique tir à la première personne, avec Freedoom.','Klassischer Ego-Shooter mit Freedoom.','Классический шутер от первого лица на Freedoom.'],
+['Coma, cresça e não bata nas paredes.','Eat, grow and don’t hit the walls.','Come, crece y no choques con las paredes.','Mangez, grandissez et évitez les murs.','Fressen, wachsen und keine Wand berühren.','Ешьте, растите и не врезайтесь в стены.'],
+['Abra o campo sem pisar em nenhuma mina.','Clear the field without stepping on a mine.','Despeja el campo sin pisar ninguna mina.','Dégagez le terrain sans marcher sur une mine.','Räume das Feld, ohne auf eine Mine zu treten.','Откройте поле, не наступив на мину.'],
+['Encaixe as peças e complete as linhas.','Fit the pieces and complete the lines.','Encaja las piezas y completa las líneas.','Emboîtez les pièces et complétez les lignes.','Setze die Teile zusammen und vervollständige die Reihen.','Складывайте фигуры и собирайте линии.'],
+['Troque blocos vizinhos e combine três ou mais da mesma cor.','Swap neighboring blocks and match three or more of the same color.','Intercambia bloques vecinos y combina tres o más del mismo color.','Échangez des blocs voisins et alignez trois blocs ou plus de la même couleur.','Tausche benachbarte Blöcke und kombiniere drei oder mehr gleicher Farbe.','Меняйте соседние блоки местами и собирайте три и более одного цвета.'],
+['Navegue em abas dentro do sistema.','Browse in tabs inside the system.','Navega con pestañas dentro del sistema.','Naviguez avec des onglets dans le système.','Surfe mit Tabs im System.','Просматривайте сайты во вкладках прямо в системе.'],
+['Toque seus arquivos de áudio locais.','Play your local audio files.','Reproduce tus archivos de audio locales.','Lisez vos fichiers audio locaux.','Spiele deine lokalen Audiodateien ab.','Воспроизводите локальные аудиофайлы.'],
+['Contas rápidas.','Quick math.','Cuentas rápidas.','Calculs rapides.','Schnelles Rechnen.','Быстрые вычисления.'],
+['Anotações salvas no navegador.','Notes saved in the browser.','Notas guardadas en el navegador.','Notes enregistrées dans le navigateur.','Im Browser gespeicherte Notizen.','Заметки, сохранённые в браузере.'],
+['Desenhe e salve em PNG.','Draw and save as PNG.','Dibuja y guarda en PNG.','Dessinez et enregistrez en PNG.','Zeichne und speichere als PNG.','Рисуйте и сохраняйте в PNG.'],
+['Linha de comando do PIRATINHA OS.','PIRATINHA OS command line.','Línea de comandos de PIRATINHA OS.','Ligne de commande de PIRATINHA OS.','Befehlszeile von PIRATINHA OS.','Командная строка PIRATINHA OS.'],
+['Navegador','Browser','Navegador','Navigateur','Browser','Браузер'],
+['Música','Music','Música','Musique','Musik','Музыка'],
+['Calculadora','Calculator','Calculadora','Calculatrice','Rechner','Калькулятор'],
+['Bloco de notas','Notepad','Bloc de notas','Bloc-notes','Editor','Блокнот'],
+['Campo Minado','Minesweeper','Buscaminas','Démineur','Minesweeper','Сапёр'],
+['Blocos Coloridos','Color Blocks','Bloques de colores','Blocs colorés','Farbblöcke','Цветные блоки'],
+['Nenhuma faixa','No track','Ninguna pista','Aucune piste','Kein Titel','Нет трека'],
+['Arquivos','Files','Archivos','Fichiers','Dateien','Файлы'],
+['Cole o link de uma playlist, álbum ou faixa','Paste a playlist, album or track link','Pega el enlace de una lista, álbum o canción','Collez le lien d’une playlist, d’un album ou d’un titre','Füge den Link einer Playlist, eines Albums oder Titels ein','Вставьте ссылку на плейлист, альбом или трек'],
+['Cole o link de uma playlist, álbum ou faixa do Spotify para tocar aqui.','Paste a Spotify playlist, album or track link to play it here.','Pega un enlace de Spotify de una lista, álbum o canción para reproducirlo aquí.','Collez un lien Spotify (playlist, album ou titre) pour l’écouter ici.','Füge einen Spotify-Link (Playlist, Album oder Titel) ein, um ihn hier abzuspielen.','Вставьте ссылку Spotify на плейлист, альбом или трек, чтобы слушать здесь.'],
+['Link inválido. Ex.: https://open.spotify.com/playlist/…','Invalid link. E.g.: https://open.spotify.com/playlist/…','Enlace no válido. Ej.: https://open.spotify.com/playlist/…','Lien invalide. Ex. : https://open.spotify.com/playlist/…','Ungültiger Link. Z. B.: https://open.spotify.com/playlist/…','Неверная ссылка. Например: https://open.spotify.com/playlist/…'],
+['Recarregar','Reload','Recargar','Actualiser','Neu laden','Обновить страницу'],
+['Nova aba','New tab','Pestaña nueva','Nouvel onglet','Neuer Tab','Новая вкладка'],
+['Endereço ou pesquisa (Wikipédia)','Address or search (Wikipedia)','Dirección o búsqueda (Wikipedia)','Adresse ou recherche (Wikipédia)','Adresse oder Suche (Wikipedia)','Адрес или поиск (Википедия)'],
+['Digite um endereço (ex.: wikipedia.org) ou uma pesquisa. Pesquisas usam a Wikipédia.','Type an address (e.g. wikipedia.org) or a search. Searches use Wikipedia.','Escribe una dirección (p. ej., wikipedia.org) o una búsqueda. Las búsquedas usan Wikipedia.','Saisissez une adresse (ex. wikipedia.org) ou une recherche. Les recherches utilisent Wikipédia.','Gib eine Adresse (z. B. wikipedia.org) oder eine Suche ein. Suchen nutzen Wikipedia.','Введите адрес (например, wikipedia.org) или запрос. Поиск идёт через Википедию.'],
+['Este site não pode ser exibido aqui','This site cannot be displayed here','Este sitio no se puede mostrar aquí','Ce site ne peut pas être affiché ici','Diese Seite kann hier nicht angezeigt werden','Этот сайт нельзя показать здесь'],
+['{} proíbe ser aberto dentro de outra página.','{} does not allow being opened inside another page.','{} no permite abrirse dentro de otra página.','{} n’autorise pas l’ouverture dans une autre page.','{} erlaubt keine Anzeige in einer anderen Seite.','{} не разрешает открываться внутри другой страницы.'],
+['Alguns sites recusam ser exibidos aqui. Use ↗ para abrir em nova aba.','Some sites refuse to be shown here. Use ↗ to open in a new tab.','Algunos sitios se niegan a mostrarse aquí. Usa ↗ para abrir en una pestaña nueva.','Certains sites refusent de s’afficher ici. Utilisez ↗ pour ouvrir dans un nouvel onglet.','Manche Seiten lassen sich hier nicht anzeigen. Nutze ↗, um sie in einem neuen Tab zu öffnen.','Некоторые сайты отказываются открываться здесь. Используйте ↗, чтобы открыть в новой вкладке.'],
+['Endereço inválido','Invalid address','Dirección no válida','Adresse invalide','Ungültige Adresse','Неверный адрес'],
+['Esse link já existe','That link already exists','Ese enlace ya existe','Ce lien existe déjà','Dieser Link existiert bereits','Такая ссылка уже есть'],
+['Clique dentro do jogo para ativar teclado e mouse.','Click inside the game to enable keyboard and mouse.','Haz clic dentro del juego para activar teclado y ratón.','Cliquez dans le jeu pour activer le clavier et la souris.','Klicke ins Spiel, um Tastatur und Maus zu aktivieren.','Щёлкните внутри игры, чтобы включить клавиатуру и мышь.'],
+['Página em branco ou recusada? O site bloqueia exibição incorporada.','Blank or refused page? The site blocks embedding.','¿Página en blanco o rechazada? El sitio bloquea la inserción.','Page blanche ou refusée ? Le site bloque l’intégration.','Leere oder abgelehnte Seite? Die Seite blockiert das Einbetten.','Пустая страница или отказ? Сайт запрещает встраивание.'],
+['Lápis','Pencil','Lápiz','Crayon','Stift','Карандаш'],
+['Borracha','Eraser','Borrador','Gomme','Radierer','Ластик'],
+['Linha','Line','Línea','Ligne','Linie','Линия'],
+['Retângulo','Rectangle','Rectángulo','Rectangle','Rechteck','Прямоугольник'],
+['Círculo','Circle','Círculo','Cercle','Kreis','Круг'],
+['Balde de tinta','Paint bucket','Bote de pintura','Pot de peinture','Farbeimer','Заливка'],
+['Desfazer','Undo','Deshacer','Annuler','Rückgängig','Отменить'],
+['Refazer','Redo','Rehacer','Rétablir','Wiederholen','Повторить'],
+['Limpar','Clear','Borrar','Effacer','Löschen','Очистить'],
+['Salvar PNG','Save PNG','Guardar PNG','Enregistrer en PNG','Als PNG speichern','Сохранить PNG'],
+['Pontos {}','Score {}','Puntos {}','Score {}','Punkte {}','Очки {}'],
+['Recorde {}','Best {}','Récord {}','Record {}','Rekord {}','Рекорд {}'],
+['Setas movem','Arrow keys move','Las flechas mueven','Les flèches déplacent','Pfeiltasten bewegen','Стрелки — движение'],
+['Fim! Enter reinicia','Game over! Enter restarts','¡Fin! Enter reinicia','Fini ! Entrée relance','Ende! Enter startet neu','Конец! Enter — заново'],
+['Setas, espaço = queda','Arrows, space = drop','Flechas, espacio = caída','Flèches, espace = chute','Pfeile, Leertaste = fallen lassen','Стрелки, пробел — бросить'],
+['Minas {}','Mines {}','Minas {}','Mines {}','Minen {}','Мины {}'],
+['Tempo {}s','Time {}s','Tiempo {}s','Temps {}s','Zeit {}s','Время {}с'],
+['Melhor {}','Best {}','Mejor {}','Meilleur {}','Beste {}','Лучшее {}'],
+['Botão direito = bandeira','Right click = flag','Clic derecho = bandera','Clic droit = drapeau','Rechtsklick = Flagge','ПКМ — флажок'],
+['Perdeu!','You lost!','¡Perdiste!','Perdu !','Verloren!','Проигрыш!'],
+['Venceu!','You won!','¡Ganaste!','Gagné !','Gewonnen!','Победа!'],
+['Movimentos {}','Moves {}','Movimientos {}','Coups {}','Züge {}','Ходы {}'],
+['Fim de jogo!','Game over!','¡Fin del juego!','Partie terminée !','Spiel vorbei!','Игра окончена!'],
+['Voltar ao modo OS','Back to OS mode','Volver al modo OS','Retour au mode OS','Zurück zum OS-Modus','Вернуться в режим OS'],
+['Modo OS','OS mode','Modo OS','Mode OS','OS-Modus','Режим OS'],
+['Escreva aqui… (salvo automaticamente)','Write here… (saved automatically)','Escribe aquí… (se guarda automáticamente)','Écrivez ici… (enregistré automatiquement)','Hier schreiben… (wird automatisch gespeichert)','Пишите здесь… (сохраняется автоматически)'],
+["Esconder ícones","Hide icons","Ocultar iconos","Masquer les icônes","Symbole ausblenden","Скрыть значки"],
+["Mostrar ícones","Show icons","Mostrar iconos","Afficher les icônes","Symbole einblenden","Показать значки"],
+["Mover para a taskbar","Move to taskbar","Mover a la barra de tareas","Déplacer vers la barre des tâches","In die Taskleiste verschieben","Переместить на панель задач"],
+["Mover para a dock","Move to dock","Mover al dock","Déplacer vers le dock","In das Dock verschieben","Переместить в док"],
+["Mover para a área de trabalho","Move to desktop","Mover al escritorio","Déplacer vers le bureau","Auf den Desktop verschieben","Переместить на рабочий стол"],
+["Habilitada","Enabled","Activado","Activé","Aktiviert","Включён"],
+["Ocultar automaticamente","Auto-hide","Ocultar automáticamente","Masquer automatiquement","Automatisch ausblenden","Скрывать автоматически"],
+["Posição da dock","Dock position","Posición del dock","Position du dock","Position des Docks","Положение дока"],
+["Esquerda","Left","Izquierda","Gauche","Links","Слева"],
+["Direita","Right","Derecha","Droite","Rechts","Справа"],
+["Formato","Shape","Forma","Forme","Form","Форма"],
+["Arredondado","Rounded","Redondeado","Arrondi","Abgerundet","Скруглённый"],
+["Quadrado","Square","Cuadrado","Carré","Eckig","Квадратный"],
+["Tamanho dos ícones da dock","Dock icon size","Tamaño de los iconos del dock","Taille des icônes du dock","Symbolgröße im Dock","Размер значков дока"],
+["Taskbar","Taskbar","Barra de tareas","Barre des tâches","Taskleiste","Панель задач"],
+["Dock","Dock","Dock","Dock","Dock","Док"],
+["Ícones","Icons","Iconos","Icônes","Symbole","Значки"],
+["Widget","Widget","Widget","Widget","Widget","Виджет"],
+["Mostrar widget de música","Show music widget","Mostrar widget de música","Afficher le widget musique","Musik-Widget anzeigen","Показывать виджет музыки"],
+["Veja e restaure os itens apagados.","View and restore deleted items.","Ve y restaura los elementos eliminados.","Consultez et restaurez les éléments supprimés.","Zeige gelöschte Elemente an und stelle sie wieder her.","Просматривайте и восстанавливайте удалённые элементы."],
+["Mover para o menu Iniciar","Move to Start menu","Mover al menú de inicio","Déplacer vers le menu Démarrer","In das Startmenü verschieben","Переместить в меню «Пуск»"],
+["Uma atualização do sistema será instalada antes de continuar (PIRATINHA OS {}).","A system update will be installed before continuing (PIRATINHA OS {}).","Se instalará una actualización del sistema antes de continuar (PIRATINHA OS {}).","Une mise à jour du système sera installée avant de continuer (PIRATINHA OS {}).","Vor dem Fortfahren wird ein Systemupdate installiert (PIRATINHA OS {}).","Перед продолжением будет установлено обновление системы (PIRATINHA OS {})."],
+["Monitor do sistema","System monitor","Monitor del sistema","Moniteur système","Systemmonitor","Монитор системы"],
+["Frase do dia","Quote of the day","Frase del día","Citation du jour","Spruch des Tages","Фраза дня"],
+["Outra","Another","Otra","Une autre","Andere","Другая"],
+["Nova nota adesiva","New sticky note","Nueva nota adhesiva","Nouvelle note adhésive","Neue Haftnotiz","Новая стикер-заметка"],
+["Mostrar monitor do sistema","Show system monitor","Mostrar monitor del sistema","Afficher le moniteur système","Systemmonitor anzeigen","Показывать монитор системы"],
+["Mostrar frase do dia","Show quote of the day","Mostrar frase del día","Afficher la citation du jour","Spruch des Tages anzeigen","Показывать фразу дня"],
+["Mostrar notas adesivas","Show sticky notes","Mostrar notas adhesivas","Afficher les notes adhésives","Haftnotizen anzeigen","Показывать стикеры"],
+["Mineração de criptomoeda detectada: {}","Cryptocurrency mining detected: {}","Minería de criptomonedas detectada: {}","Minage de cryptomonnaie détecté : {}","Kryptowährungs-Mining erkannt: {}","Обнаружен майнинг криптовалюты: {}"],
+["Possível vírus detectado: {}","Possible virus detected: {}","Posible virus detectado: {}","Virus possible détecté : {}","Möglicher Virus erkannt: {}","Обнаружен возможный вирус: {}"],
+["Encerrar processo","End process","Finalizar proceso","Arrêter le processus","Prozess beenden","Завершить процесс"],
+["Processo encerrado.","Process ended.","Proceso finalizado.","Processus arrêté.","Prozess beendet.","Процесс завершён."],
+["Todo bug é uma feature com baixa autoestima.","Every bug is a feature with low self-esteem.","Todo bug es una función con baja autoestima.","Chaque bug est une fonctionnalité avec une faible estime de soi.","Jeder Bug ist ein Feature mit geringem Selbstwertgefühl.","Каждый баг — это фича с низкой самооценкой."],
+["Quem tem backup não tem medo de reiniciar.","Whoever has a backup is not afraid to restart.","Quien tiene copia de seguridad no teme reiniciar.","Qui a une sauvegarde n’a pas peur de redémarrer.","Wer ein Backup hat, hat keine Angst vor einem Neustart.","У кого есть бэкап, тот не боится перезагрузки."],
+["O papagaio disse que a senha é 123456. Nós avisamos.","The parrot said the password is 123456. We warned you.","El loro dijo que la contraseña es 123456. Te avisamos.","Le perroquet a dit que le mot de passe est 123456. On vous a prévenu.","Der Papagei sagte, das Passwort ist 123456. Wir haben gewarnt.","Попугай сказал, что пароль 123456. Мы предупреждали."],
+["Baixar é fácil. Difícil é achar o botão de download certo.","Downloading is easy. Finding the right download button is hard.","Descargar es fácil. Lo difícil es encontrar el botón de descarga correcto.","Télécharger est facile. Le difficile, c’est de trouver le bon bouton.","Herunterladen ist leicht. Schwer ist es, den richtigen Download-Button zu finden.","Скачать легко. Трудно найти правильную кнопку загрузки."],
+["Se o jogo travou, a culpa é do ping. Sempre do ping.","If the game froze, blame the ping. Always the ping.","Si el juego se colgó, la culpa es del ping. Siempre del ping.","Si le jeu a planté, c’est la faute du ping. Toujours du ping.","Wenn das Spiel hängt, ist der Ping schuld. Immer der Ping.","Если игра зависла, виноват пинг. Всегда пинг."],
+["Limpar o cache resolve tudo. Menos a vida.","Clearing the cache fixes everything. Except life.","Limpiar la caché lo arregla todo. Menos la vida.","Vider le cache règle tout. Sauf la vie.","Cache leeren löst alles. Außer das Leben.","Очистка кэша решает всё. Кроме жизни."],
+["Um bom pirata desconfia de todo botão verde gigante.","A good pirate distrusts every giant green button.","Un buen pirata desconfía de todo botón verde gigante.","Un bon pirate se méfie de tout gros bouton vert.","Ein guter Pirat misstraut jedem riesigen grünen Button.","Хороший пират не доверяет гигантским зелёным кнопкам."],
+["Hoje é um ótimo dia para atualizar. Amanhã também.","Today is a great day to update. So is tomorrow.","Hoy es un gran día para actualizar. Mañana también.","Aujourd’hui est un excellent jour pour mettre à jour. Demain aussi.","Heute ist ein toller Tag für ein Update. Morgen auch.","Сегодня отличный день для обновления. Завтра тоже."],
+];
+const IDX = { pt: 0, en: 1, es: 2, fr: 3, de: 4, ru: 5 }, LOC = { pt: 'pt-BR', en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', ru: 'ru-RU' };
+const DICT = new Map(), PATS = []; let curLang = 'pt';
+D.forEach(r => { if (r[0].includes('{}')) PATS.push([new RegExp('^' + r[0].replace(/[.*+?^$()|[\]\\]/g, '\\$&').replace(/\{\}/g, '(.+?)') + '$'), r]); else DICT.set(r[0], r); });
+function tr(str, lang = pref.lang) {
+  if (lang === 'pt' || !str) return str;
+  const m = str.match(/^([^\p{L}\p{N}]*)([\s\S]*?)(\s*)$/u), core = m[2], i = IDX[lang]; if (!core) return str;
+  let out = null; const r = DICT.get(core);
+  if (r) out = r[i] || r[1];
+  else if (/ [·—] /.test(core)) { const parts = core.split(/( [·—] )/), t = parts.map((p, j) => j % 2 ? p : tr(p, lang)); if (t.join('') !== core) out = t.join(''); }
+  else for (const [re, row] of PATS) { const x = core.match(re); if (x) { let n = 0; out = (row[i] || row[1]).replace(/\{\}/g, () => x[++n] || ''); break; } }
+  return out == null ? str : m[1] + out + m[3];
+}
+const SRC = new WeakMap(), ASRC = new WeakMap(), ATTRS = ['placeholder', 'title', 'aria-label', 'data-label'], SKIP = '.term, script, style';
+function textNode(n) {
+  const cur = n.nodeValue, e = SRC.get(n);
+  if (e && e.out === cur) { const o = tr(e.src); if (o !== cur) { n.nodeValue = o; e.out = o; } return; }
+  const o = tr(cur); SRC.set(n, { src: cur, out: o }); if (o !== cur) n.nodeValue = o;
+}
+function attrsOf(el) {
+  ATTRS.forEach(a => {
+    const cur = el.getAttribute && el.getAttribute(a); if (cur == null) return;
+    let m = ASRC.get(el); if (!m) ASRC.set(el, m = {}); const e = m[a];
+    if (e && e.out === cur) { const o = tr(e.src); if (o !== cur) { el.setAttribute(a, o); e.out = o; } return; }
+    const o = tr(cur); m[a] = { src: cur, out: o }; if (o !== cur) el.setAttribute(a, o);
+  });
+}
+function walk(root) {
+  if (root.nodeType === 3) { if (root.parentElement && !root.parentElement.closest(SKIP)) textNode(root); return; }
+  if (root.nodeType !== 1 || root.closest(SKIP)) return;
+  attrsOf(root); const tw = document.createTreeWalker(root, 5); let n;
+  while ((n = tw.nextNode())) { if (n.nodeType === 3) { if (!n.parentElement.closest(SKIP)) textNode(n); } else attrsOf(n); }
+}
+function setLang(l) {
+  curLang = l; document.documentElement.lang = { pt: 'pt-BR', en: 'en', es: 'es', fr: 'fr', de: 'de', ru: 'ru' }[l] || 'en';
+  walk(document.body); tick();
+}
+new MutationObserver(ms => ms.forEach(m => {
+  if (m.type === 'characterData') walk(m.target); else if (m.type === 'attributes') attrsOf(m.target); else m.addedNodes.forEach(walk);
+})).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS });
 
 /* ---------- init ---------- */
 applyPrefs(); initWall(); badge.textContent = trashed.size || ''; layoutAll(); tick();

@@ -71,6 +71,8 @@ const badge = document.createElement('div'); badge.className = 'badge'; trashEl.
 
 /* ícones dos sites: arrastáveis em grid */
 store.get('piratinha-links', []).forEach(l => { if (!LINKS.some(x => x.u === l.u)) { LINKS.push(l); ORDER.push(l); } });
+[...trashed].forEach(u => { if (!LINKS.some(l => l.u === u)) trashed.delete(u); });   // esquece sites que saíram da lista
+store.set('piratinha-trash', [...trashed]);
 function addIcon(l) {
   const b = mkIcon(l.n, () => tile(l), () => openApp(l));
   icons.set(l.u, { l, el: b });

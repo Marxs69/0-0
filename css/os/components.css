@@ -8,6 +8,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,.18); overflow: hidden;
 }
 .tile img { width: 26px; height: 26px; }
+.tile img.px { image-rendering: pixelated; }   /* ícones de reserva de 16px: ampliados sem borrar */
 .tile b { color: var(--text); font-size: 20px; text-shadow: none; }
 .tile i { font-style: normal; font-size: 24px; text-shadow: none; }
 .tile { background: color-mix(in srgb, var(--glass) 36%, transparent); }

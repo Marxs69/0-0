@@ -2,7 +2,7 @@
 
 Página inicial com cara de sistema operacional, feita só com HTML, CSS e JavaScript puros. Não tem build, dependências nem servidor próprio.
 Ela reúne uma lista de links de sites de jogos numa área de trabalho com janelas, taskbar, dock, menu Iniciar, apps e jogos embutidos.
-A página original, em lista, continua disponível como **modo antigo**, agora com cards, favicons e a cor de destaque.
+A página original, em lista, continua disponível como **modo antigo**, com cards, favicons, a cor de destaque e uma divisória por grupo (Repack, Scene, Tools e Outros).
 
 > Todas as preferências, notas, recordes e wallpapers próprios ficam salvos **só no navegador** (`localStorage`). Nada é enviado a servidor nenhum.
 
@@ -25,7 +25,7 @@ A página original, em lista, continua disponível como **modo antigo**, agora c
 ### Taskbar, dock e menu Iniciar
 - Taskbar **flutuante ou acoplada**, embaixo ou em cima, com relógio em tempo real e apps fixados que podem ser **reordenados arrastando**.
 - **Dock de jogos** com posição configurável (embaixo, em cima, esquerda ou direita), ocultar automático, três tamanhos e formato redondo ou quadrado.
-- **Menu Iniciar** com busca, nome do app ao passar o mouse, blocos de apps, sites recomendados e outros, e o botão de desligar ou reiniciar. Há uma pegadinha quando a busca não encontra nada.
+- **Menu Iniciar** com busca, sites separados pelos mesmos grupos do modo antigo, nome do app ao passar o mouse, blocos de apps, sites recomendados e outros, e o botão de desligar ou reiniciar. Há uma pegadinha quando a busca não encontra nada.
 
 ### Apps embutidos
 | App | O que faz |
@@ -64,6 +64,7 @@ README.md
 assets/
   fonts/                Futura Medium Condensed BT
   icons/favicon.ico
+  icons/sites/          ícones de reserva dos sites (16×16)
   wallpapers/           imagens de fundo (lidas automaticamente)
 css/
   base.css              fonte, variáveis do tema, reset e troca de modo
@@ -110,7 +111,7 @@ No **GitHub Pages** (`usuario.github.io/repo`), a lista de wallpapers é lida pe
 
 ## Personalizando
 
-- **Adicionar um site**: inclua um item em `LINKS` em `js/config/links.js`, com `g: 'rec'` (Recomendados) ou `g: 'out'` (Outros). Também dá para usar "Novo link…" no clique direito; esses ficam salvos só no navegador.
+- **Adicionar um site**: inclua um item em `LINKS` em `js/config/links.js`, com o grupo em `g` (`repack`, `scene`, `tools` ou `out`, que é Outros) e, se quiser, um ícone de reserva em `i` (arquivos em `assets/icons/sites/`). Os grupos ficam em `GROUPS` e viram as divisórias do modo antigo e do menu Iniciar. Também dá para usar "Novo link…" no clique direito; esses ficam salvos só no navegador.
 - **Adicionar um wallpaper**: coloque a imagem em `assets/wallpapers/` (png, jpg, webp, gif, avif, bmp ou svg).
 - **Adicionar um jogo ou app**: crie a função `openAlgo()` num arquivo em `js/apps/` ou `js/games/`, inclua o `<script>` no `index.html` e adicione o item em `APPITEMS` (`js/config/links.js`).
 - **Traduzir um texto novo**: adicione uma linha `[pt, en, es, fr, de, ru]` em `js/i18n/strings.js`.
@@ -120,4 +121,4 @@ No **GitHub Pages** (`usuario.github.io/repo`), a lista de wallpapers é lida pe
 
 - **Freedoom**: licença BSD (`games/doom/freedoom/COPYING.txt`).
 - **Dwasm** (motor do DOOM em WebAssembly): GNU GPL v2 (`games/doom/COPYING-dwasm.txt`).
-- Os ícones dos sites são carregados do serviço de favicons do Google.
+- Os ícones dos sites são carregados do serviço de favicons do Google. Quando ele não tem um bom, entra o ícone salvo em `assets/icons/sites/`.

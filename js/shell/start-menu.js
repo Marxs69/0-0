@@ -24,7 +24,7 @@ function buildStart(q = '') {
     apps.forEach(l => { const b = document.createElement('button'); b.className = 'ab'; b.dataset.label = l.n; b.setAttribute('aria-label', l.n); b.append(tile(l)); b.onclick = () => openApp(l); b.addEventListener('contextmenu', e => itemMenu(e, l, placeOf(l))); g.append(b); });
     box.append(g);
   }
-  [['rec', 'Recomendados'], ['out', 'Outros']].forEach(([g, name]) => {
+  GROUPS.forEach(([g, name]) => {
     const items = found.filter(l => l.g === g); if (!items.length) return;
     const h = document.createElement('h3'); h.textContent = name; box.append(h);
     items.forEach(l => { const r = row(l.n, l.local ? (l.file || 'jogo') : hostOf(l), () => openApp(l)); r.addEventListener('contextmenu', e => itemMenu(e, l, placeOf(l))); box.append(r); });

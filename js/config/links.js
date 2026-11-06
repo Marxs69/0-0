@@ -1,18 +1,27 @@
 /* Lista de sites, jogos e apps. Adicione novos itens aqui. */
 
+const GROUPS = [   // divisórias do modo antigo e do menu Iniciar, na ordem em que aparecem
+  ['repack', 'Repack'],
+  ['scene', 'Scene'],
+  ['tools', 'Tools'],
+  ['out', 'Outros'],
+];
+const ICO = f => './assets/icons/sites/' + f + '.png';   // ícone de reserva, usado quando o Google não tem um bom
 const LINKS = [
-  { n: 'CS.RIN.RU',          u: 'https://cs.rin.ru/forum/index.php',              g: 'rec' },
-  { n: 'FitGirl Repacks',    u: 'https://fitgirl-repacks.site/',                  g: 'rec' },
-  { n: 'DODI REPACKS',       u: 'https://dodi-repacks.site/',                     g: 'rec' },
-  { n: 'Skidrow Reloaded',   u: 'https://www.skidrowreloaded.com/',               g: 'rec' },
-  { n: 'ByXatab (🇷🇺)',       u: 'https://byxatab.com/',                           g: 'rec' },
-  { n: 'GLOAD (🇩🇪)',         u: 'https://gload.to/',                              g: 'out' },
-  { n: 'ZeiGames - Rexa',    u: 'https://zeigames.com/',                          g: 'out' },
-  { n: 'OldGames Download',  u: 'https://oldgamesdownload.com/browse/platform/',  g: 'out' },
-  { n: 'My Abandonware',     u: 'https://www.myabandonware.com/',                 g: 'out' },
-  { n: 'ONLINE-Fix (🇷🇺)',    u: 'https://online-fix.me/',                         g: 'out' },
-  { n: 'Old-Games (🇷🇺)',     u: 'https://www.old-games.ru/catalog/',              g: 'out' },
-  { n: '3DM Game (🇨🇳)',      u: 'https://www.3dmgame.com/games',                  g: 'out' },
+  { n: 'DODI Repacks',        u: 'https://dodi-repacks.site/',                       g: 'repack', i: ICO('dodi-repacks-site') },
+  { n: 'FitGirl Repacks',     u: 'https://fitgirl-repacks.site/',                    g: 'repack', i: ICO('fitgirl-repacks-site') },
+  { n: 'GameBounty',          u: 'https://gamebounty.world/',                        g: 'repack', i: ICO('gamebounty-world') },
+  { n: 'KaOsKrew',            u: 'https://www.kaoskrew.org/viewforum.php?f=13',      g: 'repack', i: ICO('kaoskrew-org') },
+  { n: 'Appnetica',           u: 'https://appnetica.com/',                           g: 'scene',  i: ICO('appnetica-com') },
+  { n: 'GLOAD',               u: 'https://gload.to/',                                g: 'scene',  i: ICO('gload-to') },
+  { n: 'Old Games Download',  u: 'https://oldgamesdownload.com/browse/platform/',    g: 'scene',  i: ICO('oldgamesdownload-com') },
+  { n: 'My Abandonware',      u: 'https://www.myabandonware.com/',                   g: 'scene',  i: ICO('myabandonware-com') },
+  { n: 'RexaGames',           u: 'https://rexagames.com/',                           g: 'scene',  i: ICO('rexagames-com') },
+  { n: 'ByXatab',             u: 'https://byxatab.com/',                             g: 'scene',  i: ICO('byxatab-com') },
+  { n: 'Online-Fix - Запуск игр по сети', u: 'https://online-fix.me/',               g: 'tools',  i: ICO('online-fix-me') },
+  { n: 'FLiNG Trainer',       u: 'https://flingtrainer.com/',                        g: 'tools',  i: ICO('flingtrainer-com') },
+  { n: 'GameCopyWorld',       u: 'https://gamecopyworld.com/games/index.php',        g: 'tools',  i: ICO('gamecopyworld-com') },
+  { n: 'BetterRepack',        u: 'https://dl.betterrepack.com/public/',              g: 'out',    i: ICO('dl-betterrepack-com') },
 ];
 const GAMES = [                                  // aparecem na dock; adicione novos jogos aqui
   { n: 'DOOM', file: 'DOOM.exe', u: './games/doom/index.html', g: 'game', e: '👹', local: true, max: true },

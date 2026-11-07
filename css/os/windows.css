@@ -13,9 +13,9 @@
 .win:not(.active) .bar { opacity: .7; }
 .bar { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 10px 0 12px; flex: none; touch-action: none; cursor: default; border-bottom: 1px solid var(--glass-line); }
 .bar .tile { width: 24px; height: 24px; border-radius: 7px; box-shadow: none; }
-.bar .tile img { width: 15px; height: 15px; }
-.bar .tile b { font-size: 12px; }
-.bar .tile i { font-size: 14px; }
+.bar .tile img { width: 19px; height: 19px; }
+.bar .tile b { font-size: 15px; }
+.bar .tile i { font-size: 18px; }
 .bar .title { flex: 1; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wbtn { width: 30px; height: 30px; border: 0; border-radius: 9px; background: transparent; color: var(--text); font: inherit; font-size: 15px; display: grid; place-items: center; cursor: pointer; text-decoration: none; }
 .wbtn:hover { background: rgba(255,255,255,.14); }

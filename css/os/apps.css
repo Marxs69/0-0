@@ -44,13 +44,105 @@
 /* loja e configurações (barra lateral + conteúdo) */
 .view.sys.st { display: flex; padding: 0; overflow: hidden; }
 .sd { flex: none; width: 170px; padding: 12px 8px; border-right: 1px solid var(--glass-line); display: flex; flex-direction: column; gap: 2px; }
-.cat { padding: 10px 12px; border: 0; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
-.cat:hover { background: rgba(255,255,255,.1); } .cat.on { background: color-mix(in srgb, var(--accent) 30%, transparent); box-shadow: inset 3px 0 0 var(--accent); }
+.cat { padding: 9px 12px; border: 1px solid transparent; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.cat:hover { background: rgba(255,255,255,.1); } .cat.on { background: color-mix(in srgb, var(--accent) 30%, transparent); }
 .sm { flex: 1; min-width: 0; overflow: auto; padding: 12px 14px; }
 .sbox { width: 100%; height: 38px; margin-bottom: 12px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.08); color: var(--text); font: inherit; font-size: 14px; outline: 0; }
 .sh { margin: 14px 2px 8px; font-size: 13px; font-weight: normal; color: var(--text-dim); }
 .cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
-.card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: rgba(255,255,255,.06); border: 1px solid var(--glass-line); }
-.card .tile { width: 48px; height: 48px; flex: none; } .card .tile i { font-size: 26px; } .card .tile img { width: 28px; height: 28px; }
+.card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.08); }
+.card .tile { width: 52px; height: 52px; flex: none; } .card .tile i { font-size: 38px; } .card .tile img { width: 38px; height: 38px; } .card .tile b { font-size: 30px; }
 .ct { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .ct b { font-weight: normal; } .ct small { color: var(--text-dim); font-size: 12px; line-height: 1.3; }
 .ca { flex: none; display: flex; flex-direction: column; gap: 4px; }
+
+/* utilitários: Base64, QR Code, senhas e hash */
+.view.tool { display: flex; flex-direction: column; gap: 10px; }
+.tarea { flex: 1; min-height: 90px; width: 100%; resize: none; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--glass-line); background: rgba(0,0,0,.22); color: var(--text); font: 13px/1.45 ui-monospace, "Cascadia Code", Consolas, monospace; outline: 0; word-break: break-all; }
+.tarea:focus, .tool .sp:focus { border-color: color-mix(in srgb, var(--accent) 70%, transparent); }
+.trow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex: none; }
+.tmsg { font-size: 13px; color: var(--text-dim); margin-left: auto; } .tmsg.bad { color: #ff9a9d; }
+.tlab { font-size: 13px; font-weight: normal; color: var(--text-dim); margin-right: 4px; }
+.tchk { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.trow .tchk { margin-left: 6px; }
+.tool > .sp { flex: none; height: 38px; }
+.qrbox { position: relative; flex: 1; min-height: 120px; }
+.qrcv { position: absolute; inset: 0; margin: auto; max-width: 100%; max-height: 100%; border-radius: 12px; image-rendering: pixelated; box-shadow: 0 0 0 1px var(--glass-line), 0 10px 40px color-mix(in srgb, var(--accent) 30%, transparent); }
+.tpass { flex: 1; font: 16px ui-monospace, "Cascadia Code", Consolas, monospace; letter-spacing: .04em; }
+.tmeter { height: 6px; border-radius: 6px; background: rgba(255,255,255,.08); overflow: hidden; flex: none; }
+.tmeter i { display: block; height: 100%; width: 0; border-radius: 6px; transition: width .25s ease, background-color .25s ease; }
+.topts { display: grid; gap: 10px; padding: 12px; border-radius: 12px; background: rgba(255,255,255,.05); }
+.hlist { display: grid; gap: 8px; flex: none; }
+.hrow { display: flex; align-items: center; gap: 6px; } .hrow .tlab { width: 64px; flex: none; }
+.hrow .sp { font: 12px ui-monospace, "Cascadia Code", Consolas, monospace; }
+
+/* testes de hardware: controle, teclado e mouse, monitor */
+.chip { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.06); font-size: 12px; color: var(--text-dim); transition: background-color .08s, color .08s, border-color .08s; }
+.chip.on { background: color-mix(in srgb, var(--accent) 55%, transparent); border-color: var(--accent); color: #fff; }
+.padcv { width: 100%; max-width: 560px; aspect-ratio: 560 / 300; align-self: center; flex: none; }
+.padinfo { display: grid; gap: 4px; font: 12px ui-monospace, "Cascadia Code", Consolas, monospace; flex: none; }
+.padst { display: flex; align-items: baseline; gap: 6px; white-space: pre; } .padst .tlab { width: 130px; font-family: Futura, system-ui, sans-serif; }
+.padraw { display: flex; flex-wrap: wrap; gap: 4px; flex: none; }
+.kb { display: grid; gap: 4px; padding: 10px; border-radius: 14px; background: rgba(0,0,0,.22); flex: none; }
+.kbr { display: flex; gap: 4px; }
+.key, .kgap { flex: 1 1 0; min-width: 0; height: 34px; }
+.key { display: grid; place-items: center; border-radius: 7px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.07); font-size: 11px; color: var(--text-dim); overflow: hidden; white-space: nowrap; transition: background-color .08s, color .08s, transform .08s; }
+.key.was { background: color-mix(in srgb, var(--accent) 18%, rgba(255,255,255,.05)); color: var(--text); }
+.key.on { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(1px); box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent); }
+.kbx { display: flex; flex-wrap: wrap; gap: 4px; flex: none; } .kbx .key { flex: none; padding: 0 8px; height: 28px; }
+.msplit { flex: 1; min-height: 150px; display: flex; gap: 10px; }
+.tool .pill:disabled { opacity: .45; cursor: default; }
+.mpad { flex: 1; display: grid; place-items: center; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--glass-line)); background: rgba(0,0,0,.18); cursor: crosshair; }
+.mhint { font-size: 13px; color: var(--text-dim); pointer-events: none; }
+.mside { width: 260px; display: flex; flex-direction: column; gap: 10px; }
+.mbtns { display: flex; flex-wrap: wrap; gap: 4px; }
+.mstats { display: grid; gap: 4px; } .mst { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; } .mst b { font-weight: normal; } .mst b.bad { color: #ff9a9d; }
+.fpsbox { display: flex; gap: 14px; align-items: center; flex: none; }
+.fpsn { display: block; font-size: 40px; font-weight: normal; color: var(--text); text-shadow: 0 0 22px color-mix(in srgb, var(--accent) 50%, transparent); }
+.fpsbox .tmsg { margin: 0; }
+.fpsg { flex: 1; height: 70px; min-width: 0; border-radius: 10px; background: rgba(0,0,0,.25); }
+.lanes { flex: 1; min-height: 120px; width: 100%; border-radius: 12px; }
+.hwfs { position: fixed; inset: 0; z-index: 2147483600; background: #000; cursor: none; }
+.hwfs canvas { width: 100%; height: 100%; display: block; }
+.fshint { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); padding: 6px 14px; border-radius: 10px; font: 14px Futura, system-ui, sans-serif; color: #fff; opacity: .7; animation: fsfade 3s forwards; pointer-events: none; }
+@keyframes fsfade { 70% { opacity: .7; } to { opacity: 0; } }
+
+/* aviso de tela cheia no teste de monitor */
+.fswarn { display: flex; align-items: center; gap: 10px; flex: none; padding: 8px 10px 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.35; color: #ffd9a0; background: rgba(245,165,36,.12); border: 1px solid rgba(245,165,36,.45); }
+.fswarn span { flex: 1; } .fswarn.ok { color: var(--text-dim); background: rgba(255,255,255,.05); border-color: var(--glass-line); } .fswarn.ok span { visibility: hidden; }
+
+/* destaque no estilo do modo antigo: ao passar o mouse, fundo e contorno na cor de destaque com brilho; blocos sobem um pouco.
+   Itens selecionados ou ativos ficam com o mesmo visual, um pouco mais forte. */
+:root {
+  --hl-bg: color-mix(in srgb, var(--accent) 16%, rgba(255,255,255,.03));
+  --hl-on: color-mix(in srgb, var(--accent) 26%, rgba(255,255,255,.03));
+  --hl-line: color-mix(in srgb, var(--accent) 65%, transparent);
+  --hl-glow: 0 10px 26px rgba(0,0,0,.3), 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent), 0 0 22px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.icon, .pin, .task, .dk, #startbtn, .ab, .row, .card, .cat, button.srow, .pill, #ctx button, .startbar button {
+  transition: transform .22s cubic-bezier(.2, .8, .2, 1), background-color .2s ease, border-color .2s ease, box-shadow .22s ease, left .26s cubic-bezier(.2, .8, .2, 1), top .26s cubic-bezier(.2, .8, .2, 1);
+}
+.icon:hover, .pin:hover, .task:hover, .dk:hover, #startbtn:hover, #start .ab:hover, #start .row:hover, #start .row:focus-visible, .startbar button:hover,
+.view.sys .card:hover, .view.sys .cat:not(.danger):hover, .view.sys button.srow:hover, .pill:not(.danger):hover, #ctx button:hover {
+  outline: none; background: var(--hl-bg); border-color: var(--hl-line); box-shadow: var(--hl-glow);
+}
+.icon:hover, .pin:hover, .task:hover, #startbtn:hover, #start .ab:hover, .view.sys .card:hover { transform: translateY(-2px); }
+.icon:active, .pin:active, #start .ab:active, .view.sys .card:active { transform: translateY(-1px) scale(.99); }
+.icon.sel, .icon:focus-visible, .pin.active, .task.active, #startbtn[aria-expanded="true"], .view.sys .cat.on, .srow.on, .pill.on {
+  outline: none; background: var(--hl-on); border-color: var(--accent); box-shadow: var(--hl-glow);
+}
+.icon.drag { transform: none; box-shadow: none; }
+.icon.hot { background: color-mix(in srgb, var(--accent) 40%, rgba(255,255,255,.2)); border-color: #fff; }
+
+/* Loja: tags de organização; Configurações: "Restaurar padrões" no fim da lista lateral */
+.stags { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0 12px; }
+.stags .chip { height: 28px; padding: 0 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.stags .chip:not(.on):hover { color: var(--text); border-color: var(--hl-line); background: var(--hl-bg); }
+.stag { display: block; margin: 12px 0 8px 4px; font-size: 15px; color: var(--text-dim); }   /* tag de grupo (Repack, Sistema…): só texto, sem efeitos */
+.stags + .stag, .sh + .stag { margin-top: 0; }
+.sd .rst { margin-top: auto; text-align: center; }
+.cat.danger { color: #ffb4b6; } .cat.danger:hover { background: rgba(229,72,77,.18); border-color: rgba(229,72,77,.5); }
+
+/* Loja: títulos das seções maiores e em maiúsculas (PIRATINHA, JOGOS, APPS) e botão de área de trabalho ao lado de Abrir */
+.view.sys .sh { margin: 18px 2px 6px; font-size: 22px; color: var(--text); text-transform: uppercase; letter-spacing: .06em; }
+.view.sys .sh:first-child, .stags + .sh { margin-top: 2px; }
+.car { display: flex; gap: 4px; } .car .pill:first-child { flex: 1; } .pinb { width: 32px; padding: 0; font-size: 14px; }

@@ -26,13 +26,20 @@ const LINKS = [
 const GAMES = [                                  // aparecem na dock; adicione novos jogos aqui
   { n: 'DOOM', file: 'DOOM.exe', u: './games/doom/index.html', g: 'game', e: '👹', local: true, max: true },
 ];
-const APPITEMS = [   // apps e jogos: aparecem na área de trabalho, na taskbar ou na dock (botão direito: "Mover para…")
-  { id: 'sys:store', n: 'Loja', e: '🛍️', cat: 'apps', d: 'Instale e remova apps e jogos.', fn: () => openStore(), p0: 'taskbar' },
-  { id: 'sys:browser', n: 'Navegador', e: '🌐', cat: 'apps', d: 'Navegue em abas dentro do sistema.', fn: () => openBrowser(), p0: 'taskbar' },
-  { id: 'sys:term', n: 'Terminal', e: '💻', cat: 'apps', d: 'Linha de comando do PIRATINHA OS.', fn: () => openTerm(), p0: 'taskbar' },
-  { id: 'sys:calc', n: 'Calculadora', e: '🧮', cat: 'apps', d: 'Contas rápidas.', fn: () => openCalc(), p0: 'menu' },
-  { id: 'sys:notes', n: 'Bloco de notas', e: '📝', cat: 'apps', d: 'Anotações salvas no navegador.', fn: () => openNotes(), p0: 'menu' },
-  { id: 'sys:paint', n: 'Paint', e: '🎨', cat: 'apps', d: 'Desenhe e salve em PNG.', fn: () => openPaint(), p0: 'menu' },
+const APPITEMS = [   // apps e jogos: aparecem na área de trabalho, na taskbar ou na dock (botão direito: "Mover para…"); tag = grupo na Loja
+  { id: 'sys:store', tag: 'sistema', n: 'Loja', e: '🛍️', cat: 'apps', d: 'Instale e remova apps e jogos.', fn: () => openStore(), p0: 'taskbar' },
+  { id: 'sys:browser', tag: 'sistema', n: 'Navegador', e: '🌐', cat: 'apps', d: 'Navegue em abas dentro do sistema.', fn: () => openBrowser(), p0: 'taskbar' },
+  { id: 'sys:term', tag: 'sistema', n: 'Terminal', e: '💻', cat: 'apps', d: 'Linha de comando do PIRATINHA OS.', fn: () => openTerm(), p0: 'taskbar' },
+  { id: 'sys:calc', tag: 'util', n: 'Calculadora', e: '🧮', cat: 'apps', d: 'Contas rápidas.', fn: () => openCalc(), p0: 'none' },
+  { id: 'sys:notes', tag: 'util', n: 'Bloco de notas', e: '📝', cat: 'apps', d: 'Anotações salvas no navegador.', fn: () => openNotes(), p0: 'none' },
+  { id: 'sys:b64', tag: 'util', n: 'Base64', e: '🔣', cat: 'apps', d: 'Codifique e decodifique texto e arquivos em Base64.', fn: () => openB64(), p0: 'none' },
+  { id: 'sys:qr', tag: 'util', n: 'QR Code', e: '🔳', cat: 'apps', d: 'Transforme links e textos em QR Code e salve em PNG.', fn: () => openQR(), p0: 'none' },
+  { id: 'sys:pass', tag: 'util', n: 'Gerador de senhas', e: '🔑', cat: 'apps', d: 'Senhas aleatórias e fortes, geradas no navegador.', fn: () => openPass(), p0: 'none' },
+  { id: 'sys:hash', tag: 'util', n: 'Hash', e: '#️⃣', cat: 'apps', d: 'SHA-1, SHA-256, SHA-384 e SHA-512 de textos e arquivos.', fn: () => openHash(), p0: 'none' },
+  { id: 'sys:pad', tag: 'hw', n: 'Teste de controle', e: '🎮', cat: 'apps', d: 'Botões, gatilhos, analógicos (deriva) e vibração de qualquer controle.', fn: () => openPad(), p0: 'none' },
+  { id: 'sys:input', tag: 'hw', n: 'Teste de teclado e mouse', e: '⌨️', cat: 'apps', d: 'Ghosting do teclado, taxa de atualização do mouse, CPS e duplo clique fantasma.', fn: () => openInput(), p0: 'none' },
+  { id: 'sys:screen', tag: 'hw', n: 'Teste de monitor', e: '🖥️', cat: 'apps', d: 'Pixels mortos, FPS e Hz reais e teste de rastro (ghosting).', fn: () => openScreen(), p0: 'none' },
+  { id: 'sys:paint', tag: 'util', n: 'Paint', e: '🎨', cat: 'apps', d: 'Desenhe e salve em PNG.', fn: () => openPaint(), p0: 'none' },
   { id: GAMES[0].u, n: 'DOOM', e: '👹', cat: 'jogos', d: 'Tiro em primeira pessoa clássico, rodando Freedoom.', fn: () => openApp(GAMES[0]), p0: 'dock' },
   { id: 'game:match', n: 'Blocos Coloridos', e: '🟪', cat: 'jogos', d: 'Troque blocos vizinhos e combine três ou mais da mesma cor.', fn: () => openMatch(), p0: 'dock' },
   { id: 'game:snake', n: 'Snake', e: '🐍', cat: 'jogos', d: 'Coma, cresça e não bata nas paredes.', fn: () => openSnake(), p0: 'dock' },

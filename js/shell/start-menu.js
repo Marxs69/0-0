@@ -1,4 +1,4 @@
-/* Menu Iniciar: apps, sites e busca */
+/* Menu Iniciar: Loja, sites e busca */
 
 const hostOf = l => l.local ? (l.file || 'jogo') : new URL(l.u).hostname.replace(/^www\./, '');
 const slug = q => q.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '') || 'site';
@@ -11,18 +11,17 @@ function row(name, host, fn) {
 function buildStart(q = '') {
   const box = $('#apps'); box.innerHTML = '';
   const qq = q.trim().toLowerCase(), live = l => !OFF.has(idOf(l));
-  const apps = LINKS.filter(l => l.app && l.cat === 'apps' && live(l) && (!qq || l.n.toLowerCase().includes(qq)));
+  const shop = LINKS.find(l => l.id === 'sys:store'), showShop = !qq || [shop.n, tr(shop.n)].some(n => n.toLowerCase().includes(qq));   // o único app do menu é a Loja
   const found = LINKS.filter(l => !l.app && live(l) && (!qq || l.n.toLowerCase().includes(qq) || hostOf(l).includes(qq)));
-  if (!apps.length && !found.length) {
+  if (!showShop && !found.length) {
     if (qq) box.append(row(q.trim(), slug(q) + '.com', () => { closeStart(); window.open(FOOTER_URL, '_blank', 'noopener'); }));      // pegadinha: leva ao link do rodapé
     else { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nenhum app instalado. Abra a Loja para instalar.'; box.append(p); }
     return;
   }
-  if (apps.length) {                                    // apps em blocos de 3 por linha: o bloco é só o ícone
-    const h = document.createElement('h3'); h.textContent = 'Apps'; box.append(h);
-    const g = document.createElement('div'); g.className = 'ag';
-    apps.forEach(l => { const b = document.createElement('button'); b.className = 'ab'; b.dataset.label = l.n; b.setAttribute('aria-label', l.n); b.append(tile(l)); b.onclick = () => openApp(l); b.addEventListener('contextmenu', e => itemMenu(e, l, placeOf(l))); g.append(b); });
-    box.append(g);
+  if (showShop) {
+    const h = document.createElement('h3'); h.className = 'ghost'; h.setAttribute('aria-hidden', 'true'); h.textContent = 'Loja'; box.append(h);   // título invisível: alinha com os grupos de sites
+    const b = document.createElement('button'), n = document.createElement('span'); b.className = 'ab sb'; n.textContent = shop.n;
+    b.append(tile(shop), n); b.onclick = () => openApp(shop); b.addEventListener('contextmenu', e => itemMenu(e, shop, placeOf(shop))); box.append(b);
   }
   GROUPS.forEach(([g, name]) => {
     const items = found.filter(l => l.g === g); if (!items.length) return;
@@ -32,17 +31,7 @@ function buildStart(q = '') {
 }
 $('#search').addEventListener('input', e => buildStart(e.target.value));
 $('#search').addEventListener('keydown', e => { if (e.key === 'Enter') { const f = $('.row', startEl); if (f) f.click(); } });
-/* dica com o nome do app ao passar o mouse (fora do menu, para não ser cortada pela rolagem) */
-const tip = document.createElement('div'); tip.id = 'tip'; os.append(tip);
-const hideTip = () => tip.classList.remove('on');
-$('#apps').addEventListener('pointerover', e => {
-  const b = e.target.closest('.ab'); if (!b) return;
-  const r = b.getBoundingClientRect(); tip.textContent = b.dataset.label;
-  tip.style.left = r.left + r.width / 2 + 'px'; tip.style.top = r.top - 10 + 'px'; tip.classList.add('on');
-});
-$('#apps').addEventListener('pointerout', e => { if (!e.relatedTarget || e.relatedTarget.closest?.('.ab') !== e.target.closest('.ab')) hideTip(); });
-$('#apps').addEventListener('scroll', hideTip);
-function closeStart() { hideTip(); startEl.classList.remove('open'); startBtn.setAttribute('aria-expanded', 'false'); }
+function closeStart() { startEl.classList.remove('open'); startBtn.setAttribute('aria-expanded', 'false'); }
 startBtn.onclick = e => {
   e.stopPropagation();
   const open = startEl.classList.toggle('open'); startBtn.setAttribute('aria-expanded', open);

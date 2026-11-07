@@ -1,6 +1,6 @@
 /* Preferências salvas e janela de Configurações */
 
-const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 38 }, m: { n: 'Médio', w: 96, h: 100, t: 46 }, g: { n: 'Grande', w: 116, h: 120, t: 56 } };
+const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 42 }, m: { n: 'Médio', w: 96, h: 100, t: 52 }, g: { n: 'Grande', w: 116, h: 120, t: 62 } };
 const pref = Object.assign({ c: '#211c1e', a: .5, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#b072b1', bl: 4, sq: false, ts: 'f', lang: 'en', dk: true, da: false, dp: 'b', dsh: 'r', dz: 'm', hi: false, wg: true, wm: false, wmon: true, wq: true }, store.get('piratinha-pref', {}));
 function applyPrefs(relayout) {
   const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
@@ -40,13 +40,9 @@ function openSettings(sec) {
       }],
       ['icones', 'Ícones', () => { grp('Tamanho dos ícones', Object.entries(SIZES).map(([k, z]) => [k, z.n]), 's', true); chk('Embaralhar ícones a cada acesso', 'shuf'); chk('Esconder ícones', 'hi'); }],
       ['widget', 'Widget', () => { chk('Mostrar widget de música', 'wg'); chk('Mostrar monitor do sistema', 'wmon'); chk('Mostrar frase do dia', 'wq'); }],
-      ['sistema', 'Sistema', () => {
-        const r = mk('div'); r.style.cssText = 'display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap'; const left = mk('div'); left.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap';
-        left.append(mk('button', 'pill', 'Ir para o modo antigo', () => setMode('old')));
-        r.append(left, mk('button', 'pill danger', 'Restaurar padrões', () => ask('Restaurar os padrões e apagar todos os dados salvos neste navegador (notas, recordes, lixeira e preferências)? Isso não pode ser desfeito.', () => { try { localStorage.clear(); } catch (e) {} location.reload(); }))); main.append(r);
-      }],
     ];
-    const show = k => { side.innerHTML = ''; SECS.forEach(([id, n]) => side.append(mk('button', 'cat' + (id === k ? ' on' : ''), n, () => show(id)))); main.innerHTML = ''; SECS.find(s => s[0] === k)[2](); };
+    const show = k => { side.innerHTML = ''; SECS.forEach(([id, n]) => side.append(mk('button', 'cat' + (id === k ? ' on' : ''), n, () => show(id))));
+      side.append(mk('button', 'cat danger rst', 'Restaurar padrões', () => ask('Restaurar os padrões e apagar todos os dados salvos neste navegador (notas, recordes, lixeira e preferências)? Isso não pode ser desfeito.', () => { try { localStorage.clear(); } catch (e) {} location.reload(); }))); main.innerHTML = ''; SECS.find(s => s[0] === k)[2](); };
     show(typeof sec === 'string' && SECS.some(s => s[0] === sec) ? sec : 'geral');
   } });
 }

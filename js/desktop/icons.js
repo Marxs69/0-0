@@ -8,11 +8,14 @@ if (store.get('piratinha-pref', {}).shuf !== false) for (let i = ORDER.length - 
 let frozen = false;
 const trashed = new Set(store.get('piratinha-trash', []));
 const OFF = new Set(store.get('piratinha-off', []));        // desinstalados (ids da loja); não vão para a lixeira
-const PLACE = store.get('piratinha-place', {});              // onde cada item aparece: 'desktop' | 'taskbar' | 'dock'
-const idOf = l => l.app ? l.id : 'link:' + l.u, placeOf = l => PLACE[idOf(l)] || l.p0 || 'desktop';
+OFF.delete('sys:trash');                                      // a lixeira saiu da Loja: quem a tinha removido volta a vê-la
+const PLACE = store.get('piratinha-place', {});              // onde cada item aparece: 'desktop' | 'taskbar' | 'dock' | 'none' (só na Loja)
+const idOf = l => l.app ? l.id : 'link:' + l.u, placeOf = l => { const p = PLACE[idOf(l)] || l.p0 || 'desktop'; return p === 'menu' ? 'none' : p; };   // 'none' = só na Loja (o menu Iniciar não guarda mais apps)
 const cell = new Map();                                // posições efetivas
 const icons = new Map();
-const reserved = (c, r) => r === 0 && c === 0;   // célula da lixeira
+let dockBox = null;                                  // retângulo da dock (em coordenadas da área de trabalho), quando ela fica embaixo ou em cima
+const overDock = (c, r) => dockBox && PAD + c * CW < dockBox.r && PAD + c * CW + CW > dockBox.l && PAD + r * RH < dockBox.b && PAD + r * RH + CH > dockBox.t;
+const reserved = (c, r) => (r === 0 && c === 0) || overDock(c, r);   // célula da lixeira e células por baixo da dock
 const taken = (c, r, except) => { for (const [k, p] of cell) if (k !== except && p[0] === c && p[1] === r) return true; return false; };
 const free = (c, r, except) => !reserved(c, r) && !taken(c, r, except);
 function firstFree(except) { for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) if (free(c, r, except)) return [c, r]; return null; }
@@ -29,8 +32,15 @@ const valid = p => p && p[0] < cols && p[1] < rows && !reserved(p[0], p[1]);
 
 function layoutAll() {
   cols = Math.max(2, Math.floor((desk.clientWidth - PAD * 2) / CW));
-  const avail = desk.clientHeight - PAD * 2, fit = Math.max(1, Math.floor(avail / CH)), step = (avail - CH) / fit;
-  rows = step >= CH * .85 ? fit + 1 : fit; RH = rows > fit ? step : CH;      // cabe uma linha extra apertando até 15%
+  // 8 ícones por coluna (contando a lixeira), espaçados para o último ficar logo acima da taskbar. A coluna desce até a taskbar
+  // mesmo com a dock embaixo (ela só ocupa o meio); as células que cairiam sobre a dock ficam bloqueadas.
+  // Em telas baixas demais (linhas com menos de 75% da altura do ícone), usa menos linhas.
+  const dr = desk.getBoundingClientRect(), tb = $('#taskbar').getBoundingClientRect(), dk = $('#dock'), ROWS = 8;
+  const avail = (pref.tb === 't' ? innerHeight - 10 : tb.top - 8) - dr.top - PAD;          // do topo do 1º ícone até o fim do último
+  const db = !dk.hidden && !pref.da && (pref.dp === 'b' || pref.dp === 't') ? dk.getBoundingClientRect() : null;
+  dockBox = db && db.width ? { l: db.left - dr.left - 6, r: db.right - dr.left + 6, t: db.top - dr.top - 6, b: db.bottom - dr.top + 6 } : null;
+  rows = ROWS; while (rows > 2 && avail / rows < CH * .75) rows--;
+  RH = (avail - CH) / (rows - 1); if (RH < CH) RH = avail / rows;        // apertado: o ícone encolhe para a altura da linha (classe .tight)
   desk.classList.toggle('tight', RH < CH); desk.style.setProperty('--rh', Math.min(CH, RH) + 'px');
   cell.clear(); setXY(trashEl, 0, 0); trashEl.hidden = OFF.has('sys:trash');
   const gone = l => trashed.has(l.u) || OFF.has(idOf(l)) || placeOf(l) !== 'desktop';
@@ -76,7 +86,7 @@ store.set('piratinha-trash', [...trashed]);
 function addIcon(l) {
   const b = mkIcon(l.n, () => tile(l), () => openApp(l));
   icons.set(l.u, { l, el: b });
-  b.addEventListener('contextmenu', e => showCtx(e, [['📂 Abrir', () => openApp(l)], ...(l.fn ? [] : [['↗ Abrir em nova aba', () => window.open(l.u, '_blank', 'noopener')]]), ['📌 Mover para a taskbar', () => setPlace(l, 'taskbar')], ['🧷 Mover para a dock', () => setPlace(l, 'dock')], ...(l.app ? [['📋 Mover para o menu Iniciar', () => setPlace(l, 'menu')]] : []), ['🗑️ Mover para a lixeira', () => sendToTrash(l)], ...(l.c ? [['❌ Excluir link', () => delLink(l)]] : [])]));
+  b.addEventListener('contextmenu', e => showCtx(e, [['📂 Abrir', () => openApp(l)], ...(l.fn ? [] : [['↗ Abrir em nova aba', () => window.open(l.u, '_blank', 'noopener')]]), ['📌 Mover para a taskbar', () => setPlace(l, 'taskbar')], ['🧷 Mover para a dock', () => setPlace(l, 'dock')], ...(l.app ? [['🙈 Tirar da área de trabalho', () => setPlace(l, 'none')]] : []), ['🗑️ Mover para a lixeira', () => sendToTrash(l)], ...(l.c ? [['❌ Excluir link', () => delLink(l)]] : [])]));
   b.addEventListener('pointerdown', e => {
     if (e.button !== 0) return;
     b._dragged = false;

@@ -1,4 +1,4 @@
-/* Onde cada item aparece: área de trabalho, taskbar, dock ou menu Iniciar */
+/* Onde cada item aparece: área de trabalho, taskbar, dock ou em lugar nenhum ('none': só na Loja) */
 
 $('#taskbar').addEventListener('contextmenu', e => e.preventDefault());       // o botão direito na taskbar nunca abre as configurações
 
@@ -27,7 +27,7 @@ function setPlace(l, w) {
 }
 function itemMenu(e, l, where) {
   const w = wins.get(l.win || l.u), items = [w ? ['✕ Fechar', () => w.el.querySelector('.close').click()] : ['📂 Abrir', () => openApp(l)]];
-  [['taskbar', '📌 Mover para a taskbar'], ['dock', '🧷 Mover para a dock'], ['desktop', '🖥️ Mover para a área de trabalho'], ['menu', '📋 Mover para o menu Iniciar']].forEach(([k, t]) => { if (k !== where && (k !== 'menu' || l.app)) items.push([t, () => setPlace(l, k)]); });
+  [['taskbar', '📌 Mover para a taskbar'], ['dock', '🧷 Mover para a dock'], ['desktop', '🖥️ Mover para a área de trabalho'], ['none', '🙈 Esconder (continua na Loja)']].forEach(([k, t]) => { if (k !== where && (k !== 'none' || (l.app && l.id !== 'sys:store'))) items.push([t, () => setPlace(l, k)]); });
   showCtx(e, items);
 }
 function setInst(l, on) {

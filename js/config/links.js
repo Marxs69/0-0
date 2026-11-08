@@ -25,6 +25,7 @@ const LINKS = [
 ];
 const GAMES = [                                  // aparecem na dock; adicione novos jogos aqui
   { n: 'DOOM', file: 'DOOM.exe', u: './games/doom/index.html', g: 'game', e: '👹', local: true, max: true },
+  { n: 'Smithing', file: 'Smithing.exe', u: './games/smithing/index.html', g: 'game', e: '⚒️', local: true, max: true },
 ];
 const APPITEMS = [   // apps e jogos: aparecem na área de trabalho, na taskbar ou na dock (botão direito: "Mover para…"); tag = grupo na Loja
   { id: 'sys:store', tag: 'sistema', n: 'Loja', e: '🛍️', cat: 'apps', d: 'Instale e remova apps e jogos.', fn: () => openStore(), p0: 'taskbar' },
@@ -41,10 +42,7 @@ const APPITEMS = [   // apps e jogos: aparecem na área de trabalho, na taskbar 
   { id: 'sys:screen', tag: 'hw', n: 'Teste de monitor', e: '🖥️', cat: 'apps', d: 'Pixels mortos, FPS e Hz reais e teste de rastro (ghosting).', fn: () => openScreen(), p0: 'none' },
   { id: 'sys:paint', tag: 'util', n: 'Paint', e: '🎨', cat: 'apps', d: 'Desenhe e salve em PNG.', fn: () => openPaint(), p0: 'none' },
   { id: GAMES[0].u, n: 'DOOM', e: '👹', cat: 'jogos', d: 'Tiro em primeira pessoa clássico, rodando Freedoom.', fn: () => openApp(GAMES[0]), p0: 'dock' },
-  { id: 'game:match', n: 'Blocos Coloridos', e: '🟪', cat: 'jogos', d: 'Troque blocos vizinhos e combine três ou mais da mesma cor.', fn: () => openMatch(), p0: 'dock' },
-  { id: 'game:snake', n: 'Snake', e: '🐍', cat: 'jogos', d: 'Coma, cresça e não bata nas paredes.', fn: () => openSnake(), p0: 'dock' },
-  { id: 'game:mines', n: 'Campo Minado', e: '💣', cat: 'jogos', d: 'Abra o campo sem pisar em nenhuma mina.', fn: () => openMines(), p0: 'dock' },
-  { id: 'game:tetris', n: 'Tetris', e: '🧱', cat: 'jogos', d: 'Encaixe as peças e complete as linhas.', fn: () => openTetris(), p0: 'dock' },
+  { id: GAMES[1].u, n: 'Smithing', e: '⚒️', cat: 'jogos', d: 'Forje armas e armaduras no ritmo do martelo, entregue encomendas e venda no leilão.', fn: () => openApp(GAMES[1]), p0: 'dock' },
 ].map(a => Object.assign({ app: true, u: a.id, win: a.id, local: true, g: 'app' }, a));
 LINKS.push(...APPITEMS);
 const FOOTER_URL = 'https://desciclopedia.org/wiki/Especial:Aleat%C3%B3ria';

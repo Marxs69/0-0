@@ -54,7 +54,60 @@ A troca entre os modos tem uma animação de **1,5 s** em que a tela que sai se 
 
 ### Jogos
 - **DOOM**, rodando o [Freedoom](https://freedoom.github.io/) no navegador (WebAssembly, motor Dwasm).
-- **Blocos Coloridos** (combine três), **Snake**, **Campo Minado** e **Tetris**, com recordes salvos no navegador.
+- **Smithing** (`games/smithing/`): jogo 2D de gerenciamento de forja em pixel art, com progresso salvo no navegador.
+  - **Começo**: 0 moedas, 5 de cobre, 2 de bronze, moldes de Capacete e Luvas e uma encomenda de Luvas de Bronze.
+  - **Materiais**:
+    - Minérios naturais: Cobre, Estanho (só para ligas), Ferro, Prata, Ouro e Mithril.
+    - Ligas: Bronze, Aço, Adamantita, Oricalco e Astralita.
+    - Graus: Cobre e Estanho 1, até Astralita 10.
+    - Painel da esquerda com botões em grade: **Metais | Madeiras** em cima e **Forja | Gemas** embaixo. Sem madeira e gemas liberadas, ficam só **Metais | Forja** lado a lado. Madeiras aparece com o molde de Arco ou de Cajado, e Gemas a partir da mina nível 3; os dois ficam desabilitados quando vazios. O botão de compra embaixo muda com a aba: **Comprar metais** ou **Comprar madeiras**.
+    - Madeiras: Pinho, Carvalho, Freixo, Teixo, Pau-ferro, Ébano e Sândalo.
+    - **Prata e Ouro servem só para anéis e amuletos.**
+    - A loja vende, a 4× o valor: Estanho (primeiro e mais barato), Cobre, Ferro, Prata e Ouro (estes dois só depois da Mina funda), e Pinho a Teixo. Pau-ferro, Ébano e Sândalo só saem da floresta.
+  - **Mina** (botão no topo, reabre a cada 2:30): só dá minério natural bruto. Os veios aparecem com um anel que se fecha; clique quando ele encostar (Perfeito = 2, Bom = 1, Ok = 50% de 1) e uma picareta golpeia o veio. Os 6 níveis são:
+    - rasa: cobre, estanho e pouco ferro;
+    - funda: + prata e ouro, muito raros;
+    - caverna de cristais: + gemas;
+    - profunda: + mithril;
+    - abismo e coração da montanha: mais metais raros e gemas melhores.
+    
+    Cada nível mais fundo deixa mais comuns os minérios dos níveis anteriores.
+  - **Floresta** (botão 🌲 no topo, abre com o molde de Arco ou de Cajado e rebrota a cada 2:00, com 8 árvores): teste de força. Segure o clique e a carga do machado sobe da esquerda para a direita aos trancos; ao encher, ela despenca. Solte dentro da faixa da árvore: Perfeito = 2 madeiras, Bom = 1, Ok = 50% de 1. Madeiras nobres são mais raras e têm faixa menor e mais à direita.
+  - **Fornalha** (painel da esquerda, botão Forja): segure para aquecer e mantenha a temperatura na faixa verde. O que der errado se perde.
+    - Níveis: barro (cobre, estanho, prata, ouro), tijolos (+ ferro), alto-forno (+ mithril) e arcano.
+    - Uma fundição **perfeita** (90%+ na faixa) num forno quente pode transformar ferro em **aço** (10/20/30%) e mithril em **adamantita/oricalco** (5/10%).
+  - **Ligas** (compradas em ordem na loja de melhorias e feitas na Forja):
+    1. Bronze = cobre + estanho (o tutorial);
+    2. **Processo de Bessemer**: 2 ferro → aço;
+    3. Liga arcana: mithril + prata → adamantita;
+    4. Liga solar: mithril + ouro → oricalco;
+    5. **Brasagem estelar**: adamantita + oricalco → **Astralita** (grau 11).
+  - **Gemas** (mina nível 3+): vão em qualquer peça, aumentam o valor (cheio em joias e cajados, metade nas outras) e melhoram as chances de raridade (+2% a +10%).
+  - **Moldes** (agrupados por tema no painel e na loja: Armaduras, Armas, Joias, Madeiras e Arcabuzaria): os níveis são Simples, Reforçado, Ornamentado, Magistral e Mítico, e cada nível usa 1 material a mais. Uso no nível base:
+    - Adaga 1 (liberada desde o início).
+    - Capacete 2, Luvas 1, Grevas 2, Armadura 3, Escudo 3.
+    - Espada 2 e Machado 1.
+    - **Espada longa** (4) e **Machado de guerra** (3): liberados juntos pela **Armaria** da loja de melhorias, que também libera os moldes de Espada e Machado se faltarem. Usam a base + 2.
+    - **Pistola de pederneira** (fim de jogo, **Arcabuzaria**, 350.000): exige Bigorna e Martelo de Mithril. A loja mostra o que falta (✔/✘). Os moldes de pistola também custam 14× mais. Usa 3 metais comuns no cano + 1 madeira na coronha (+1 metal por nível) e vale muito.
+    - Anel 1 e Amuleto 2 (com **Joalheria**).
+    - Arco 2 e Cajado 1 + gema obrigatória (comprados na Oficina).
+  - **Gemas por peça**: 1 na maioria; o cajado aceita 2 a partir do Magistral; anel e amuleto ganham +1 por nível depois do Ornamentado (2 no Magistral, 3 no Mítico). Os bônus de valor se somam, e a melhora de raridade fica limitada a +10% no total.
+  - **📖 Enciclopédia** (ao lado do Menu), com abas e sub-abas:
+    - Materiais: metais, madeiras e gemas.
+    - Peças.
+    - Recursos: mina e floresta.
+    - Melhorias: fornalha, bigorna e martelo, mina, balcões e comércio, e técnicas.
+    - Raridades.
+  - **Bigorna**: um espaço por material, mais a gema. O ritmo tem 5 faixas (Perfeito, Ótimo, Bom, Ruim, Errou) e o cursor é vermelho. A **Forja composta** permite metais diferentes na mesma peça.
+  - **Raridade por sorte**: Comum, Incomum, Raro, Épico, Lendário e Único (com fundo vermelho).
+  - **Estoque, Balcão, Leilão e Melhorias**:
+    - Estoque: arrastar para o leilão ou para a bigorna (reforja); venda automática no botão 💰, depois de contratar o **Ajudante de ferreiro**.
+    - Balcão: só encomendas. As **missões** ficam no botão 🏆 à esquerda das moedas, com um alerta mostrando quantas estão prontas para resgatar. Cada melhoria muda levemente a cor e os cantos: cantoneiras de ferro, cantos de latão e, no último, cantos de ouro com gema.
+    - Leilão: começa fechado. A primeira compra o abre com 1 espaço, e as seguintes vão até 5. A venda é incerta.
+    - Melhorias: bigorna, martelo, mina, fornalha, ligas, balcão, leilão, Ajudante de ferreiro (venda automática), Fornecedor (compra automática), Oficina (moldes de Arco e Cajado), Joalheria e Forja composta.
+  - **+10k** (ao lado das moedas): trapaça que dá 10.000 moedas, para testes.
+  - **☰ Menu**: continuar, menu inicial ou resetar o progresso (em vermelho, com confirmação).
+  - O equilíbrio fica em tabelas no topo de `game.js`, e os sprites, em `sprites.js`.
 
 ### Widgets
 - 🎵 **Música**: toca arquivos de áudio do seu computador.
@@ -99,7 +152,6 @@ js/
   desktop/              ícones, lixeira, wallpaper, menu de contexto
   shell/                menu Iniciar, modo antigo (e a transição em areia), relógio, configurações, taskbar e dock
   apps/                 notas, calculadora, navegador, Paint, terminal, loja e utilitários (tools.js: Base64, QR Code, senhas, hash), testes de hardware (hwtest.js)
-  games/                jogos embutidos (Blocos, Snake, Campo Minado, Tetris)
   system/               energia/atualização e notificações
   widgets/              base de arrastar, música, monitor, frase do dia
   i18n/                 traduções (strings.js) e motor de tradução (i18n.js)
@@ -107,6 +159,7 @@ js/
 games/
   doom/                 motor Dwasm (index.html/.js/.wasm/.data) + licença
     freedoom/           WADs do Freedoom e créditos
+  smithing/             jogo Smithing (index.html, style.css, sprites.js, game.js)
 ```
 
 Os scripts são **clássicos**, não módulos. Eles compartilham variáveis globais e precisam ser carregados **na ordem que está no `index.html`**. Um arquivo novo deve entrar na lista na posição certa: depois dos arquivos de que ele depende e antes de `main.js`.
@@ -126,7 +179,7 @@ No **GitHub Pages** (`usuario.github.io/repo`), a lista de wallpapers é lida pe
 
 - **Adicionar um site**: inclua um item em `LINKS` em `js/config/links.js`, com o grupo em `g` (`repack`, `scene`, `tools` ou `out`, que é Outros) e, se quiser, um ícone de reserva em `i` (arquivos em `assets/icons/sites/`). Os grupos ficam em `GROUPS` e viram as divisórias do modo antigo e do menu Iniciar. Também dá para usar "Novo link…" no clique direito; esses ficam salvos só no navegador.
 - **Adicionar um wallpaper**: coloque a imagem em `assets/wallpapers/` (png, jpg, webp, gif, avif, bmp ou svg).
-- **Adicionar um jogo ou app**: crie a função `openAlgo()` num arquivo em `js/apps/` ou `js/games/`, inclua o `<script>` no `index.html` e adicione o item em `APPITEMS` (`js/config/links.js`).
+- **Adicionar um jogo ou app**: crie a função `openAlgo()` num arquivo em `js/apps/`, inclua o `<script>` no `index.html` e adicione o item em `APPITEMS` (`js/config/links.js`).
 - **Traduzir um texto novo**: adicione uma linha `[pt, en, es, fr, de, ru]` em `js/i18n/strings.js`.
 - **Voltar tudo ao padrão**: Configurações → Sistema → Restaurar padrões.
 

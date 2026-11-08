@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smithing</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Menu inicial -->
+<section id="menu" class="screen on">
+  <div class="menu-box">
+    <img id="menu-anvil" alt="">
+    <h1>SMITHING</h1>
+    <p class="sub">Forje, venda, repita.</p>
+    <button id="play" class="btn big">▶ Jogar</button>
+  </div>
+</section>
+
+<!-- Tela de jogo -->
+<section id="game" class="screen">
+  <header id="top">
+    <div class="top-left"><button id="pause" class="btn small">☰ Menu</button><button id="ency" class="btn small" title="Enciclopédia">📖</button></div>
+    <div class="top-center"><button id="missions-btn" class="btn small missions-btn" title="Missões">🏆 Missões<span id="missions-alert" class="alert mini" hidden></span></button><div id="coins"><img id="coin-img" alt=""><span id="coin-n">0</span></div><button id="cheat" class="btn small cheat" title="Trapaça: +10000 moedas">+10k</button></div>
+    <div class="top-right"><button id="forest-btn" class="btn small mine-btn" hidden>🌲 Floresta</button><button id="mine-btn" class="btn small mine-btn">⛏ Mina</button></div>
+  </header>
+
+  <main id="shop">
+    <aside class="panel">
+      <div class="ptabs"><button data-tab="metals" class="on">Metais</button><button data-tab="woods" hidden>Madeiras</button><button data-tab="raw" title="Fornalha: derreter minério e fazer ligas">Forja <b id="raw-n"></b></button><button data-tab="gems" hidden>Gemas</button></div>
+      <div id="ores" class="list"></div>
+      <button id="buy-ores" class="btn buy">+ Comprar metais</button>
+    </aside>
+
+    <section id="center">
+      <div id="anvil-area">
+        <div class="slots">
+          <div id="ore-slots"></div>
+          <div class="plus">+</div>
+          <div class="slot" id="slot-t"><span>Molde</span></div>
+          <div id="gem-slots"></div>
+        </div>
+        <div id="anvil-wrap">
+          <img id="hammer" alt="">
+          <img id="anvil" alt="">
+          <canvas id="sparks" width="320" height="200"></canvas>
+        </div>
+        <div id="rhythm" hidden>
+          <div id="bar"><div id="zone"><div class="zb"><div class="zo"><div class="zp"></div></div></div></div><div id="cursor"></div></div>
+          <div id="strikes"></div>
+          <div id="verdict">&nbsp;</div>
+        </div>
+        <button id="forge" class="btn" disabled>🔨 Martelar!</button>
+        <p id="tip"></p>
+      </div>
+
+      <div id="stock-area">
+        <div class="stock-main">
+          <h2>Estoque <small id="stock-n"></small></h2>
+          <div id="stock"></div>
+        </div>
+        <button id="auto" class="auto" title="Venda automática: vende sozinho as peças do estoque por 70% do valor (Lendárias, Únicas e as que servem para encomendas abertas ficam guardadas)">💰<small>auto</small></button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>Moldes</h2>
+      <div id="molds" class="list"></div>
+      <button id="buy-molds" class="btn buy">+ Comprar moldes</button>
+    </aside>
+  </main>
+
+  <footer id="bottom">
+    <div id="upgrades" class="box" title="Loja de melhorias">
+      <div class="box-head">⚙ Melhorias</div>
+      <div id="up-icons"></div>
+    </div>
+    <div id="counter" title="Encomendas e missões">
+      <div class="counter-top"></div>
+      <i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i>
+      <div class="counter-front"><span class="sign">📜 Balcão · Encomendas <b id="order-n">0</b></span><span id="counter-alert" class="alert" hidden>!</span></div>
+    </div>
+    <div id="auction" class="box" title="Leilão: arraste peças do estoque para cá">
+      <div class="box-head">🔨 Leilão</div>
+      <div id="auction-slots"></div>
+    </div>
+  </footer>
+
+  <!-- Janela genérica (lojas, balcão, leilão, melhorias, menu) -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-box">
+      <div class="modal-head"><h2 id="m-title"></h2><button id="m-x" class="btn small ghost">✕</button></div>
+      <div id="m-tabs"></div>
+      <div id="m-body"></div>
+      <div id="m-foot"></div>
+    </div>
+  </div>
+
+  <!-- Mina -->
+  <div id="mine" class="mine" hidden>
+    <div class="mine-box">
+      <div class="mine-head"><b id="mine-title">⛏ Mina</b><span id="mine-hud"></span><button id="mine-exit" class="btn small ghost">Sair</button></div>
+      <canvas id="mine-cv" width="640" height="340"></canvas>
+      <div id="mine-result" hidden></div>
+    </div>
+  </div>
+
+  <!-- Floresta -->
+  <div id="forest" class="mine" hidden>
+    <div class="mine-box">
+      <div class="mine-head"><b>🌲 Floresta</b><span id="for-hud"></span><button id="for-exit" class="btn small ghost">Sair</button></div>
+      <canvas id="for-cv" width="640" height="340"></canvas>
+      <div id="for-result" hidden></div>
+    </div>
+  </div>
+
+  <!-- Fornalha -->
+  <div id="furnace" class="mine" hidden>
+    <div class="mine-box">
+      <div class="mine-head"><b id="fur-title">🔥 Fornalha</b><span id="fur-hud"></span><button id="fur-exit" class="btn small ghost">Sair</button></div>
+      <canvas id="fur-cv" width="640" height="300"></canvas>
+      <div id="fur-result" hidden></div>
+    </div>
+  </div>
+
+  <div id="tooltip" hidden></div>
+  <div id="toast"></div>
+</section>
+
+<script src="sprites.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

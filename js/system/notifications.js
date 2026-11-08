@@ -3,9 +3,6 @@
 const JOKES = [
   { i: '⬇️', t: 'Atualização do sistema', m: 'PIRATINHA OS 9.0.1 está pronto. Clique para instalar.', u: 1 },
   { i: '🎮', t: 'Barba-Negra', m: 'começou a jogar DOOM.', g: 1 },
-  { i: '🎮', t: 'Jack Sparrow', m: 'começou a jogar Campo Minado.', g: 1 },
-  { i: '🎮', t: 'Capitão Gancho', m: 'começou a jogar Tetris.', g: 1 },
-  { i: '🎮', t: 'Papagaio', m: 'começou a jogar Snake e já perdeu.', g: 1 },
   { i: '🦜', t: 'Papagaio', m: 'instalou 14 extensões sem perguntar.' },
   { i: '🛡️', t: 'Antivírus', m: 'tirou o dia de folga.' },
   { i: '📦', t: 'tesouro.zip', m: 'terminou de baixar. Ninguém sabe onde.' },

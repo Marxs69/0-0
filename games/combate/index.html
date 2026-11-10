@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combate</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Menu inicial -->
+<section id="menu" class="screen on">
+  <div class="menu-box">
+    <canvas id="menu-art" width="84" height="28"></canvas>
+    <h1>COMBATE</h1>
+    <p class="sub">Arrume a mochila. Vença a luta.</p>
+    <button id="m-continue" class="btn big" hidden>▶ Continuar jornada</button>
+    <button id="m-new" class="btn big">⚔ Nova jornada</button>
+    <button id="m-tree" class="btn">💠 Árvore de melhorias <b id="m-ess"></b></button>
+    <p id="m-best" class="dim"></p>
+  </div>
+</section>
+
+<!-- Árvore permanente -->
+<section id="tree" class="screen">
+  <header class="bar">
+    <button id="t-back" class="btn small">← Voltar</button>
+    <b class="title">Árvore de melhorias permanentes</b>
+    <span class="coin ess">💠 <b id="t-ess">0</b></span>
+  </header>
+  <div id="tree-wrap"><div id="tree-area"><svg id="tree-lines"></svg></div></div>
+  <p class="dim center">Essência (💠) é ganha a cada luta vencida e nunca se perde. Estas melhorias valem para todas as jornadas.</p>
+</section>
+
+<!-- Jogo -->
+<section id="game" class="screen">
+  <header class="bar">
+    <button id="g-menu" class="btn small">☰ Menu</button>
+    <b class="title" id="g-round"></b>
+    <span class="coin">❤ <b id="g-lives"></b></span>
+    <span class="coin gold">🪙 <b id="g-gold"></b></span>
+    <span class="coin ess">💠 <b id="g-ess"></b></span>
+  </header>
+
+  <div id="arena">
+    <canvas id="cv" width="256" height="104"></canvas>
+    <div class="plate" id="pa"><b class="pn"></b><div class="hp"><i></i><span></span></div><div class="st"></div></div>
+    <div class="plate right" id="pb"><b class="pn"></b><div class="hp"><i></i><span></span></div><div class="st"></div></div>
+    <div id="fx"></div>
+    <div id="center-ctl">
+      <button id="fight" class="btn big">⚔ LUTAR!</button>
+      <div id="speed" hidden><button data-s="1">1×</button><button data-s="2">2×</button><button data-s="4">4×</button></div>
+      <div id="timer" hidden></div>
+    </div>
+  </div>
+
+  <footer id="hud">
+    <aside class="panel" id="side">
+      <h2>Reserva <small id="stash-n"></small></h2>
+      <div id="stash"></div>
+      <div id="sell">🪙 Arraste aqui para vender</div>
+      <div id="info"></div>
+    </aside>
+
+    <div class="packbox">
+      <h2>Sua mochila <small>R ou botão direito gira</small></h2>
+      <div id="pack" class="grid"></div>
+    </div>
+
+    <section class="panel" id="mid">
+      <div id="prep-ui">
+        <div class="tabs"><button data-tab="shop" class="on">🛒 Loja</button><button data-tab="train">💪 Treino</button></div>
+        <div id="shop"></div>
+        <div id="train" hidden></div>
+      </div>
+      <div id="log" hidden></div>
+    </section>
+
+    <div class="packbox enemy">
+      <h2 id="e-title">Mochila do inimigo</h2>
+      <div id="epack" class="grid"></div>
+    </div>
+  </footer>
+
+</section>
+
+<div id="modal" hidden><div class="modal-box"><h2 id="mo-title"></h2><div id="mo-body"></div><div id="mo-foot"></div></div></div>
+<div id="tip" hidden></div>
+<div id="toast"></div>
+
+<script src="sprites.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

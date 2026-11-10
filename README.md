@@ -55,6 +55,7 @@ A troca entre os modos tem uma animação de **1,5 s** em que a tela que sai se 
 ### Jogos
 - **DOOM**, rodando o [Freedoom](https://freedoom.github.io/) no navegador (WebAssembly, motor Dwasm).
 - **Smithing** (`games/smithing/`): jogo 2D de gerenciamento de forja em pixel art, com progresso salvo no navegador.
+- **Combate** (`games/combate/`): protótipo de auto-batalha com mochila em pixel art. Os itens ocupam casas na mochila, como numa maleta; antes de cada luta dá para ver a mochila do inimigo, comprar na loja, melhorar itens e treinar o personagem. A essência ganha nas lutas compra melhorias permanentes numa árvore.
   - **Começo**: 0 moedas, 5 de cobre, 2 de bronze, moldes de Capacete e Luvas e uma encomenda de Luvas de Bronze.
   - **Materiais**:
     - Minérios naturais: Cobre, Estanho (só para ligas), Ferro, Prata, Ouro e Mithril.
@@ -160,6 +161,7 @@ games/
   doom/                 motor Dwasm (index.html/.js/.wasm/.data) + licença
     freedoom/           WADs do Freedoom e créditos
   smithing/             jogo Smithing (index.html, style.css, sprites.js, game.js)
+  combate/              jogo Combate (index.html, style.css, sprites.js, game.js)
 ```
 
 Os scripts são **clássicos**, não módulos. Eles compartilham variáveis globais e precisam ser carregados **na ordem que está no `index.html`**. Um arquivo novo deve entrar na lista na posição certa: depois dos arquivos de que ele depende e antes de `main.js`.

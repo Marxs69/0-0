@@ -10,8 +10,9 @@
 
 <!-- Menu inicial -->
 <section id="menu" class="screen on">
+  <div class="embers" data-n="26"></div>
   <div class="menu-box">
-    <img id="menu-anvil" alt="">
+    <div class="menu-forge"><img id="menu-anvil" alt=""><img id="menu-hammer" alt=""><i id="menu-spark"></i></div>
     <h1>SMITHING</h1>
     <p class="sub">Forje, venda, repita.</p>
     <button id="play" class="btn big">▶ Jogar</button>
@@ -22,7 +23,7 @@
 <section id="game" class="screen">
   <header id="top">
     <div class="top-left"><button id="pause" class="btn small">☰ Menu</button><button id="ency" class="btn small" title="Enciclopédia">📖</button></div>
-    <div class="top-center"><button id="missions-btn" class="btn small missions-btn" title="Missões">🏆 Missões<span id="missions-alert" class="alert mini" hidden></span></button><div id="coins"><img id="coin-img" alt=""><span id="coin-n">0</span></div><button id="cheat" class="btn small cheat" title="Trapaça: +10000 moedas">+10k</button></div>
+    <div class="top-center"><button id="missions-btn" class="btn small missions-btn" title="Recompensas">🏆 Recompensas<span id="missions-alert" class="alert mini" hidden></span></button><div id="coins"><img id="coin-img" alt=""><span id="coin-n">0</span></div><button id="cheat" class="btn small cheat" title="Trapaça: +100000 moedas" hidden>+100k</button><button id="cheat-cd" class="btn small cheat" title="Trapaça: zera a espera da mina, da floresta e das runas" hidden>⏱ Zerar esperas</button></div>
     <div class="top-right"><button id="forest-btn" class="btn small mine-btn" hidden>🌲 Floresta</button><button id="mine-btn" class="btn small mine-btn">⛏ Mina</button></div>
   </header>
 
@@ -35,6 +36,9 @@
 
     <section id="center">
       <div id="anvil-area">
+        <div class="embers" data-n="14"></div>
+        <canvas id="bolts"></canvas>
+        <button id="rune-btn" class="btn small mine-btn" title="Runas: ver as já gravadas e gravar mais" hidden></button>
         <div class="slots">
           <div id="ore-slots"></div>
           <div class="plus">+</div>
@@ -44,7 +48,8 @@
         <div id="anvil-wrap">
           <img id="hammer" alt="">
           <img id="anvil" alt="">
-          <canvas id="sparks" width="320" height="200"></canvas>
+          <div id="rune-slot" class="slot sm runeslot" title="Runa (opcional): só em armaduras e armas, uma por peça" hidden></div>
+          <canvas id="sparks" width="360" height="260"></canvas>
         </div>
         <div id="rhythm" hidden>
           <div id="bar"><div id="zone"><div class="zb"><div class="zo"><div class="zp"></div></div></div></div><div id="cursor"></div></div>
@@ -60,7 +65,7 @@
           <h2>Estoque <small id="stock-n"></small></h2>
           <div id="stock"></div>
         </div>
-        <button id="auto" class="auto" title="Venda automática: vende sozinho as peças do estoque por 70% do valor (Lendárias, Únicas e as que servem para encomendas abertas ficam guardadas)">💰<small>auto</small></button>
+        <button id="auto" class="auto" title="Venda automática: abre as opções (o que vender e o que guardar)">💰<small>auto</small></button>
       </div>
     </section>
 
@@ -76,8 +81,9 @@
       <div class="box-head">⚙ Melhorias</div>
       <div id="up-icons"></div>
     </div>
-    <div id="counter" title="Encomendas e missões">
+    <div id="counter" title="Balcão: clique para ver as encomendas ou arraste uma peça do estoque para entregar ou vender">
       <div class="counter-top"></div>
+      <div class="cloth"></div>
       <i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i>
       <div class="counter-front"><span class="sign">📜 Balcão · Encomendas <b id="order-n">0</b></span><span id="counter-alert" class="alert" hidden>!</span></div>
     </div>
@@ -103,6 +109,15 @@
       <div class="mine-head"><b id="mine-title">⛏ Mina</b><span id="mine-hud"></span><button id="mine-exit" class="btn small ghost">Sair</button></div>
       <canvas id="mine-cv" width="640" height="340"></canvas>
       <div id="mine-result" hidden></div>
+    </div>
+  </div>
+
+  <!-- Runas -->
+  <div id="runes" class="mine" hidden>
+    <div class="mine-box">
+      <div class="mine-head"><b id="rune-title">ᚱ Mesa de runas</b><span id="rune-hud"></span><button id="rune-exit" class="btn small ghost">Sair</button></div>
+      <canvas id="rune-cv" width="640" height="340"></canvas>
+      <div id="rune-result" hidden></div>
     </div>
   </div>
 

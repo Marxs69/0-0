@@ -12,7 +12,7 @@ const pct = v => Math.round(v * 100) + '%';
 /* ======================= Dados (equilíbrio do jogo) ======================= */
 const LVM = [1, 1.4, 1.9];                         // multiplicador dos números do item por nível (1 a 3)
 const lvl = (v, lv) => Math.round(v * LVM[lv - 1]);
-const MAX_LV = 3, STASH_MAX = 8, FATIGUE_AT = 25;
+const MAX_LV = 3, STASH_MAX = 8, FATIGUE_AT = 25, DROP_CHANCE = .2;   // DROP_CHANCE = chance de o inimigo derrotado largar um item da mochila dele
 
 // w × h = casas na mochila · price = preço na loja · min = rodada em que começa a aparecer na loja
 // kind: weapon (ataca a cada cd segundos) · def · util    aura = bônus dado aos itens encostados nele
@@ -47,13 +47,33 @@ const ENEMIES = [
   { n: 'Rei Caveira',  spr: 'king',     hp: 150, w: 6, h: 5, big: true, kit: [['whet', 2, 0, 0], ['amulet', 2, 0, 1], ['venom', 1, 0, 2], ['sword', 3, 1, 0], ['spear', 1, 2, 0], ['ishield', 2, 3, 0], ['potion', 2, 5, 0], ['armor', 2, 3, 3, 1]] },
 ];
 
+/* Jornada: 100 rodadas em 10 ciclos de 10. Em cada ciclo voltam os mesmos 9 inimigos, mais fortes, e a 10ª rodada é um chefe.
+   O 10º chefe (rodada 100) é o final; depois dele a loja fecha e as rodadas seguem sem fim, cada vez mais duras.
+   BOSSES: kit = índice em ENEMIES de onde vem a mochila do chefe (o 1º chefe é o próprio Rei Caveira da rodada 10). */
+const CYCLE = 10, FINAL = 100;
+const BOSSES = [
+  { n: 'Rei Caveira',        spr: 'king',     kit: 9 },
+  { n: 'Senhor da Guerra',   spr: 'warlord',  kit: 8 },
+  { n: 'Cavaleiro Negro',    spr: 'knight',   kit: 6 },
+  { n: 'Mestre Assassino',   spr: 'assassin', kit: 7 },
+  { n: 'Arquixamã',          spr: 'shaman',   kit: 9 },
+  { n: 'Rei Orc',            spr: 'orc',      kit: 8 },
+  { n: 'General Lanceiro',   spr: 'lancer',   kit: 6 },
+  { n: 'Lorde dos Ossos',    spr: 'skeleton', kit: 7 },
+  { n: 'Rei Bandido',        spr: 'bandit',   kit: 8 },
+  { n: 'Imperador Caveira',  spr: 'king',     kit: 9 },
+];
+// Por ciclo completo: +vida, +dano e +velocidade do inimigo (e +1 nível nos itens dele). Chefe: vida e dano extras.
+// Depois da rodada final, vida e dano ainda crescem ENDLESS por rodada (composto), para a jornada infinita acabar um dia
+const E_HP = .7, E_DMG = .2, E_SPD = .04, E_SPD_MAX = .6, BOSS_HP = 1.6, BOSS_DMG = 1.1, ENDLESS = 1.06;
+const isBoss = round => round % CYCLE === 0, endless = () => run.round > FINAL;
+
 // Treino: melhorias do personagem compradas com ouro, valem só nesta jornada
 const TRAIN = [
   { id: 'vig', e: '❤', n: 'Vigor',     d: '+12 de vida máxima',           base: 5, step: 3 },
   { id: 'str', e: '💪', n: 'Força',     d: '+8% de dano',                  base: 6, step: 4 },
   { id: 'agi', e: '⚡', n: 'Agilidade', d: '+6% de velocidade dos itens',  base: 6, step: 4 },
 ];
-const TRAIN_MAX = 5;
 
 // Árvore permanente (comprada com essência). x, y = posição na árvore · req = nó anterior · fx = efeito
 const NODES = [
@@ -85,6 +105,7 @@ let mode = 'prep';            // prep | combat | result
 let sel = null;               // item selecionado: { src: 'pack' | 'stash' | 'shop' | 'enemy', it }
 let cb = null;                // combate em andamento
 let view = { a: null, b: null };   // lutadores mostrados na arena (prévia na preparação, reais no combate)
+const SHOP_BOX = 88;           // lado (px) da área do item no card da loja
 const itemEls = new Map();    // item → elemento na mochila (para as barras de recarga)
 
 /* ======================= Mochila: geometria ======================= */
@@ -116,19 +137,25 @@ function newRun() {
   setupRound();
 }
 function mkEnemy(round) {
-  const e = ENEMIES[round - 1], pack = { w: e.w, h: e.h, items: [] };
+  const cyc = Math.floor((round - 1) / CYCLE), boss = isBoss(round) && cyc > 0 ? BOSSES[cyc % BOSSES.length] : null;
+  const e = boss ? { ...ENEMIES[boss.kit], n: boss.n, spr: boss.spr, hp: ENEMIES[9].hp, w: 6, h: 5, big: true } : ENEMIES[(round - 1) % CYCLE];
+  const extra = round > FINAL ? ENDLESS ** (round - FINAL) : 1, pack = { w: e.w, h: e.h, items: [] };
   e.kit.forEach(([id, lv, x, y, r], i) => {
-    const it = { uid: 'e' + i, id, lv, x, y, r: r || 0 };
+    const it = { uid: 'e' + i, id, lv: Math.min(MAX_LV, lv + cyc), x, y, r: r || 0 };
     if (fits(pack, it, x, y, it.r)) pack.items.push(it); else console.warn('Kit inválido:', e.n, id);
   });
-  return { n: e.n, spr: e.spr, hp: e.hp, big: !!e.big, pack };
+  return { n: e.n, spr: e.spr, big: !!e.big, boss: isBoss(round), pack,
+    hp: Math.round(e.hp * (1 + E_HP * cyc) * (boss ? BOSS_HP : 1) * extra),
+    dmg: (1 + E_DMG * cyc) * (boss ? BOSS_DMG : 1) * extra, spd: 1 + Math.min(E_SPD_MAX, E_SPD * cyc) };
 }
 function rollShop() {
+  if (endless()) return void (run.shop = []);   // depois do chefe final a loja fecha
   const pool = Object.keys(ITEMS).filter(id => ITEMS[id].min <= run.round), n = 4 + meta('shopn');
   run.shop = Array.from({ length: n }, () => ({ uid: 's' + run.uid++, id: pool[Math.random() * pool.length | 0], lv: 1, r: 0, sold: false }));
 }
 function setupRound() { run.enemy = mkEnemy(run.round); rollShop(); run.free = meta('reroll'); run.rerolls = 0; sel = null; save(); }
-const rerollCost = () => run.free > 0 ? 0 : 1 + run.rerolls;
+const REROLL_BASE = 3;   // troca da loja: 3, 6, 12… (dobra a cada troca paga na rodada)
+const rerollCost = () => run.free > 0 ? 0 : REROLL_BASE * 2 ** run.rerolls;
 
 /* ======================= Lutadores e combate (mesma lógica para os dois lados) ======================= */
 function buildFighter(name, spr, hp, pack, dmgMul = 1, spdMul = 1, big = false) {
@@ -152,7 +179,7 @@ function buildFighter(name, spr, hp, pack, dmgMul = 1, spdMul = 1, big = false) 
 }
 const playerFighter = () => buildFighter('Você', 'hero', 60 + meta('hp') + run.train.vig * 12, run.pack,
   1 + meta('dmg') + run.train.str * .08, 1 + meta('spd') + run.train.agi * .06);
-const enemyFighter = () => buildFighter(run.enemy.n, run.enemy.spr, run.enemy.hp, run.enemy.pack, 1, 1, run.enemy.big);
+const enemyFighter = () => buildFighter(run.enemy.n, run.enemy.spr, run.enemy.hp, run.enemy.pack, run.enemy.dmg || 1, run.enemy.spd || 1, run.enemy.big);
 function rates(f) {           // dano e bloqueio por segundo, para a prévia
   let dps = 0, bps = 0;
   for (const r of f.items) { const sp = f.spdMul * (1 + r.haste) / (r.d.cd || 1); if (r.d.dmg) dps += (lvl(r.d.dmg, r.it.lv) + r.bonus) * f.dmgMul * sp; if (r.d.block) bps += lvl(r.d.block, r.it.lv) * sp; }
@@ -218,15 +245,17 @@ function finishCombat() {
   mode = 'result';
   const round = run.round, name = cb.b.name;
   if (cb.win) {
-    const gold = 6 + round * 2, last = round >= ENEMIES.length, ess = essFor(round) + (last ? 10 : 0);
+    const gold = 6 + round * 2, final = round === FINAL, ess = essFor(round) + (final ? 50 : 0);
     S.meta.ess += ess; run.ess += ess; S.best = Math.max(S.best, round);
-    if (last) {
-      const total = run.ess; run = S.run = null; save();
-      return modal('🏆 Jornada concluída!', `<p>${name} caiu. Você venceu as ${ENEMIES.length} rodadas!</p><p class="rw">💠 +${ess} de essência <small>(${total} nesta jornada)</small></p>`,
-        [['💠 Árvore de melhorias', () => show('tree')], ['Menu', () => show('menu')]]);
+    // Espólio: um item da mochila do inimigo vai para a reserva (reserva cheia: vira ouro pelo valor de venda)
+    let loot = '';
+    if (Math.random() < DROP_CHANCE && run.enemy.pack.items.length) {
+      const src = run.enemy.pack.items[Math.random() * run.enemy.pack.items.length | 0], it = newItem(src.id, src.lv), full = run.stash.length >= STASH_MAX;
+      if (full) run.gold += sellValue(it); else run.stash.push(it);
+      loot = `<p class="rw loot"><img src="${itemImg(it.id)}" alt=""> Espólio: ${ITEMS[it.id].n}${it.lv > 1 ? ' ' + '★'.repeat(it.lv) : ''}${full ? ` <small>(reserva cheia: 🪙 +${sellValue(it)})</small>` : ''}</p>`;
     }
     run.gold += gold; run.round++; setupRound();
-    return modal('Vitória!', `<p>Você derrotou ${name}.</p><p class="rw">🪙 +${gold} de ouro &nbsp; 💠 +${ess} de essência</p><p class="dim">Próximo inimigo: <b>${run.enemy.n}</b></p>`,
+    return modal(final ? '🏆 Chefe final derrotado!' : 'Vitória!', `<p>Você derrotou ${name}.</p>${final ? '<p class="dim">Rodadas infinitas: a loja fechou.</p>' : ''}<p class="rw">🪙 +${gold} de ouro &nbsp; 💠 +${ess} de essência</p>${loot}<p class="dim">Próximo: <b>${run.enemy.boss ? '👑 ' : ''}${run.enemy.n}</b></p>`,
       [['Continuar ▶', toPrep]]);
   }
   run.lives--;
@@ -241,13 +270,22 @@ function finishCombat() {
 function toPrep() { mode = 'prep'; cb = null; $('#fx').innerHTML = ''; render(); }
 
 /* ======================= Arena (canvas) ======================= */
-const cv = $('#cv'), g = cv.getContext('2d'), BG = arenaBg(cv.width, cv.height), GROUND = cv.height - 24;
-g.imageSmoothingEnabled = false;
+/* A altura lógica é fixa (104 px de arte); a largura acompanha a proporção da área na tela, então nada é cortado:
+   numa janela larga e baixa a cena ganha largura em vez de perder o topo. Os lutadores ficam sempre em volta do centro. */
+const cv = $('#cv'), g = cv.getContext('2d'), CH = 104, GROUND = CH - 24, GAP = 72;   // GAP = do centro até as costas de cada lutador
+let BG = null;
+function fitArena() {
+  const r = $('#arena').getBoundingClientRect(); if (!r.width || !r.height) return;
+  const w = Math.max(176, Math.round(CH * r.width / r.height / 2) * 2);   // mínimo: os dois lutadores cabem (abaixo disso só as bordas somem)
+  if (BG && w === cv.width) return;
+  cv.width = w; cv.height = CH; g.imageSmoothingEnabled = false; BG = arenaBg(w, CH);
+}
+new ResizeObserver(fitArena).observe($('#arena'));
 let lastTs = 0;
 function drawFighter(f, dir, now) {
   const s = charSprite(f.spr), sc = f.big ? 3 : 2, w = 28 * sc;
   const bob = f.dead ? 0 : Math.round(Math.sin(now / 320 + (dir > 0 ? 0 : 2)));
-  const x = Math.round((dir > 0 ? 56 : cv.width - 56 - w) + dir * f.lunge * 16), y = GROUND - 27 * sc + bob;
+  const x = Math.round((dir > 0 ? cv.width / 2 - GAP : cv.width / 2 + GAP - w) + dir * f.lunge * 16), y = GROUND - 27 * sc + bob;
   g.save();
   if (f.dead) { const k = Math.min(1, f.dead); g.globalAlpha = 1 - k * .65; g.translate(x + w / 2, GROUND); g.rotate(-dir * k * Math.PI / 2); g.translate(-(x + w / 2), -GROUND); }
   g.translate(dir > 0 ? x : x + w, y); g.scale(dir * sc, sc);
@@ -259,6 +297,7 @@ function frame(ts) {
   requestAnimationFrame(frame);
   const real = Math.min(.1, (ts - lastTs) / 1000 || 0); lastTs = ts;
   if (!$('#game').classList.contains('on') || !view.a) return;
+  if (!BG) { fitArena(); if (!BG) return; }
   if (mode === 'combat' && cb) {
     if (!cb.over) { cb.acc += real * S.speed; while (cb.acc >= STEP && !cb.over) { step(STEP); cb.acc -= STEP; } }
     else if ((cb.endT += real) > 1.1) finishCombat();
@@ -287,7 +326,7 @@ function modal(title, body, btns) {
 function log(html) { const l = $('#log'); l.append(el('p', '', html)); while (l.children.length > 80) l.firstChild.remove(); l.scrollTop = l.scrollHeight; }
 function fx(side, text, cls) {
   const s = el('span', 'float ' + cls, text);
-  s.style.left = (side === 'a' ? 27 : 73) + (Math.random() * 10 - 5) + '%'; s.style.top = 38 + Math.random() * 14 + '%';
+  s.style.left = 50 + (side === 'a' ? -1 : 1) * (GAP - 28) / cv.width * 100 + (Math.random() * 10 - 5) + '%';   // em cima do lutador s.style.top = 38 + Math.random() * 14 + '%';
   $('#fx').append(s); setTimeout(() => s.remove(), 900);
 }
 function flashItem(r) { const e = itemEls.get(r.it); if (e) { e.classList.remove('fire'); void e.offsetWidth; e.classList.add('fire'); } }
@@ -328,7 +367,7 @@ function itemEl(it, src) {
   e.style.width = `calc(var(--c) * ${w})`; e.style.height = `calc(var(--c) * ${h})`;
   e.onmouseenter = ev => showTip(ev, it); e.onmousemove = moveTip; e.onmouseleave = hideTip;
   if (src === 'enemy') e.onclick = () => { if (mode === 'prep') { sel = { src, it }; render(); } };
-  else e.onpointerdown = ev => startDrag(ev, src, it);
+  else if (src !== 'shop') e.onpointerdown = ev => startDrag(ev, src, it);   // na loja quem arrasta é o card inteiro
   return e;
 }
 function renderGrid(box, pack, src) {
@@ -361,7 +400,7 @@ function updateCombatUI() {
 function render() {
   if (!run) return;
   const prep = mode === 'prep';
-  $('#g-round').textContent = `Rodada ${Math.min(run.round, ENEMIES.length)} / ${ENEMIES.length}`;
+  $('#g-round').textContent = (run.enemy.boss ? '👑 ' : '') + (endless() ? `Rodada ${run.round} · ∞` : `Rodada ${run.round} / ${FINAL}`);
   $('#g-lives').textContent = run.lives; $('#g-gold').textContent = run.gold; $('#g-ess').textContent = S.meta.ess;
   $('#game').dataset.mode = mode;
   $('#fight').hidden = !prep; $('#speed').hidden = $('#timer').hidden = prep;
@@ -382,20 +421,29 @@ function render() {
   $('#stash-n').textContent = `${run.stash.length}/${STASH_MAX}`;
 
   const sh = $('#shop'); sh.innerHTML = '';
+  if (endless()) sh.innerHTML = '<p class="dim">Loja fechada.</p>';
   run.shop.forEach(en => {
     const c = el('div', 'card' + (en.sold ? ' sold' : '') + (price(en.id) > run.gold ? ' poor' : ''));
-    if (!en.sold) c.append(itemEl(en, 'shop'));
+    if (!en.sold) {   // o item cresce até preencher a área do card; clicar ou arrastar em qualquer ponto do card vale
+      const d = ITEMS[en.id], ie = itemEl(en, 'shop'), box = el('div', 'ci');
+      ie.style.setProperty('--c', Math.floor(Math.min(SHOP_BOX / d.w, SHOP_BOX / d.h, 44)) + 'px'); box.append(ie); c.append(box);
+      c.onpointerdown = ev => startDrag(ev, 'shop', en);
+      c.onmouseenter = ev => showTip(ev, en); c.onmousemove = moveTip; c.onmouseleave = hideTip;
+      if (sel && sel.it === en) c.classList.add('sel');
+    }
     c.append(el('span', 'cn', en.sold ? 'vendido' : ITEMS[en.id].n), el('span', 'cp', en.sold ? '' : '🪙 ' + price(en.id)));
     sh.append(c);
   });
+  if (!endless()) {
   const rc = rerollCost(), rb = el('button', 'btn small reroll', `🎲 Trocar itens (${rc ? '🪙 ' + rc : 'grátis'})`);
   rb.disabled = rc > run.gold; rb.onclick = () => { if (run.free > 0) run.free--; else { run.gold -= rc; run.rerolls++; } rollShop(); sel = null; save(); render(); };
   sh.append(rb);
+  }
 
   const tr = $('#train'); tr.innerHTML = '';
   TRAIN.forEach(t => {
-    const n = run.train[t.id], max = n >= TRAIN_MAX, c = trainCost(t);
-    const row = el('div', 'trow', `<span class="te">${t.e}</span><div><b>${t.n}</b> <small>${'●'.repeat(n)}${'○'.repeat(TRAIN_MAX - n)}</small><br><small>${t.d}</small></div>`);
+    const n = run.train[t.id], max = false, c = trainCost(t);
+    const row = el('div', 'trow', `<span class="te">${t.e}</span><div><b>${t.n}</b> <small>nv.${n}</small><br><small>${t.d}</small></div>`);
     const b = el('button', 'btn small', max ? 'máx.' : '🪙 ' + c); b.disabled = max || c > run.gold;
     b.onclick = () => { run.gold -= c; run.train[t.id]++; save(); render(); };
     row.append(b); tr.append(row);
@@ -510,7 +558,7 @@ addEventListener('wheel', () => { if (drag && drag.moved) rotateDrag(); }, { pas
 function renderMenu() {
   $('#m-continue').hidden = !run;
   $('#m-ess').textContent = `(💠 ${S.meta.ess})`;
-  $('#m-best').textContent = S.best ? `Melhor jornada: rodada ${S.best} de ${ENEMIES.length}` : '';
+  $('#m-best').textContent = S.best ? `Melhor jornada: rodada ${S.best}` : '';
   const c = $('#menu-art'), x = c.getContext('2d'); x.clearRect(0, 0, 84, 28);
   x.drawImage(charSprite('hero').img, 0, 0); x.save(); x.translate(84, 0); x.scale(-1, 1); x.drawImage(charSprite('king').img, 0, 0); x.restore();
 }

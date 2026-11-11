@@ -47,7 +47,7 @@ h2 small { font-size: 10px; letter-spacing: 0; text-transform: none; opacity: .8
 /* Arena */
 #game { position: relative; }
 #arena { position: relative; flex: 1; min-height: 120px; background: #2a1f4e; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
-#cv { height: 100%; width: 100%; object-fit: cover; object-position: center bottom; }
+#cv { height: 100%; width: 100%; object-fit: cover; object-position: center bottom; }   /* a proporção do canvas acompanha a da área (fitArena) */
 .plate { position: absolute; top: 8px; left: 10px; width: min(34%, 300px); background: rgba(20, 16, 28, .82); border: 2px solid var(--line-2); border-radius: 4px; padding: 5px 8px; }
 .plate.right { left: auto; right: 10px; text-align: right; }
 .plate .pn { letter-spacing: 1px; text-transform: uppercase; font-size: 12px; }
@@ -70,7 +70,7 @@ h2 small { font-size: 10px; letter-spacing: 0; text-transform: none; opacity: .8
 /* HUD de baixo: reserva | sua mochila | loja ou registro | mochila do inimigo */
 #hud { display: flex; gap: 8px; padding: 8px; background: #1a1426; border-top: 2px solid var(--line); align-items: stretch; }
 #side { width: 216px; display: flex; flex-direction: column; gap: 6px; }
-#mid { flex: 1; min-width: 200px; display: flex; flex-direction: column; overflow: hidden; }
+#mid { flex: 1; min-width: 200px; display: flex; flex-direction: column; overflow: hidden; max-height: max(calc(var(--c) * 6 + 40px), 230px); }   /* loja estreita rola em vez de esticar o HUD e espremer a arena */
 .packbox { background: var(--panel); border: 2px solid var(--line-2); border-radius: 4px; padding: 8px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
 .packbox h2 { align-self: stretch; }
 .packbox.enemy { border-color: #8c3a4a; }
@@ -118,11 +118,15 @@ h2 small { font-size: 10px; letter-spacing: 0; text-transform: none; opacity: .8
 .tabs button.on { color: var(--gold); border-color: var(--gold); background: var(--panel-2); }
 #prep-ui { display: flex; flex-direction: column; min-height: 0; flex: 1; }
 #shop { --c: 22px; display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; overflow: auto; }
-.card { width: 92px; min-height: 124px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; padding: 5px 3px; background: #1a1426; border: 2px solid var(--line); border-radius: 4px; text-align: center; }
+.card { width: 100px; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; padding: 5px 3px; cursor: grab; touch-action: none; background: #1a1426; border: 2px solid var(--line); border-radius: 4px; text-align: center; }
 .card .cn { font-size: 10px; line-height: 1.1; min-height: 22px; display: flex; align-items: center; }
 .card .cp { color: var(--gold); font-weight: 700; font-size: 12px; }
 .card.poor .cp { color: var(--red); }
-.card.sold { opacity: .35; justify-content: center; }
+.card .ci { width: 88px; height: 88px; display: flex; align-items: center; justify-content: center; }
+.card:not(.sold):hover, .card.sel { border-color: var(--gold); }
+.card.lifted { opacity: .4; }
+.card.sold { opacity: .35; justify-content: center; cursor: default; }
+.rw.loot { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--gold); } .rw.loot img { height: 40px; }
 .reroll { align-self: flex-end; margin-left: auto; }
 .trow { display: flex; align-items: center; gap: 10px; padding: 6px; border-bottom: 2px solid #1a1426; }
 .trow div { flex: 1; } .trow small { color: var(--dim); } .te { font-size: 20px; }

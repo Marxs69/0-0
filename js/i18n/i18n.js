@@ -1,6 +1,6 @@
 /* Motor de tradução: traduz textos e atributos do DOM em tempo real */
 
-const IDX = { pt: 0, en: 1, es: 2, fr: 3, de: 4, ru: 5 }, LOC = { pt: 'pt-BR', en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', ru: 'ru-RU' };
+const IDX = { pt: 0, en: 1 }, LOC = { pt: 'pt-BR', en: 'en-US' };
 const DICT = new Map(), PATS = []; let curLang = 'pt';
 D.forEach(r => { if (r[0].includes('{}')) PATS.push([new RegExp('^' + r[0].replace(/[.*+?^$()|[\]\\]/g, '\\$&').replace(/\{\}/g, '(.+?)') + '$'), r]); else DICT.set(r[0], r); });
 function tr(str, lang = pref.lang) {
@@ -33,7 +33,7 @@ function walk(root) {
   while ((n = tw.nextNode())) { if (n.nodeType === 3) { if (!n.parentElement.closest(SKIP)) textNode(n); } else attrsOf(n); }
 }
 function setLang(l) {
-  curLang = l; document.documentElement.lang = { pt: 'pt-BR', en: 'en', es: 'es', fr: 'fr', de: 'de', ru: 'ru' }[l] || 'en';
+  curLang = l; document.documentElement.lang = l === 'pt' ? 'pt-BR' : 'en';
   walk(document.body); tick();
 }
 new MutationObserver(ms => ms.forEach(m => {

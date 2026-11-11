@@ -2,6 +2,7 @@
 
 const SIZES = { p: { n: 'Pequeno', w: 80, h: 88, t: 42 }, m: { n: 'Médio', w: 96, h: 100, t: 52 }, g: { n: 'Grande', w: 116, h: 120, t: 62 } };
 const pref = Object.assign({ c: '#211c1e', a: .5, s: 'm', h24: true, sec: false, an: true, shuf: true, tb: 'b', notif: true, ac: '#b072b1', bl: 4, sq: false, ts: 'f', lang: 'en', dk: true, da: false, dp: 'b', dsh: 'r', dz: 'm', hi: false, wg: true, wm: false, wmon: true, wq: true }, store.get('piratinha-pref', {}));
+if (pref.lang !== 'pt') pref.lang = 'en';   // idioma salvo que não existe mais (ES, FR, DE, RU) volta para o inglês
 function applyPrefs(relayout) {
   const h = pref.c, st = document.documentElement.style, z = SIZES[pref.s] || SIZES.m;
   const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
@@ -31,7 +32,7 @@ function openSettings(sec) {
     };
     const SECS = [
       ['geral', 'Geral', () => { chk('Relógio em 24 horas', 'h24'); chk('Mostrar segundos no relógio', 'sec'); chk('Animações das janelas', 'an'); chk('Cantos quadrados', 'sq'); }],
-      ['idioma', 'Idioma', () => grp('Idioma', [['en', 'EN'], ['pt', 'BR'], ['es', 'ES'], ['fr', 'FR'], ['de', 'DE'], ['ru', 'RU']], 'lang')],
+      ['idioma', 'Idioma', () => grp('Idioma', [['en', 'EN'], ['pt', 'BR']], 'lang')],
       ['taskbar', 'Taskbar', () => { grp('Posição da taskbar', [['b', 'Embaixo'], ['t', 'Em cima']], 'tb', 'soft'); grp('Estilo da taskbar', [['f', 'Flutuante'], ['d', 'Acoplada']], 'ts', 'soft'); }],
       ['dock', 'Dock', () => {
         chk('Habilitada', 'dk', 'soft'); chk('Ocultar automaticamente', 'da', 'soft');

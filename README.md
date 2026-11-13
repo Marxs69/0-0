@@ -18,8 +18,9 @@ Reúne links de sites de jogos numa área de trabalho com janelas, taskbar, dock
 - **DOOM**: [Freedoom](https://freedoom.github.io/) em WebAssembly (motor Dwasm).
 - **Smithing** (`games/smithing/`): gerenciamento de forja em pixel art. Mine, corte madeira, funda ligas, forje no ritmo do martelo, entregue encomendas e venda no leilão. A enciclopédia do jogo (📖) explica cada sistema.
 - **Combate** (`games/combate/`): auto-batalha com mochila. Arrume os itens nas casas, veja a mochila do inimigo e lute. São 100 rodadas com um chefe a cada 10; depois do 10º a loja fecha e as rodadas ficam infinitas.
+- **Colônia** (`games/colonia/`): gerenciamento de colônia. Escolha o lugar num mundo gerado por semente (globo ou mapa) vendo clima, água, solo e vida selvagem, monte o grupo (humanos, elfos e orcs) e dê ordens: construir, escavar, cortar, colher, atacar e alocar a casa. A mesa de pesquisa libera melhorias e a bancada faz espadas e armaduras (com o couro da caça). Há chuva e neve, animais agressivos e invasões de saqueadores.
 
-Nos dois jogos próprios, o equilíbrio fica em tabelas no topo de `game.js` e a arte em `sprites.js`.
+Nos jogos próprios, o equilíbrio fica em tabelas no topo de `game.js` e a arte em `sprites.js`.
 
 ## Estrutura
 
@@ -37,7 +38,7 @@ js/
   widgets/        música, monitor, frase do dia
   i18n/           strings.js (traduções) e i18n.js (motor)
   main.js         inicialização
-games/            doom/, smithing/, combate/
+games/            doom/, smithing/, combate/, colonia/
 ```
 
 Os scripts são clássicos (não módulos) e dependem da ordem do `index.html`: um arquivo novo entra depois do que ele usa e antes de `main.js`.

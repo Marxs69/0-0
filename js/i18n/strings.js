@@ -178,6 +178,7 @@ const D = [
 ['Recorde {}','Best {}'],
 ['Forje armas e armaduras no ritmo do martelo, entregue encomendas e venda no leilão.','Forge weapons and armor to the hammer’s rhythm, fill orders and sell at auction.'],
 ['Arrume a mochila com armas e escudos, espie a mochila do inimigo e vença as lutas automáticas.','Pack your backpack with weapons and shields, peek at the enemy’s backpack and win the auto-battles.'],
+['Escolha um lugar no mundo, monte o grupo e erga uma colônia: construa, escave, cace e defenda.','Pick a spot in the world, gather your crew and raise a colony: build, dig, hunt and defend.'],
 ['Voltar ao modo OS','Back to OS mode'],
 ['Modo OS','OS mode'],
 ['Escreva aqui… (salvo automaticamente)','Write here… (saved automatically)'],
